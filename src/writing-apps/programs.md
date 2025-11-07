@@ -1,6 +1,3 @@
----
-description: Writing app programs with Pico
----
 
 # Programs
 
@@ -64,6 +61,4 @@ Use the pre-prepared pico EVM proof and Groth16 verifier in the repo to run cont
 cd contract 
 forge test
 ```
-
-
 

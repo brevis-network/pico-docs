@@ -1,6 +1,3 @@
----
-description: Composable proving workflows
----
 
 # ProverChain
 

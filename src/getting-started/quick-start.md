@@ -1,6 +1,3 @@
----
-description: One minute quick start of writing a Pico program
----
 
 # Quick start
 

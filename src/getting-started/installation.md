@@ -1,6 +1,3 @@
----
-description: Install Pico toolchains
----
 
 # Installation
 

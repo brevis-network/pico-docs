@@ -1,6 +1,3 @@
----
-description: Switching to the best proving backends seamlessly
----
 
 # Proving Backends
 

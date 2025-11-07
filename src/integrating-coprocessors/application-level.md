@@ -1,6 +1,3 @@
----
-description: Integrating Beyond Function-Level Precompiles
----
 
 # Application-level
 

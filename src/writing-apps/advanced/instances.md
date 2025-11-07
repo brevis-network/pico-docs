@@ -1,6 +1,3 @@
----
-description: Customizable zkVM Instantiations
----
 
 # Instances
 

@@ -1,6 +1,3 @@
----
-description: Going Beyond Default Settings
----
 
 # Advanced
 

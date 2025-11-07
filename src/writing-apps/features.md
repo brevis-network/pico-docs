@@ -1,6 +1,3 @@
----
-description: Logging, debugging and proving options
----
 
 # Features
 

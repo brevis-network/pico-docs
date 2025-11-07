@@ -1,6 +1,3 @@
----
-description: Proving with Pico CLI and SDK APIs
----
 
 # Proving
 
@@ -23,7 +20,7 @@ pico-sdk = { git = "https://github.com/brevis-network/pico" }
 
 2. Execute the proving process and generate RISC-V proof.
 
-{% code lineNumbers="true" %}
+
 ```rust
 // prover/src/main.rs
 fn main() {
@@ -68,7 +65,7 @@ fn verify_public_values(n: u32, public_values: &PublicValuesStruct) {
     assert_eq!(result_b, public_values.b, "Mismatch in value 'b'");
 }
 ```
-{% endcode %}
+
 
 ## Pico EmulatorStdin
 
