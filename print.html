@@ -1,0 +1,911 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Pico</title>
+        <meta name="robots" content="noindex">
+
+
+        <!-- Custom HTML head -->
+        <link rel="icon" href="favicon-dark.png" media="(prefers-color-scheme: light)">
+        <link rel="icon" href="favicon-light.png" media="(prefers-color-scheme: dark)">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="shortcut icon" href="favicon-f2934afb.png">
+        <link rel="stylesheet" href="css/variables-8adf115d.css">
+        <link rel="stylesheet" href="css/general-2459343d.css">
+        <link rel="stylesheet" href="css/chrome-cc69e1fb.css">
+        <link rel="stylesheet" href="css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="ayu-highlight-56612340.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="theme/custom-fc75f45e.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex-6233c3f0.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc-d8b0f95b.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Pico</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="introducing-pico-1"><a href="#introducing-pico-1" class="header">Introducing Pico</a></h1>
+<hr>
+<h2 id="description-a-modular-performant-zkvm"><a class="header" href="#description-a-modular-performant-zkvm">description: A modular, performant zkVM</a></h2>
+<h1 id="introducing-pico"><a class="header" href="#introducing-pico">Introducing Pico</a></h1>
+<figure><img src=".gitbook/assets/Frame - 1.png" alt=""><figcaption></figcaption></figure>
+<p>Welcome to Pico—the open-source zero-knowledge virtual machine (zkVM) that transforms how developers build secure, scalable, and high-performance decentralized applications. Drawing on the innovative <a href="https://vitalik.eth.limo/general/2024/09/02/gluecp.html">“glue-and-coprocessor”</a> architecture, Pico fuses the efficiency of specialized circuits with the adaptability of a general-purpose zkVM. This unique design empowers you to craft tailored proof systems that meet the diverse needs of modern cryptographic applications.</p>
+<p>Pico’s design is rooted in the need for adaptable, high-performance ZK systems that can keep pace with the rapidly evolving landscape of cryptographic research. Rather than relying on a one-size-fits-all solution, Pico’s modular architecture lets you:</p>
+<ul>
+<li><strong>Leverage Interchangeable Proving Backends:</strong> Select from multiple proving backends to achieve the best performance and efficiency.</li>
+<li><strong>Integrate App-Specific Circuits:</strong> Seamlessly incorporate specialized circuits/coprocessors to accelerate domain-specific computations.</li>
+<li><strong>Customize Proving Workflows:</strong> Assemble and fine-tune proof generation pipelines tailored to your application’s specific requirements.</li>
+</ul>
+<h2 id="why-choose-pico"><a class="header" href="#why-choose-pico">Why Choose Pico?</a></h2>
+<p>Pico is built upon four fundamental strengths that set it apart:</p>
+<ul>
+<li><strong>Modularity:</strong> Pico’s architecture is composed of independent, interchangeable components. This design allows you to configure and reassemble the system to align with your application’s requirements precisely.</li>
+<li><strong>Flexibility:</strong> Pico supports various proving backends and custom proving pipelines, enabling you to fine-tune every aspect of the proof generation process. Adjust parameters effortlessly to meet specific performance demands.</li>
+<li><strong>Extensibility:</strong> Designed for seamless integration, Pico allows you to incorporate app-specific circuits and custom acceleration modules. This extensibility ensures you can add bespoke coprocessors or precompiles, enhancing the system’s capabilities without disrupting its core functionality.</li>
+<li><strong>Performance:</strong> Engineered for efficiency, Pico achieves industry-leading proof generation speeds on standard hardware. Its optimized workflows and specialized circuits deliver exceptional throughput and low latency, even in high-demand scenarios.</li>
+</ul>
+<p>Pico provides a robust, future-ready foundation that meets today’s challenges and evolves with the advancing field of zero-knowledge technology. Whether you’re a developer eager to explore the potential of ZK proofs or a researcher pushing the boundaries of cryptographic innovation, Pico is the ideal platform to build upon.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="installation-1"><a href="#installation-1" class="header">Installation</a></h1>
+<hr>
+<h2 id="description-install-pico-toolchains"><a class="header" href="#description-install-pico-toolchains">description: Install Pico toolchains</a></h2>
+<h1 id="installation"><a class="header" href="#installation">Installation</a></h1>
+<h2 id="requirements"><a class="header" href="#requirements">Requirements:</a></h2>
+<ul>
+<li><a href="https://www.rust-lang.org/tools/install">Rust (Nightly)</a></li>
+<li><a href="https://git-scm.com/book/en/v2/Getting-Started-Installing-Git">Git </a></li>
+<li><a href="https://docs.docker.com/engine/install/">Docker (Optional, for EVM proof)</a></li>
+</ul>
+<h2 id="install"><a class="header" href="#install">Install </a></h2>
+<h3 id="option-1--cargo-install"><a class="header" href="#option-1--cargo-install">Option 1:  Cargo install</a></h3>
+<ol>
+<li>Install pico-cli from the GitHub repository</li>
+</ol>
+<pre><code class="language-sh">cargo +nightly-2025-08-04 install --git https://github.com/brevis-network/pico pico-cli
+</code></pre>
+<ol start="2">
+<li>Check the version</li>
+</ol>
+<pre><code class="language-sh">cargo pico --version
+</code></pre>
+<h3 id="option-2-local-install"><a class="header" href="#option-2-local-install">Option 2: Local install</a></h3>
+<ol>
+<li>Git clone Pico-VM repository</li>
+</ol>
+<pre><code class="language-sh">git clone https://github.com/brevis-network/pico
+</code></pre>
+<ol start="2">
+<li>cargo install from the local path</li>
+</ol>
+<pre><code class="language-sh">cd sdk/cli
+cargo install --locked --force --path .
+</code></pre>
+<h3 id="rust-toolchain"><a class="header" href="#rust-toolchain">Rust toolchain</a></h3>
+<p>Pico uses the rust-specific rust toolchain version(nightly-2025-08-04) to build the program. The specific toolchain version can be found in the <code>rust_toolchain</code> file in the repository root.</p>
+<pre><code class="language-sh">rustup install nightly-2025-08-04
+</code></pre>
+<pre><code class="language-bash">rustup component add rust-src --toolchain nightly-2025-08-04
+</code></pre>
+<p><a href="https://book.openvm.dev/introduction.html"><br></a></p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="quick-start-1"><a href="#quick-start-1" class="header">Quick start</a></h1>
+<hr>
+<h2 id="description-one-minute-quick-start-of-writing-a-pico-program"><a class="header" href="#description-one-minute-quick-start-of-writing-a-pico-program">description: One minute quick start of writing a Pico program</a></h2>
+<h1 id="quick-start"><a class="header" href="#quick-start">Quick start</a></h1>
+<p>This page shows you how to create and prove a Fibonacci program.</p>
+<h2 id="start-with-the-fibonacci-template"><a class="header" href="#start-with-the-fibonacci-template">Start with the Fibonacci template </a></h2>
+<ol>
+<li>Create project </li>
+</ol>
+<pre><code>cargo pico new --template basic Fibonacci
+</code></pre>
+<p>This creates a directory <code>Fibonacci</code> with the <code>basic</code> template, which contains a fibonacci program.</p>
+<ol start="2">
+<li>Build program</li>
+</ol>
+<pre><code class="language-sh"># Build program in app folder
+cd app
+cargo pico build    
+</code></pre>
+<p>This will use the Pico compiler to generate a RISC-V ELF that can be executed by the Pico ZKVM.</p>
+<ol start="3">
+<li>Prove program with Pico</li>
+</ol>
+<pre><code class="language-sh"># Prove in prover folder
+cd ../prover
+RUST_LOG=info cargo run --release
+</code></pre>
+<p>The <code>prover</code> subdirectory contains a Rust program that will load an input for the ELF that was just compiled, execute it, and generate a proof. This project has the entire functionality of the Pico SDK at its disposal, and can be customized however you want.</p>
+<p>If you simply wish to use the default provided proving clients and options, you can prove using the Pico CLI via</p>
+<pre><code class="language-sh">RUST_LOG=info cargo pico prove --input "0x0A000000" --fast --elf /path/to/elf # input n = 10
+</code></pre>
+<p>The input to the fibonacci program is a single u32 specifying which number to compute, so we can directly pass the input with the <code>--input</code> option, supplying little endian bytes. <code>--fast</code> simply tells the prover to skip any recursion steps and terminate after finishing the RISC-V proof.</p>
+<h2 id="project-layout"><a class="header" href="#project-layout">Project Layout</a></h2>
+<pre><code>Fibonacci
+|—— app
+     |—— elf
+          |—— riscv32im-pico-zkvm-elf
+     |—— src
+          |—— main.rs
+     |—— Cargo.toml
+|—— lib
+     |—— src
+          |—— lib.rs
+     |—— Cargo.toml
+|—— prover
+     |—— src
+           |—— main.rs
+     |—— Cargo.toml
+|—— Cargo.toml
+|—— Cargo.lock
+|—— rust-toolchain     
+</code></pre>
+<p>The template project includes 3 workspace members: <code>app</code>, <code>lib</code> and <code>prover</code></p>
+<p><code>app</code>: contains the program source code, which will be compiled to <code>RiscV</code></p>
+<p><code>app/elf</code><strong>:</strong> contains ELF with RISC-V instructions. </p>
+<p><code>lib</code>:  contains components or utilities shared in multiple modules.</p>
+<p><code>prover</code>: contains the scripts to prepare program input data and execute the proving process.</p>
+<h2 id="start-with-the-evm-template"><a class="header" href="#start-with-the-evm-template">Start with the EVM template </a></h2>
+<p><strong>Minimum memory requirement</strong>: 32GB</p>
+<ol>
+<li>
+<p>Create and build the EVM Example Project</p>
+<pre><code class="language-bash">cargo pico new evm-example --template evm
+cd evm-example/app/
+cargo pico build
+</code></pre>
+<p>This uses the <code>evm</code> template, which will set up a proving script that will generate a Groth16 proof suitable for verification via smart contract on an ETH compatible chain.</p>
+</li>
+<li>
+<p>Prove program to EVM</p>
+<pre><code class="language-bash">cd ../prover
+RUST_LOG=info cargo run --release
+</code></pre>
+<p>This step will locally set up the Groth16 Verifier contract and generate the Pico Groth16 proof. The files will be outputted to the <code>root/contracts/test_data</code> folder.<br>The prover program will then attempt to launch a Docker container to generate the final EVM proof with <code>gnark</code>. This ingests <code>test_data/proof.json</code> and should produce <code>test_data/proof.data</code>. If this file is not produced, you may need to increase the amount of RAM available to the container.</p>
+</li>
+<li>
+<p>Test EVM Proof</p>
+<pre><code class="language-bash">cd ../contracts
+mv -f ./test_data/Groth16Verifier.sol ./src/Groth16Verifier.sol
+forge test
+</code></pre>
+<p>The foundry test script will parse the proof generated in the previous step and interact with the Groth16 Verifier contract. With all tests passing, the EVM quick start is successful.</p>
+</li>
+</ol>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="programs-1"><a href="#programs-1" class="header">Programs</a></h1>
+<hr>
+<h2 id="description-writing-app-programs-with-pico"><a class="header" href="#description-writing-app-programs-with-pico">description: Writing app programs with Pico</a></h2>
+<h1 id="programs"><a class="header" href="#programs">Programs</a></h1>
+<h2 id="pico-entrypoint"><a class="header" href="#pico-entrypoint">Pico entrypoint</a></h2>
+<p>The program is executed and proved with the zkVM platform. Pico links the programs by the main function annotated with the <code>entrypoint</code> macro_rules. The program needs to be declared with <code>no_main</code>. </p>
+<pre class="playground"><code class="language-rust">// declare no_main
+#![no_main]
+
+// point out the main function in your program.
+pico_sdk::entrypoint!(main);
+
+pub fn main() {
+    //todo: write your program logic here
+}
+</code></pre>
+<p>Raw system calls are available by using <code>pico_sdk::riscv_ecalls::*</code> but it is recommended to use the integrated patch libraries to avoid disrupting the standard development workflow. The program can then be compiled to RiscV without creating conditional compilation-related hoops aside from the entry point (unless your system assumes a word size of 64 bits, which is untrue in the zkVM). A few light wrappers for elliptic curve types can also be found in the <code>pico-patch-libs</code> crate.</p>
+<p>Be very careful with using heap memory. The currently implemented allocator does not free any memory, so cloning a medium-sized <code>Vec</code> a few too many times will cause your program to go OOM. You must write your own allocator if a more managed memory solution is required.</p>
+<h2 id="inputs-and-outputs"><a class="header" href="#inputs-and-outputs">Inputs and outputs</a></h2>
+<p><code>pico_sdk::io::read_as</code> Read a serialized input data type into the program and deserialize it into specific types, such as u32, u64, and bytes. Pico <code>prove</code> CLI provides two ways to pass the inputs: hex string and file path. When your specific input is a file path , the file content will be read as bytes in the program.  </p>
+<pre><code class="language-sh">cargo pico prove --input "" # hex or file path
+</code></pre>
+<p><code>pico_sdk::io::commit</code> Commit serializable data to the public stream. The public inputs will be compressed using a SHA256 hash and exported to the on-chain. </p>
+<p><code>pico_sdk::io:commit_bytes</code> Write the public values in a byte buffer.</p>
+<h2 id="setup-programs"><a class="header" href="#setup-programs">Setup programs</a></h2>
+<ol>
+<li>Create an instant program</li>
+</ol>
+<pre><code class="language-sh">cargo pico new --template basic basic-example
+</code></pre>
+<p>The project only contains a program module.  You can test and debug your RISC-V program quickly using the basic template.</p>
+<ol start="2">
+<li>Create a program with EVM</li>
+</ol>
+<pre><code class="language-sh">cargo pico new --template evm evm-example
+</code></pre>
+<p>The created project with the evm template will contain an extra <code>Contracts</code> folder for app and verification contracts .</p>
+<ul>
+<li>Proving with the evm option referring to <a href="#proving-1">this page</a> can generate the proof for on-chain EVM.</li>
+<li>Verification test requires to the install <a href="https://book.getfoundry.sh/getting-started/installation">foundryup and forge test</a>. </li>
+</ul>
+<p>Use the pre-prepared pico EVM proof and Groth16 verifier in the repo to run contract tests.</p>
+<pre><code class="language-sh">cd contract 
+forge test
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="proving-1"><a href="#proving-1" class="header">Proving</a></h1>
+<hr>
+<h2 id="description-proving-with-pico-cli-and-sdk-apis"><a class="header" href="#description-proving-with-pico-cli-and-sdk-apis">description: Proving with Pico CLI and SDK APIs</a></h2>
+<h1 id="proving"><a class="header" href="#proving">Proving</a></h1>
+<h2 id="overview"><a class="header" href="#overview">Overview </a></h2>
+<p>Pico provides CLI and SDK tools to recursively prove the program to the developers.  </p>
+<p>Pico CLI provides a complete toolchain for compiling the RISC-V program and using Pico to complete end-to-end proof. Refer to the <a href="#installation-1">installation page</a> to install the CLI toolchain. CLI default use the KoalaBear field for the backend proving, if you want to switch to other fields, read more details in <a href="#proving-backends-1">Proving Backends Page</a>. </p>
+<p>Like the CLI, the Pico-SDK includes lower-level APIs that can prove the program directly. The <a href="https://github.com/brevis-network/pico-zkapp-template/tree/main/prover">prover package</a> of the template project repository provides an example of how to import and initialize the SDK and quickly generate a RISC-V proof using the Pico SDK. In the <a href="#proving-steps">Proving Steps Section</a>, you can read more about VM e2e proving and the Gnark EVM proof generation for On-chain verification </p>
+<p>Let’s quickly go through the Pico SDK usage and generate a Fibonacci RISC-V proof.</p>
+<ol>
+<li>Import <code>pico-sdk</code></li>
+</ol>
+<pre><code class="language-toml"># Cargo.toml
+pico-sdk = { git = "https://github.com/brevis-network/pico" }
+</code></pre>
+<ol start="2">
+<li>Execute the proving process and generate RISC-V proof.</li>
+</ol>
+<p>{% code lineNumbers=“true” %}</p>
+<pre class="playground"><code class="language-rust">// prover/src/main.rs
+fn main() {
+    // Initialize logger
+    init_logger();
+
+    // Load the ELF file
+    let elf = load_elf("../elf/riscv32im-pico-zkvm-elf");
+
+    // Initialize the prover client
+    let client = DefaultProverClient::new(&amp;elf);
+    // Initialize new stdin
+    let mut stdin_builder = client.new_stdin_builder();
+
+    // Set up input and generate proof
+    let n = 100u32;
+    stdin_builder.write(&amp;n);
+
+    // Generate proof
+    let proof = client.prove_fast(stdin_builder).expect("Failed to generate proof");
+
+    // Decodes public values from the proof's public value stream.
+    let public_buffer = proof.pv_stream.unwrap();
+    let public_values = PublicValuesStruct::abi_decode(&amp;public_buffer, true).unwrap();
+
+    // Verify the public values
+    verify_public_values(n, &amp;public_values);
+}
+
+/// Verifies that the computed Fibonacci values match the public values.
+fn verify_public_values(n: u32, public_values: &amp;PublicValuesStruct) {
+    println!(
+        "Public value n: {:?}, a: {:?}, b: {:?}",
+        public_values.n, public_values.a, public_values.b
+    );
+
+    // Compute Fibonacci values locally
+    let (result_a, result_b) = fibonacci(0, 1, n);
+
+    // Assert that the computed values match the public values
+    assert_eq!(result_a, public_values.a, "Mismatch in value 'a'");
+    assert_eq!(result_b, public_values.b, "Mismatch in value 'b'");
+}</code></pre>
+<p>{% endcode %}</p>
+<h2 id="pico-emulatorstdin"><a class="header" href="#pico-emulatorstdin">Pico EmulatorStdin</a></h2>
+<h3 id="stdin-writer"><a class="header" href="#stdin-writer">Stdin Writer</a></h3>
+<ol>
+<li><strong>Pico SDK supports writing the serializable object and bytes to Pico.</strong></li>
+</ol>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>/// Write a serializable struct to the buffer.
+pub fn write&lt;T: Serialize&gt;(&amp;mut self, data: &amp;T);
+/// Write a slice of bytes to the buffer.
+pub fn write_slice(&amp;mut self, slice: &amp;[u8]);
+<span class="boring">}</span></code></pre>
+<p>Examples:</p>
+<pre class="language-rust"><code class="lang-rust">use std::vec;
+use pico_sdk::client::SDKProverClient;
+use serde::{Deserialize, Serialize};
+
+#[derive(Serialize, Deserialize)]
+pub struct FibonacciInputs {
+    pub a: u32,
+    pub b: u32,
+    pub n: u32,
+}
+
+fn main() {
+    // Initialize the prover client
+    let client = SDKProverClient::new(&amp;elf, false);
+    // Initialize new stdin
+    let mut stdin_builder = client.new_stdin_builder();
+    // example 1: write a u32 to the VM
+    let n = 100u32;
+    stdin_builder.write(&amp;n);
+    
+<strong>    // example 2: write a struct 
+</strong>    let inputs = FibonacciInputs { a: 0, b: 1, n };
+    stdin_builder.write(&amp;inputs);
+    
+    // example 3: write a byte array
+    let bytes = vec![1, 2, 3, 4];
+    stdin_builder.write_slice(&amp;bytes);
+}
+</code></pre>
+
+<ol start="2">
+<li><strong>CLI input option</strong></li>
+</ol>
+<p>The <code>prove</code> command <mark style="color:orange;"><code>--input</code></mark> option can take a hex string or a file path. the hex string must be match the length of the read type. For example, the input <code>n = 100u32</code>; the <mark style="color:orange;">hex string should be</mark> <mark style="color:orange;"></mark><mark style="color:orange;"><code>0x0A000000</code></mark> <mark style="color:orange;"></mark><mark style="color:orange;">in little-endian format</mark>.</p>
+<pre><code class="language-sh">RUST_LOG=info cargo pico prove --input "0x0A000000" --fast
+</code></pre>
+<h3 id="read"><a class="header" href="#read">Read</a></h3>
+<p>Corresponding to the writer functions, there are read_as and read_slice tools for io reading the serializable object or bytes into the program.</p>
+<p>SDK examples:</p>
+<pre class="language-rust"><code class="lang-rust">
+use pico_sdk::io::{read_as, read_vec};
+
+<strong>#[derive(Serialize, Deserialize)]
+</strong>pub struct FibonacciInputs {
+    pub a: u32,
+    pub b: u32,
+    pub n: u32,
+}
+
+fn main() {
+    // example 1: read the u32 input `n`
+<strong>    let n: u32 = read_as();
+</strong><strong>    
+</strong>    // example 2: read FibonacciInputs struct  
+    let inputs = read_as::&lt;FibonacciInputs&gt;();
+    
+    // example 3: read a byte array
+    let bytes: Vec&lt;u8&gt; = read_vec();
+}
+</code></pre>
+
+<h2 id="end-to-end-proving"><a class="header" href="#end-to-end-proving">End-to-end Proving</a></h2>
+<p>This section introduces more advanced CLI options and SDK APIs to complete the end-to-end proving process. The Proving process consists of multiple stages, including <a href="#provechain-proving-phase">RISCV, RECURSION, and  EVM Phases</a>. Pico SDK includes various ProverClients in different proving backends. Here, we use the KoalaBearProverClient (based on STARK on KoalaBear) in the example code. </p>
+<h3 id="riscv-phase"><a class="header" href="#riscv-phase">RISCV-Phase</a></h3>
+<p>Prove RISC-V programs and generate an uncompressed proof with the <mark style="color:orange;">–fast</mark> option. The command is mainly used to test and debug the program.</p>
+<p>CLI:</p>
+<pre><code class="language-sh">RUST_LOG cargo pico prove --fast 
+</code></pre>
+<p>For example, when executing the fast proving with inputs in the Fibonacci, the input <code>n</code> is a <code>u32</code> data received through <code>pico::sdk::read_as</code>, and it must be in little-endian format and filled to 4 bytes.</p>
+<pre><code class="language-sh">RUST_LOG=info cargo pico prove --input "0x0A000000" --fast
+</code></pre>
+<p>SDK:</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Initialize the SDK.
+let client = DefaultProverClient::new(&amp;elf);
+
+// Initialize new stdin and write the inputs by builder.
+let mut stdin_builder = client.new_stdin_builder();
+ 
+// Set up input
+let n = 100u32;
+stdin_builder.write(&amp;n);
+
+let riscv_proof = client.prove_fast(stdin_builder).expect("Failed to generate proof");
+<span class="boring">}</span></code></pre>
+<p>Fast proving is implemented by using only one FRI query which drastically reduces the theoretical security bits. <strong>DO NOT USE THIS OPTION IN PRODUCTION. ATTACKERS MAY BE ABLE TO COMMIT TO INVALID TRACES</strong>.</p>
+<h3 id="recursion-phase"><a class="header" href="#recursion-phase">RECURSION-Phase</a></h3>
+<p>CLI:</p>
+<pre><code class="language-sh">RUST_LOG cargo pico prove --field kb # kb: koalabear (default), bb:babebear 
+</code></pre>
+<p>Proving without the <code>--fast</code> argument will execute the prover up to and including the EMBED-Phase. The resulting proof can then be verified by the <code>Gnark</code> proof verification circuit, which can then be verified on-chain via contract.</p>
+<p>options:</p>
+<p><code>--field</code></p>
+<p>Specify the field, When without this option, default to Koalabear field.</p>
+<ul>
+<li>kb: Koalabear</li>
+<li>bb: Babybear</li>
+</ul>
+<p><code>--output</code></p>
+<p>You can specify the output path to generate the files prepared for the <code>Gnark</code> verification and default is in the project root  <code>target/pico_out/</code></p>
+<pre><code class="language-sh">RUST_LOG cargo pico prove --output outputs
+</code></pre>
+<p>SDK:</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Initialize the SDK.
+let client = DefaultProverClient::new(&amp;elf);
+// ... write to stdin as previously described
+let (riscv_proof, embed_proof) = client.prove(stdin_builder)?;
+let output_dir = PathBuf::from_str(&amp;"./outputs").expect("the output dir is invalid");
+
+client.write_onchain_data(output, &amp;riscv_proof, &amp;embed_proof)?;
+<span class="boring">}</span></code></pre>
+<p>Outputs</p>
+<ul>
+<li><code>constraints.json</code>: The schema of the stark proof constraints is used to transform to Gnark circuit constraints.</li>
+<li><code>groth16_witness.json</code>: input witnessness of Gnark circuit.</li>
+</ul>
+<h3 id="evm-phase"><a class="header" href="#evm-phase">EVM-Phase</a></h3>
+<p>The Pico CLI provides an EVM option to generate the program Groth16 proof and verifier Contracts. You must ensure the <a href="https://docs.docker.com/engine/install/ubuntu/">Docker</a> has been installed when using the evm option.</p>
+<p>CLI:</p>
+<pre><code class="language-sh"># Setup groth16 PK/VK if its never generated or a new version update.
+cargo pico prove --evm --setup 
+# generate groth16 proof 
+cargo pico prove --evm 
+</code></pre>
+<p>SDK:</p>
+<pre class="language-rust"><code class="lang-rust">// Initialize the SDK.
+let client = KoalaBearProveVKClient::new(&amp;elf);
+let output_dir = PathBuf::from_str(&amp;"./outputs").expect("the output dir is invalid");
+// The second argument need_setup should be true when you haven't setup groth16 pk/vk yet.
+<strong>// The last argument selects the proving backend: use "kb" for KoalaBear or "bb" for BabyBear.
+</strong>prover_client.prove_evm(stdin_builder, true, output_path, "kb").expect("Failed to generate evm proof");
+</code></pre>
+
+<p>The outputs:</p>
+<p><code>proof.data</code>:  <code>Groth16</code> proof generated by the Gnark Verifier Circuit.</p>
+<p><code>pv_file</code>: The public values hex string; it’s the input of <code>Fibonacci</code> Contract</p>
+<p>When executing EVM proving, the <code>Gnark</code> <code>Groth16</code> ProvingKey/VerificationKey is also generated at this step. The <code>--setup</code> only needs to be executed once to make sure the PK/VK is generated.</p>
+<h3 id="evm-verification"><a class="header" href="#evm-verification">EVM Verification</a></h3>
+<p>The generated <code>inputs.json</code> format is as follows:</p>
+<pre><code>{
+  "riscvVKey": "bytes32",
+  "proof": "bytes32[]",
+  "publicValues": "bytes"
+}
+
+</code></pre>
+<p>After parsing the input data, you can call the <code>PicoVerifier.sol</code> as shown below:</p>
+<pre><code class="language-solidity">// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+
+/// @title Pico Verifier Interface
+/// @author Brevis Network
+/// @notice This contract is the interface for the Pico Verifier.
+interface IPicoVerifier {
+    /// @notice Verifies a proof with given public values and riscv verification key.
+    /// @param riscvVkey The verification key for the RISC-V program.
+    /// @param publicValues The public values encoded as bytes.
+    /// @param proof The proof of the riscv program execution in the Pico.
+    function verifyPicoProof(
+        bytes32 riscvVkey,
+        bytes calldata publicValues,
+        uint256[8] calldata proof
+    ) external view;
+}
+</code></pre>
+<p>The <code>verifyPicoProof</code> function in <code>PicoVerifier.sol</code> takes a RISC-V verification key, public values, and a Pico proof, using the Groth16 verifier to validate the proof and public inputs via the pairing algorithm. For the full implementation of the PicoVerifier, please refer to the repository <a href="https://github.com/brevis-network/pico-zkapp-template/blob/evm/contracts/src/PicoVerifier.sol">here</a>.</p>
+<p>In production, you need to verify riscvVKey and parse the public values verified by PicoVerifier. You can refer to the Fibonacci.sol example in the repository <a href="https://github.com/brevis-network/pico-zkapp-template/blob/evm/contracts/src/Fibonacci.sol">here</a>.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="features-2"><a href="#features-2" class="header">Features</a></h1>
+<hr>
+<h2 id="description-logging-debugging-and-proving-options"><a class="header" href="#description-logging-debugging-and-proving-options">description: Logging, debugging and proving options</a></h2>
+<h1 id="features"><a class="header" href="#features">Features</a></h1>
+<h2 id="logging"><a class="header" href="#logging">Logging </a></h2>
+<p>Pico leverages Rust’s standard logging utilities to provide detailed runtime information, particularly about performance and program statistics. You can control the verbosity of the logs via the <code>RUST_LOG</code> environment variable:</p>
+<ul>
+<li><strong>Info Level:</strong> Set <code>RUST_LOG=info</code> to output overall performance data and high-level progress information.</li>
+<li><strong>Debug Level:</strong> Set <code>RUST_LOG=debug</code> to display detailed logs, including statistics of chunks and records as they are generated and processed.</li>
+</ul>
+<p>For scenarios where you want to save logs to a file without color codes (which may be embedded by default), you can pipe the output through a tool like <code>ansi2txt</code>. This conversion ensures that the log file remains clean and free of terminal-specific formatting, as the tracing framework does not automatically adjust colors based on environment variables.</p>
+<h2 id="debugging"><a class="header" href="#debugging">Debugging</a></h2>
+<p>In the rare event that proving fails on a correctly executing binary, Pico provides additional debug capabilities to assist in pinpointing issues:</p>
+<ul>
+<li><strong>Enhanced Debugging Features:</strong> Enable the <code>debug</code> and <code>debug-lookups</code> features when running the prover. These features provide extra context by outputting detailed information on individual constraints and lookup operations within each processing batch.</li>
+<li><strong>Minimal Memory Impact:</strong> Since debug information is generated from data already in memory for the current batch of proofs, enabling debugging does not incur a significant additional memory cost. The debug data can be discarded once the batch is processed and debugged.</li>
+<li><strong>Accessing Debug Data:</strong> Combine the debugging features with <code>RUST_LOG=debug</code> to capture detailed logs. </li>
+</ul>
+<h2 id="proving-options"><a class="header" href="#proving-options">Proving Options</a></h2>
+<p>Pico offers several configurable parameters to optimize the proving process for your system’s resources and performance requirements:</p>
+<ul>
+<li><strong>Automatic Configuration:</strong> By default, Pico automatically adjusts standard options, such as chunk and batch sizes, according to the available memory on the running machine.</li>
+<li><strong>Manual Overrides:</strong> Developers can fine-tune the proving process by setting the following environment variables:
+<ul>
+<li><strong><code>CHUNK_SIZE</code>:</strong> Determines the number of cycles executed before splitting records. This helps manage the trace size, and setting this value to a power of 2 is recommended.</li>
+<li><strong><code>CHUNK_BATCH_SIZE</code>:</strong> Specifies the number of chunks processed concurrently. Set this value based on the total available system memory and the per-record/trace memory cost, ensuring you do not exceed your system’s capacity.</li>
+</ul>
+</li>
+</ul>
+<p>These options allow you to balance performance and resource utilization, making it possible to optimize Pico for a wide range of environments—from resource-constrained setups to high-performance systems.</p>
+<h2 id="features-1"><a class="header" href="#features-1">Features</a></h2>
+<p><code>pico-vm</code> comes enabled with several features by default. These being <code>strict</code>, <code>rayon</code>, and <code>nightly-features</code>. <code>strict</code> is a compile time option for <code>#![deny(warnings)]</code> on the entire pico-vm module. <code>rayon</code> enables the usage of rayon’s <code>ParallelIterator</code> and related traits to use multithreading to speed up the proving process. This feature should be left on unless you wish to compile a single threaded prover for profiling reasons, as <code>rayon</code> tends to pollute the stack trace when running <code>flamegraph</code>. nightly-features enables certain CPU-specific performance enhancements, enabling further optimizations with <code>-march=native</code> and turning on <code>AVX2</code> by default on x86-based architectures. <code>AVX512</code> can be enabled via additional <code>RUSTFLAGS</code> as well. This should be left on, like <code>rayon</code>, unless you have a specific reason not to.</p>
+<p>To build <code>pico-vm</code> without default features, simply set default-features = false in your Cargo.toml or run <code>cargo build -p pico-vm --no-default-features</code> for your local build environment, maybe adding <code>--example</code> if you want to build a specific example in addition to the Rust library.</p>
+<h2 id="single-threaded-profiling"><a class="header" href="#single-threaded-profiling">Single threaded profiling</a></h2>
+<p>As mentioned in the previous section, we support single threaded builds in order to generate neater flamegraphs for profiling purposes. For example, to build <code>test_riscv</code> for profiling, run</p>
+<pre><code>cargo build -p pico-vm --no-default-features --profile --profiling --example test_riscv
+</code></pre>
+<p>to build the binary and then run</p>
+<pre><code>sudo flamegraph -o flamegraph.svg -- ./target/profiling/examples/test_riscv
+</code></pre>
+<p>with <a href="https://github.com/flamegraph-rs/flamegraph"><code>cargo flamegraph</code></a> to produce a flamegraph that you can use to explore cost centers.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="advanced-1"><a href="#advanced-1" class="header">Advanced</a></h1>
+<hr>
+<h2 id="description-going-beyond-default-settings"><a class="header" href="#description-going-beyond-default-settings">description: Going Beyond Default Settings</a></h2>
+<h1 id="advanced"><a class="header" href="#advanced">Advanced</a></h1>
+<p>Pico offers several advanced components that let you go beyond its default configuration. In this section, you’ll explore:</p>
+<ul>
+<li><strong>VM Instances:</strong> The fundamental building blocks for creating custom virtual machines.</li>
+<li><strong>ProverChains:</strong> Tools that enable you to compose tailored proving workflows.</li>
+<li><strong>Proving Backends:</strong> A range of supported proving backends and insights on how switching between them can optimize performance.</li>
+</ul>
+<p>Together, these powerful features empower you to build a customized VM that perfectly fits your application’s unique requirements.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="instances-1"><a href="#instances-1" class="header">Instances</a></h1>
+<hr>
+<h2 id="description-customizable-zkvm-instantiations"><a class="header" href="#description-customizable-zkvm-instantiations">description: Customizable zkVM Instantiations</a></h2>
+<h1 id="instances"><a class="header" href="#instances">Instances</a></h1>
+<p>Pico is architected as a chain of modular components, each tailored to perform a specific role in the overall ZK proof generation process. These components—known as <strong>machine instances</strong>—are instantiations of a virtual machine and comprise several submodules, including chips, compilers, emulators, and proving backends. This modular design not only simplifies the internal workflow but also provides developers with the flexibility to customize and extend the system to meet diverse application needs.</p>
+<h2 id="built-in-machine-instances"><a class="header" href="#built-in-machine-instances">Built-in Machine Instances </a></h2>
+<p>The current release of Pico includes several built-in machine instances, each designed for a distinct phase of the proof generation pipeline:</p>
+<h3 id="riscv"><a class="header" href="#riscv"><code>RISCV</code> </a></h3>
+<p>The <code>RISCV</code>  instance is responsible for executing RISCV programs and generating the initial STARK proofs. It achieves this by:</p>
+<ul>
+<li>Execution &amp; Chunking: Running the program and dividing it into smaller, manageable chunks.</li>
+<li>Parallel Proof Generation: Proving these chunks concurrently to generate a series of proofs, with the total number of proofs equaling the number of chunks.</li>
+</ul>
+<h3 id="convert"><a class="header" href="#convert"><code>CONVERT</code> </a></h3>
+<p>Acting as the first step in the recursion process, the <code>CONVERT</code> instance transforms each STARK proof produced by the <code>RISCV</code> instance into a recursion-compatible STARK proof. This conversion is crucial for setting the stage for recursive proof composition.</p>
+<h3 id="combine"><a class="header" href="#combine"><code>COMBINE</code> </a></h3>
+<p>The <code>COMBINE</code> instance aggregates <code>m</code> of recursion proofs generated from the <strong>same</strong> machine instance into a single STARK proof. By default, <code>m</code> is set to 2 in Pico, though it can be configured to a larger value. This instance is applied recursively to collapse a large collection of proofs into one final proof, forming a recursion tree. For example, if you start with <code>n</code> proofs, the first layer uses <code>n/m</code> COMBINE calls to produce <code>n/m</code> proofs; these are then aggregated in subsequent layers (<code>n/m²</code>, <code>n/m³</code>, etc.) until only one proof remains. This consolidation streamlines subsequent processing and reduces overall complexity.</p>
+<h3 id="compress"><a class="header" href="#compress"><code>COMPRESS</code> </a></h3>
+<p>Aiming to optimize efficiency in later recursive stage, the <strong>COMPRESS</strong> instance compresses a recursion STARK proof into a smaller-sized proof.</p>
+<h3 id="embed"><a class="header" href="#embed"><code>EMBED</code> </a></h3>
+<p>As the final stage in generating a STARK proof, the <strong>EMBED</strong> instance embeds the STARK proof into the BN254 field. This prepares the proof for later conversion into an on-chain-verifiable SNARK.</p>
+<h2 id="modularity-and-internal-extensibility"><a class="header" href="#modularity-and-internal-extensibility">Modularity and Internal Extensibility</a></h2>
+<p>Pico’s machine instances are designed with a strong emphasis on modularity and internal extensibility:</p>
+<ul>
+<li><strong>Purpose-Driven Specialization:</strong> Each machine instance is engineered to execute a specific phase of the proof generation process. This targeted design enhances performance and simplifies debugging, as each instance handles a distinct, well-defined task.</li>
+<li><strong>Isolated Upgradability:</strong> The self-contained nature of each machine instance allows developers to update, optimize, or replace individual components independently. This isolation promotes rapid iteration and integration of cutting-edge cryptographic techniques without disrupting the overall system.</li>
+<li><strong>Flexible Submodule Architecture:</strong> Within each instance, core functionalities are implemented via interchangeable submodules (e.g., chips, compilers, emulators, proving backends). This design enables targeted enhancements, such as swapping out a proving backend to leverage a more efficient prime field, without modifying the instance’s primary function.</li>
+<li><strong>Seamless Future Integration:</strong> By compartmentalizing functionalities into discrete units, Pico is primed for the adoption of new technologies. As innovative proving systems and cryptographic primitives emerge, they can be integrated into the framework without a complete overhaul, ensuring the platform evolves alongside technological advancements.</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="proverchain-1"><a href="#proverchain-1" class="header">ProverChain</a></h1>
+<hr>
+<h2 id="description-composable-proving-workflows"><a class="header" href="#description-composable-proving-workflows">description: Composable proving workflows</a></h2>
+<h1 id="proverchain"><a class="header" href="#proverchain">ProverChain</a></h1>
+<p>Pico empowers developers with the <strong>ProverChain</strong>—a feature that enables you to seamlessly chain together machine instances to create a complete, end-to-end ZK proof generation workflow. Leveraging Pico’s modular architecture, ProverChain allows you to design workflows tailored precisely to the needs of your application.</p>
+<h2 id="proving-phases"><a class="header" href="#proving-phases">Proving Phases <a href="#provechain-proving-phase" id="provechain-proving-phase"></a></a></h2>
+<p>Pico’s proving process is structured into distinct phases:</p>
+<ul>
+<li><strong>RISCV-Phase:</strong> The <code>RISCV</code> instance executes a RISCV program, generating a series of initial proofs.</li>
+<li><strong>RECURSION-Phase:</strong> The <code>CONVERT</code>, <code>COMBINE</code>, <code>COMPRESS</code>, and <code>EMBED</code> instances work together recursively to consolidate these proofs into a single STARK proof.</li>
+<li><strong>EVM-Phase:</strong> This final STARK proof is then fed into a Gnark prover to generate a on-chain-verifiable SNARK that is ready for deployment on EVM-based blockchains.</li>
+</ul>
+<h2 id="default-proving-workflow"><a class="header" href="#default-proving-workflow">Default Proving Workflow</a></h2>
+<p>By default, Pico constructs a proving workflow by chaining the following machine instances:</p>
+<p><strong><code>RISCV → CONVERT → COMBINE → COMPRESS → EMBED → ONCHAIN (optional)</code></strong></p>
+<p>In this sequence:</p>
+<ul>
+<li><strong>RISCV-</strong> and the <strong>RECURSION-Phase</strong> handle the initial execution and recursive proof generation. It takes a RISCV program and input and generates an embedded STARK proof.</li>
+<li><strong>ONCHAIN</strong>—an optional instance—works at <strong>EVM-Phase</strong> and converts the embedded STARK proof into an EVM-verifiable SNARK.</li>
+</ul>
+<h2 id="customizing-your-workflow"><a class="header" href="#customizing-your-workflow">Customizing Your Workflow</a></h2>
+<p>While the default workflow is designed for uniform efficiency, ProverChain offers exceptional flexibility, enabling developers to tailor the proving process to their specific requirements:</p>
+<ul>
+<li><strong>Chain Modification:</strong> Easily add, adjust, or remove machine instances. For example, if on-chain verification is not required, you can simply omit the ONCHAIN step.</li>
+<li><strong>Performance Optimization:</strong> Experiment with different configurations to achieve the optimal balance between proof size and proving efficiency. In some scenarios, accepting a slightly larger proof can lead to faster overall performance.</li>
+<li><strong>Intermediate Access:</strong> The ProverChain module exposes the intermediate steps—formatted as a sequence (e.g., <code>stdin -&gt; proof -&gt; proof -&gt; ... -&gt; final proof</code>)—allowing you to fine-tune internal parameters at each stage of the workflow.</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="proving-backends-1"><a href="#proving-backends-1" class="header">Proving Backends</a></h1>
+<hr>
+<h2 id="description-switching-to-the-best-proving-backends-seamlessly"><a class="header" href="#description-switching-to-the-best-proving-backends-seamlessly">description: Switching to the best proving backends seamlessly</a></h2>
+<h1 id="proving-backends"><a class="header" href="#proving-backends">Proving Backends</a></h1>
+<p>One of Pico’s most innovative feature is its ability to seamlessly switch between multiple proving backends. This functionality enables you to select the optimal backend for your specific application requirements, resulting in significant efficiency gains without altering your existing proving logic.</p>
+<h2 id="why-multiple-proving-backends-matter"><a class="header" href="#why-multiple-proving-backends-matter">Why Multiple Proving Backends Matter</a></h2>
+<p>Specialized circuits for different application features often demand advanced proving systems optimized for specific prime fields. Consider, for example, the recursive proving of a hash function like <strong>Poseidon2</strong>—a critical component in Pico’s recursive proving strategy. Although the same STARK proving system is used, working on the <strong>KoalaBear</strong> field can be much more efficient than on the <strong>BabyBear</strong> field due to the inherent properties of these fields. As a result, when a program requires extensive Poseidon2 proving, simply switching to KoalaBear can yield considerable performance improvements.</p>
+<h2 id="supported-proving-backends"><a class="header" href="#supported-proving-backends">Supported Proving Backends</a></h2>
+<p>Currently, Pico supports generating proofs in all phases—RISCV, RECURSION, and EVM—with both STARK on KoalaBear and STARK on BabyBear. For CircleSTARK on Mersenne31, Pico currently supports the RISCV-Phase, with RECURSION and EVM phases coming soon.</p>
+<ul>
+<li>STARK on KoalaBear (prime field $$p=2^{31}-2^{24}+1$$): Supports generating proofs for
+<ul>
+<li><input disabled="" type="checkbox" checked="">  RISCV-Phase</li>
+<li><input disabled="" type="checkbox" checked="">  RECURSION-Phase</li>
+<li><input disabled="" type="checkbox" checked="">  EVM-Phase</li>
+</ul>
+</li>
+<li>STARK on BabyBear (prime field $$p=2^{31}-2^{27}+1$$): Supports generating proofs for
+<ul>
+<li><input disabled="" type="checkbox" checked="">  RISCV-Phase</li>
+<li><input disabled="" type="checkbox" checked="">  RECURSION-Phase</li>
+<li><input disabled="" type="checkbox" checked="">  EVM-Phase</li>
+</ul>
+</li>
+<li>CircleSTARK on Mersenne31 where $$p=2^{31}−1$$). Supports generating proofs for
+<ul>
+<li><input disabled="" type="checkbox" checked="">  RISCV-Phase</li>
+<li><input disabled="" type="checkbox">  RECURSION-Phase</li>
+<li><input disabled="" type="checkbox">  EVM-Phase</li>
+</ul>
+</li>
+</ul>
+<h2 id="seamless-backend-switching"><a class="header" href="#seamless-backend-switching">Seamless Backend Switching</a></h2>
+<p>Switching between proving backends in Pico is designed to be straightforward. The underlying proving logic is abstracted away, allowing you to change the backend configuration through a simple parameter update—without needing to rewrite any part of your application.</p>
+<p>The Pico SDK provides a suite of <code>ProverClient</code> implementations, each corresponding to a different proving backend:</p>
+<ul>
+<li><strong>KoalaBearProverClient:</strong> Uses STARK on KoalaBear for fast proving without VK (verification key) verification.</li>
+<li><strong>KoalaBearProverVKClient:</strong> Uses STARK on KoalaBear for full proving with VK verification.</li>
+<li><strong>BabyBearProverClient:</strong> Similar to KoalaBearProverClient, but for STARK on BabyBear.</li>
+<li><strong>BabyBearProverVKClient:</strong> Similar to KoalaBearProverVKClient, but for STARK on BabyBear.</li>
+<li><strong>M31RiscvProverClient:</strong> Performs RISCV proving using CircleSTARK on Mersenne31.</li>
+</ul>
+<p>We could initialize the <code>ProverClient</code> for different backend configurations:</p>
+<pre class="playground"><code class="language-rust">// An example for initializing the different prover clients
+fn main() {
+    // Initialize logger.
+    init_logger();
+
+    // Load the ELF file.
+    let elf = load_elf("./elf/riscv32im-pico-zkvm-elf");
+
+    // Initialize a client for fast proving (without VK verification) 
+    // using STARK on KoalaBear.
+    let client = KoalaBearProverClient::new(elf);
+
+    // Initialize a client for full proving with VK verification 
+    // using STARK on KoalaBear.
+    let client = KoalaBearProverVKClient::new(elf);
+
+    // Initialize a client for fast proving (without VK verification) 
+    // using STARK on BabyBear.
+    let client = BabyBearProverClient::new(elf);
+
+    // Initialize a client for full proving with VK verification 
+    // using STARK on BabyBear.
+    let client = BabyBearProverVKClient::new(elf);
+
+    // Initialize a client for RISCV proving using CircleSTARK on Mersenne31.
+    let client = M31RiscvProverClient::new(elf);
+}</code></pre>
+<h2 id="benefits-of-switchable-proving-backends"><a class="header" href="#benefits-of-switchable-proving-backends">Benefits of Switchable Proving Backends</a></h2>
+<ul>
+<li><strong>Performance Gains:</strong> Optimize your proof generation by selecting the backend that best suits the computational demands of your workload.</li>
+<li><strong>Flexibility:</strong> Experiment with different backends and configurations to achieve the ideal balance between proof size, proving efficiency, and on-chain compatibility.</li>
+<li><strong>Seamless Upgrades:</strong> As new prime fields and proving systems are integrated into Pico, you can upgrade your proving backend with minimal disruption.</li>
+<li><strong>Future-Proofing:</strong> Stay at the forefront of zero-knowledge technology advancements by taking advantage of the latest proving systems as they become available.</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="function-level-1"><a href="#function-level-1" class="header">Function-level</a></h1>
+<hr>
+<h2 id="description-integrating-specialized-circuits-within-pico"><a class="header" href="#description-integrating-specialized-circuits-within-pico">description: Integrating specialized circuits within Pico</a></h2>
+<h1 id="function-level"><a class="header" href="#function-level">Function-level</a></h1>
+<p>Function-level coprocessors—commonly known as precompiles—are specialized circuits within Pico designed to optimize and streamline specific cryptographic operations and computational tasks. These precompiles handle operations such as elliptic curve arithmetic, hash functions, and signature verifications. In a general-purpose environment, these operations can be resource-intensive, but by offloading them to dedicated circuits, Pico significantly reduces computational costs, improves performance, and enhances scalability during proof generation and verification. Packaging these core operations into efficient, well-tested modules not only accelerates development cycles but also establishes a secure foundation for a wide range of zk-applications, including privacy-preserving transactions, rollups, and layer-2 scaling solutions.</p>
+<h2 id="work-flow"><a class="header" href="#work-flow">Work Flow</a></h2>
+<p>Below is an example workflow of Keccak256 hash permutation precompile in Pico.</p>
+<img src=".gitbook/assets/file.excalidraw.svg" alt="" class="gitbook-drawing">
+<p>The Pico precompiles workflow involves several steps to efficiently execute and verify cryptographic operations. To illstrate how it works, we use Keccak-256 precompile as an example:</p>
+<ol>
+<li><strong>Developer Preparation</strong>: Developers begin by writing and preparing the necessary code, including the <a href="https://github.com/brevis-network/tiny-keccak/tree/patch-v1.0.0">tiny-keccak patch</a> for cryptographic hashing functions. This library provides the core primitives needed for SHA2, SHA3, and Keccak-based operations.</li>
+<li><strong>Tiny-Keccak Patch</strong>: Pico uses a forked and zero-knowledge-compatible version of tiny-keccak (sourced from the public <a href="https://github.com/debris/tiny-keccak">debris repository</a>). This patch optimizes hashing operations—particularly Keccak-256—to run efficiently within Pico.</li>
+<li><strong>Keccak256 Precompile</strong>: When a Keccak-256 hashing function is invoked, Pico’s Keccak256 precompile is triggered to handle the specific permutation operations. This specialized circuit, known internally as the <code>keccak256_permute_syscall</code>, is optimized for performance, minimizing overhead and improving provability.</li>
+<li><strong>Rust Toolchain &amp; ELF Generation</strong>: The Rust toolchain compiles your code, including the tiny-keccak patch, into an Executable and Linkable Format (ELF) file, which is the RISC0’s support for zkVM executables.</li>
+</ol>
+<p>By following this workflow, developers can perform cryptographic operations more efficiently and securely, taking full advantage of Pico’s precompile features to reduce proof overhead and streamline the development of ZK apps.</p>
+<h2 id="list-of-syscalls"><a class="header" href="#list-of-syscalls">List of Syscalls</a></h2>
+<p>Pico is currently supporting <a href="https://github.com/brevis-network/pico/blob/main/sdk/patch-libs/src/lib.rs">these syscalls</a>.</p>
+<h2 id="list-of-patches"><a class="header" href="#list-of-patches">List of patches</a></h2>
+<p>Pico is currently supporting the following patches:</p>
+<table data-full-width="true">
+<thead>
+<tr><th width="208">Patch Name</th><th width="400">Github link</th><th>branch</th></tr>
+</thead>
+<tbody>
+<tr><td>tiny-keccak</td><td>https://github.com/brevis-network/tiny-keccak</td><td><a href="https://github.com/brevis-network/tiny-keccak/releases/tag/pico-patch-v1.0.0-keccak-v2.0.2">pico-patch-v1.0.0-keccak-v2.0.2</a></td></tr>
+<tr><td>sha2</td><td>https://github.com/brevis-network/hashes</td><td><a href="https://github.com/brevis-network/hashes/releases/tag/pico-patch-v1.0.1-sha2-v0.10.8">pico-patch-v1.0.1-sha2-v0.10.8</a></td></tr>
+<tr><td>sha3</td><td>https://github.com/brevis-network/hashes</td><td><a href="https://github.com/brevis-network/hashes/releases/tag/pico-patch-v1.0.1-sha3-v0.10.8">pico-patch-v1.0.1-sha3-v0.10.8</a></td></tr>
+<tr><td>curve25519-dalek</td><td>https://github.com/brevis-network/curve25519-dalek</td><td><a href="https://github.com/brevis-network/curve25519-dalek/releases/tag/pico-patch-v1.0.1-curve25519-dalek-v4.1.3">pico-patch-v1.0.1-curve25519-dalek-v4.1.3</a></td></tr>
+<tr><td>bls12381</td><td>https://github.com/brevis-network/bls12_381</td><td><a href="https://github.com/brevis-network/bls12_381/releases/tag/pico-patch-v1.0.1-bls12_381-v0.8.0">pico-patch-v1.0.1-bls12_381-v0.8.0</a></td></tr>
+<tr><td>curve25519-dalek-ng</td><td>https://github.com/brevis-network/curve25519-dalek-ng</td><td><a href="https://github.com/brevis-network/curve25519-dalek-ng/releases/tag/pico-patch-v1.0.1-curve25519-dalek-ng-v4.1.1">pico-patch-v1.0.1-curve25519-dalek-ng-v4.1.1</a></td></tr>
+<tr><td>ed25519-consensus</td><td>https://github.com/brevis-network/ed25519-consensus</td><td><a href="https://github.com/brevis-network/ed25519-consensus/releases/tag/pico-patch-v1.0.1-ed25519-consensus-v2.1.0">pico-patch-v1.0.1-ed25519-consensus-v2.1.0</a></td></tr>
+<tr><td>ecdsa-core</td><td>https://github.com/brevis-network/signatures</td><td><a href="https://github.com/brevis-network/signatures/releases/tag/pico-patch-v1.0.1-ecdsa-0.16.9">pico-patch-v1.0.1-ecdsa-0.16.9</a></td></tr>
+<tr><td>secp256k1</td><td>https://github.com/brevis-network/rust-secp256k1</td><td><a href="https://github.com/brevis-network/rust-secp256k1/releases/tag/pico-patch-v1.0.1-secp256k1-v0.29.1">pico-patch-v1.0.1-secp256k1-v0.29.1</a></td></tr>
+<tr><td>substate-bn</td><td>https://github.com/brevis-network/bn</td><td><a href="https://github.com/brevis-network/bn/releases/tag/pico-patch-v1.0.1-bn-v0.6.0">pico-patch-v1.0.1-bn-v0.6.0</a></td></tr>
+<tr><td>bigint</td><td>https://github.com/brevis-network/crypto-bigint</td><td><a href="https://github.com/brevis-network/crypto-bigint/releases/tag/pico-patch-v1.0.0-bigint-v0.6.0">pico-patch-v1.0.0-bigint-v0.6.0</a></td></tr>
+</tbody>
+</table>
+
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="application-level-1"><a href="#application-level-1" class="header">Application-level</a></h1>
+<hr>
+<h2 id="description-integrating-beyond-function-level-precompiles"><a class="header" href="#description-integrating-beyond-function-level-precompiles">description: Integrating Beyond Function-Level Precompiles</a></h2>
+<h1 id="application-level"><a class="header" href="#application-level">Application-level</a></h1>
+<p>Application-level coprocessors extend far beyond individual function-level precompiles. Instead of optimizing a single cryptographic operation, these coprocessors integrate an array of specialized circuits that work together to tackle broader, domain-specific computational challenges. By incorporating application-level coprocessors, Pico not only enhances its performance but also serves as a versatile “glue” that seamlessly routes data between high-efficiency modules. This design enables Pico to be finely tuned for specific applications without sacrificing its overall flexibility and general-purpose utility—resulting in enhanced performance, improved scalability, and accelerated development cycles.</p>
+<p>Pico can integrate a variety of exceptional coprocessors across different domains. For example:</p>
+<ul>
+<li><strong>On-Chain Data zkCoprocessors</strong>: Engineered to provide efficient and secure access to historical blockchain data, these coprocessors enables developers to retrieve and analyze past transaction records, state data, and other on-chain information with confidence. Brevis Coprocessor has already been successfully integrated into Pico. This solution will offer a comprehensive framework for building applications that depend on verifiable, reliable on-chain data processing. <em>Detailed integration guidelines will be available soon.</em></li>
+<li><strong>zkML (Zero-Knowledge Machine Learning) Coprocessors</strong> : These coprocessors leverages ZK proofs to enable secure, privacy-preserving training and inference for machine learning models. It ensures that sensitive data and/or proprietary model information remain confidential throughout the process, opening the door to advanced, secure ML applications.</li>
+</ul>
+<p>These application-level coprocessors empower Pico to support highly specialized, domain-specific tasks while preserving the generality and flexibility that make it a robust platform for a wide range of zero-knowledge applications.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr-ef4e11c1.min.js"></script>
+        <script src="mark-09e88c2c.min.js"></script>
+        <script src="searcher-c2a407aa.js"></script>
+
+        <script src="clipboard-1626706a.min.js"></script>
+        <script src="highlight-abc7f01d.js"></script>
+        <script src="book-a0b12cfe.js"></script>
+
+        <!-- Custom JS scripts -->
+
+        <script>
+        window.addEventListener('load', function() {
+            window.setTimeout(window.print, 100);
+        });
+        </script>
+
+
+    </div>
+    </body>
+</html>
