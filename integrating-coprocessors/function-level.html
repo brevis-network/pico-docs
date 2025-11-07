@@ -36,10 +36,10 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-6233c3f0.js";
+            window.path_to_searchindex_js = "../searchindex-fc3941f9.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../toc-d8b0f95b.js"></script>
+        <script src="../toc-2ac93ff0.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -175,9 +175,7 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <hr>
-<h2 id="description-integrating-specialized-circuits-within-pico"><a class="header" href="#description-integrating-specialized-circuits-within-pico">description: Integrating specialized circuits within Pico</a></h2>
-<h1 id="function-level"><a class="header" href="#function-level">Function-level</a></h1>
+                        <h1 id="function-level"><a class="header" href="#function-level">Function-level</a></h1>
 <p>Function-level coprocessors—commonly known as precompiles—are specialized circuits within Pico designed to optimize and streamline specific cryptographic operations and computational tasks. These precompiles handle operations such as elliptic curve arithmetic, hash functions, and signature verifications. In a general-purpose environment, these operations can be resource-intensive, but by offloading them to dedicated circuits, Pico significantly reduces computational costs, improves performance, and enhances scalability during proof generation and verification. Packaging these core operations into efficient, well-tested modules not only accelerates development cycles but also establishes a secure foundation for a wide range of zk-applications, including privacy-preserving transactions, rollups, and layer-2 scaling solutions.</p>
 <h2 id="work-flow"><a class="header" href="#work-flow">Work Flow</a></h2>
 <p>Below is an example workflow of Keccak256 hash permutation precompile in Pico.</p>

@@ -36,10 +36,10 @@
             const path_to_root = "../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../searchindex-6233c3f0.js";
+            window.path_to_searchindex_js = "../../searchindex-fc3941f9.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../../toc-d8b0f95b.js"></script>
+        <script src="../../toc-2ac93ff0.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -175,9 +175,7 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <hr>
-<h2 id="description-switching-to-the-best-proving-backends-seamlessly"><a class="header" href="#description-switching-to-the-best-proving-backends-seamlessly">description: Switching to the best proving backends seamlessly</a></h2>
-<h1 id="proving-backends"><a class="header" href="#proving-backends">Proving Backends</a></h1>
+                        <h1 id="proving-backends"><a class="header" href="#proving-backends">Proving Backends</a></h1>
 <p>One of Pico’s most innovative feature is its ability to seamlessly switch between multiple proving backends. This functionality enables you to select the optimal backend for your specific application requirements, resulting in significant efficiency gains without altering your existing proving logic.</p>
 <h2 id="why-multiple-proving-backends-matter"><a class="header" href="#why-multiple-proving-backends-matter">Why Multiple Proving Backends Matter</a></h2>
 <p>Specialized circuits for different application features often demand advanced proving systems optimized for specific prime fields. Consider, for example, the recursive proving of a hash function like <strong>Poseidon2</strong>—a critical component in Pico’s recursive proving strategy. Although the same STARK proving system is used, working on the <strong>KoalaBear</strong> field can be much more efficient than on the <strong>BabyBear</strong> field due to the inherent properties of these fields. As a result, when a program requires extensive Poseidon2 proving, simply switching to KoalaBear can yield considerable performance improvements.</p>

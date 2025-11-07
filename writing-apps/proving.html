@@ -36,10 +36,10 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-6233c3f0.js";
+            window.path_to_searchindex_js = "../searchindex-fc3941f9.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../toc-d8b0f95b.js"></script>
+        <script src="../toc-2ac93ff0.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -175,9 +175,7 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <hr>
-<h2 id="description-proving-with-pico-cli-and-sdk-apis"><a class="header" href="#description-proving-with-pico-cli-and-sdk-apis">description: Proving with Pico CLI and SDK APIs</a></h2>
-<h1 id="proving"><a class="header" href="#proving">Proving</a></h1>
+                        <h1 id="proving"><a class="header" href="#proving">Proving</a></h1>
 <h2 id="overview"><a class="header" href="#overview">Overview </a></h2>
 <p>Pico provides CLI and SDK tools to recursively prove the program to the developers.  </p>
 <p>Pico CLI provides a complete toolchain for compiling the RISC-V program and using Pico to complete end-to-end proof. Refer to the <a href="../getting-started/installation.html">installation page</a> to install the CLI toolchain. CLI default use the KoalaBear field for the backend proving, if you want to switch to other fields, read more details in <a href="advanced/proving-backends.html">Proving Backends Page</a>. </p>
@@ -192,7 +190,6 @@ pico-sdk = { git = "https://github.com/brevis-network/pico" }
 <ol start="2">
 <li>Execute the proving process and generate RISC-V proof.</li>
 </ol>
-<p>{% code lineNumbers=“true” %}</p>
 <pre class="playground"><code class="language-rust">// prover/src/main.rs
 fn main() {
     // Initialize logger
@@ -235,7 +232,6 @@ fn verify_public_values(n: u32, public_values: &amp;PublicValuesStruct) {
     assert_eq!(result_a, public_values.a, "Mismatch in value 'a'");
     assert_eq!(result_b, public_values.b, "Mismatch in value 'b'");
 }</code></pre>
-<p>{% endcode %}</p>
 <h2 id="pico-emulatorstdin"><a class="header" href="#pico-emulatorstdin">Pico EmulatorStdin</a></h2>
 <h3 id="stdin-writer"><a class="header" href="#stdin-writer">Stdin Writer</a></h3>
 <ol>

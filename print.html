@@ -37,10 +37,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-6233c3f0.js";
+            window.path_to_searchindex_js = "searchindex-fc3941f9.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-d8b0f95b.js"></script>
+        <script src="toc-2ac93ff0.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -176,11 +176,8 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <h1 id="introducing-pico-1"><a href="#introducing-pico-1" class="header">Introducing Pico</a></h1>
-<hr>
-<h2 id="description-a-modular-performant-zkvm"><a class="header" href="#description-a-modular-performant-zkvm">description: A modular, performant zkVM</a></h2>
-<h1 id="introducing-pico"><a class="header" href="#introducing-pico">Introducing Pico</a></h1>
-<figure><img src=".gitbook/assets/Frame - 1.png" alt=""><figcaption></figcaption></figure>
+                        <h1 id="introducing-pico"><a class="header" href="#introducing-pico">Introducing Pico</a></h1>
+<p><img src=".gitbook/assets/Frame - 1.png" alt=""><figcaption></figcaption></p>
 <p>Welcome to Pico—the open-source zero-knowledge virtual machine (zkVM) that transforms how developers build secure, scalable, and high-performance decentralized applications. Drawing on the innovative <a href="https://vitalik.eth.limo/general/2024/09/02/gluecp.html">“glue-and-coprocessor”</a> architecture, Pico fuses the efficiency of specialized circuits with the adaptability of a general-purpose zkVM. This unique design empowers you to craft tailored proof systems that meet the diverse needs of modern cryptographic applications.</p>
 <p>Pico’s design is rooted in the need for adaptable, high-performance ZK systems that can keep pace with the rapidly evolving landscape of cryptographic research. Rather than relying on a one-size-fits-all solution, Pico’s modular architecture lets you:</p>
 <ul>
@@ -198,9 +195,6 @@
 </ul>
 <p>Pico provides a robust, future-ready foundation that meets today’s challenges and evolves with the advancing field of zero-knowledge technology. Whether you’re a developer eager to explore the potential of ZK proofs or a researcher pushing the boundaries of cryptographic innovation, Pico is the ideal platform to build upon.</p>
 <div style="break-before: page; page-break-before: always;"></div>
-<h1 id="installation-1"><a href="#installation-1" class="header">Installation</a></h1>
-<hr>
-<h2 id="description-install-pico-toolchains"><a class="header" href="#description-install-pico-toolchains">description: Install Pico toolchains</a></h2>
 <h1 id="installation"><a class="header" href="#installation">Installation</a></h1>
 <h2 id="requirements"><a class="header" href="#requirements">Requirements:</a></h2>
 <ul>
@@ -240,9 +234,6 @@ cargo install --locked --force --path .
 </code></pre>
 <p><a href="https://book.openvm.dev/introduction.html"><br></a></p>
 <div style="break-before: page; page-break-before: always;"></div>
-<h1 id="quick-start-1"><a href="#quick-start-1" class="header">Quick start</a></h1>
-<hr>
-<h2 id="description-one-minute-quick-start-of-writing-a-pico-program"><a class="header" href="#description-one-minute-quick-start-of-writing-a-pico-program">description: One minute quick start of writing a Pico program</a></h2>
 <h1 id="quick-start"><a class="header" href="#quick-start">Quick start</a></h1>
 <p>This page shows you how to create and prove a Fibonacci program.</p>
 <h2 id="start-with-the-fibonacci-template"><a class="header" href="#start-with-the-fibonacci-template">Start with the Fibonacci template </a></h2>
@@ -325,9 +316,6 @@ forge test
 </li>
 </ol>
 <div style="break-before: page; page-break-before: always;"></div>
-<h1 id="programs-1"><a href="#programs-1" class="header">Programs</a></h1>
-<hr>
-<h2 id="description-writing-app-programs-with-pico"><a class="header" href="#description-writing-app-programs-with-pico">description: Writing app programs with Pico</a></h2>
 <h1 id="programs"><a class="header" href="#programs">Programs</a></h1>
 <h2 id="pico-entrypoint"><a class="header" href="#pico-entrypoint">Pico entrypoint</a></h2>
 <p>The program is executed and proved with the zkVM platform. Pico links the programs by the main function annotated with the <code>entrypoint</code> macro_rules. The program needs to be declared with <code>no_main</code>. </p>
@@ -363,7 +351,7 @@ pub fn main() {
 </code></pre>
 <p>The created project with the evm template will contain an extra <code>Contracts</code> folder for app and verification contracts .</p>
 <ul>
-<li>Proving with the evm option referring to <a href="#proving-1">this page</a> can generate the proof for on-chain EVM.</li>
+<li>Proving with the evm option referring to <a href="#proving">this page</a> can generate the proof for on-chain EVM.</li>
 <li>Verification test requires to the install <a href="https://book.getfoundry.sh/getting-started/installation">foundryup and forge test</a>. </li>
 </ul>
 <p>Use the pre-prepared pico EVM proof and Groth16 verifier in the repo to run contract tests.</p>
@@ -371,13 +359,10 @@ pub fn main() {
 forge test
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
-<h1 id="proving-1"><a href="#proving-1" class="header">Proving</a></h1>
-<hr>
-<h2 id="description-proving-with-pico-cli-and-sdk-apis"><a class="header" href="#description-proving-with-pico-cli-and-sdk-apis">description: Proving with Pico CLI and SDK APIs</a></h2>
 <h1 id="proving"><a class="header" href="#proving">Proving</a></h1>
 <h2 id="overview"><a class="header" href="#overview">Overview </a></h2>
 <p>Pico provides CLI and SDK tools to recursively prove the program to the developers.  </p>
-<p>Pico CLI provides a complete toolchain for compiling the RISC-V program and using Pico to complete end-to-end proof. Refer to the <a href="#installation-1">installation page</a> to install the CLI toolchain. CLI default use the KoalaBear field for the backend proving, if you want to switch to other fields, read more details in <a href="#proving-backends-1">Proving Backends Page</a>. </p>
+<p>Pico CLI provides a complete toolchain for compiling the RISC-V program and using Pico to complete end-to-end proof. Refer to the <a href="#installation">installation page</a> to install the CLI toolchain. CLI default use the KoalaBear field for the backend proving, if you want to switch to other fields, read more details in <a href="#proving-backends">Proving Backends Page</a>. </p>
 <p>Like the CLI, the Pico-SDK includes lower-level APIs that can prove the program directly. The <a href="https://github.com/brevis-network/pico-zkapp-template/tree/main/prover">prover package</a> of the template project repository provides an example of how to import and initialize the SDK and quickly generate a RISC-V proof using the Pico SDK. In the <a href="#proving-steps">Proving Steps Section</a>, you can read more about VM e2e proving and the Gnark EVM proof generation for On-chain verification </p>
 <p>Let’s quickly go through the Pico SDK usage and generate a Fibonacci RISC-V proof.</p>
 <ol>
@@ -389,7 +374,6 @@ pico-sdk = { git = "https://github.com/brevis-network/pico" }
 <ol start="2">
 <li>Execute the proving process and generate RISC-V proof.</li>
 </ol>
-<p>{% code lineNumbers=“true” %}</p>
 <pre class="playground"><code class="language-rust">// prover/src/main.rs
 fn main() {
     // Initialize logger
@@ -432,7 +416,6 @@ fn verify_public_values(n: u32, public_values: &amp;PublicValuesStruct) {
     assert_eq!(result_a, public_values.a, "Mismatch in value 'a'");
     assert_eq!(result_b, public_values.b, "Mismatch in value 'b'");
 }</code></pre>
-<p>{% endcode %}</p>
 <h2 id="pico-emulatorstdin"><a class="header" href="#pico-emulatorstdin">Pico EmulatorStdin</a></h2>
 <h3 id="stdin-writer"><a class="header" href="#stdin-writer">Stdin Writer</a></h3>
 <ol>
@@ -617,9 +600,6 @@ interface IPicoVerifier {
 <p>The <code>verifyPicoProof</code> function in <code>PicoVerifier.sol</code> takes a RISC-V verification key, public values, and a Pico proof, using the Groth16 verifier to validate the proof and public inputs via the pairing algorithm. For the full implementation of the PicoVerifier, please refer to the repository <a href="https://github.com/brevis-network/pico-zkapp-template/blob/evm/contracts/src/PicoVerifier.sol">here</a>.</p>
 <p>In production, you need to verify riscvVKey and parse the public values verified by PicoVerifier. You can refer to the Fibonacci.sol example in the repository <a href="https://github.com/brevis-network/pico-zkapp-template/blob/evm/contracts/src/Fibonacci.sol">here</a>.</p>
 <div style="break-before: page; page-break-before: always;"></div>
-<h1 id="features-2"><a href="#features-2" class="header">Features</a></h1>
-<hr>
-<h2 id="description-logging-debugging-and-proving-options"><a class="header" href="#description-logging-debugging-and-proving-options">description: Logging, debugging and proving options</a></h2>
 <h1 id="features"><a class="header" href="#features">Features</a></h1>
 <h2 id="logging"><a class="header" href="#logging">Logging </a></h2>
 <p>Pico leverages Rust’s standard logging utilities to provide detailed runtime information, particularly about performance and program statistics. You can control the verbosity of the logs via the <code>RUST_LOG</code> environment variable:</p>
@@ -659,9 +639,6 @@ interface IPicoVerifier {
 </code></pre>
 <p>with <a href="https://github.com/flamegraph-rs/flamegraph"><code>cargo flamegraph</code></a> to produce a flamegraph that you can use to explore cost centers.</p>
 <div style="break-before: page; page-break-before: always;"></div>
-<h1 id="advanced-1"><a href="#advanced-1" class="header">Advanced</a></h1>
-<hr>
-<h2 id="description-going-beyond-default-settings"><a class="header" href="#description-going-beyond-default-settings">description: Going Beyond Default Settings</a></h2>
 <h1 id="advanced"><a class="header" href="#advanced">Advanced</a></h1>
 <p>Pico offers several advanced components that let you go beyond its default configuration. In this section, you’ll explore:</p>
 <ul>
@@ -671,9 +648,6 @@ interface IPicoVerifier {
 </ul>
 <p>Together, these powerful features empower you to build a customized VM that perfectly fits your application’s unique requirements.</p>
 <div style="break-before: page; page-break-before: always;"></div>
-<h1 id="instances-1"><a href="#instances-1" class="header">Instances</a></h1>
-<hr>
-<h2 id="description-customizable-zkvm-instantiations"><a class="header" href="#description-customizable-zkvm-instantiations">description: Customizable zkVM Instantiations</a></h2>
 <h1 id="instances"><a class="header" href="#instances">Instances</a></h1>
 <p>Pico is architected as a chain of modular components, each tailored to perform a specific role in the overall ZK proof generation process. These components—known as <strong>machine instances</strong>—are instantiations of a virtual machine and comprise several submodules, including chips, compilers, emulators, and proving backends. This modular design not only simplifies the internal workflow but also provides developers with the flexibility to customize and extend the system to meet diverse application needs.</p>
 <h2 id="built-in-machine-instances"><a class="header" href="#built-in-machine-instances">Built-in Machine Instances </a></h2>
@@ -701,9 +675,6 @@ interface IPicoVerifier {
 <li><strong>Seamless Future Integration:</strong> By compartmentalizing functionalities into discrete units, Pico is primed for the adoption of new technologies. As innovative proving systems and cryptographic primitives emerge, they can be integrated into the framework without a complete overhaul, ensuring the platform evolves alongside technological advancements.</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
-<h1 id="proverchain-1"><a href="#proverchain-1" class="header">ProverChain</a></h1>
-<hr>
-<h2 id="description-composable-proving-workflows"><a class="header" href="#description-composable-proving-workflows">description: Composable proving workflows</a></h2>
 <h1 id="proverchain"><a class="header" href="#proverchain">ProverChain</a></h1>
 <p>Pico empowers developers with the <strong>ProverChain</strong>—a feature that enables you to seamlessly chain together machine instances to create a complete, end-to-end ZK proof generation workflow. Leveraging Pico’s modular architecture, ProverChain allows you to design workflows tailored precisely to the needs of your application.</p>
 <h2 id="proving-phases"><a class="header" href="#proving-phases">Proving Phases <a href="#provechain-proving-phase" id="provechain-proving-phase"></a></a></h2>
@@ -729,9 +700,6 @@ interface IPicoVerifier {
 <li><strong>Intermediate Access:</strong> The ProverChain module exposes the intermediate steps—formatted as a sequence (e.g., <code>stdin -&gt; proof -&gt; proof -&gt; ... -&gt; final proof</code>)—allowing you to fine-tune internal parameters at each stage of the workflow.</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
-<h1 id="proving-backends-1"><a href="#proving-backends-1" class="header">Proving Backends</a></h1>
-<hr>
-<h2 id="description-switching-to-the-best-proving-backends-seamlessly"><a class="header" href="#description-switching-to-the-best-proving-backends-seamlessly">description: Switching to the best proving backends seamlessly</a></h2>
 <h1 id="proving-backends"><a class="header" href="#proving-backends">Proving Backends</a></h1>
 <p>One of Pico’s most innovative feature is its ability to seamlessly switch between multiple proving backends. This functionality enables you to select the optimal backend for your specific application requirements, resulting in significant efficiency gains without altering your existing proving logic.</p>
 <h2 id="why-multiple-proving-backends-matter"><a class="header" href="#why-multiple-proving-backends-matter">Why Multiple Proving Backends Matter</a></h2>
@@ -807,9 +775,6 @@ fn main() {
 <li><strong>Future-Proofing:</strong> Stay at the forefront of zero-knowledge technology advancements by taking advantage of the latest proving systems as they become available.</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
-<h1 id="function-level-1"><a href="#function-level-1" class="header">Function-level</a></h1>
-<hr>
-<h2 id="description-integrating-specialized-circuits-within-pico"><a class="header" href="#description-integrating-specialized-circuits-within-pico">description: Integrating specialized circuits within Pico</a></h2>
 <h1 id="function-level"><a class="header" href="#function-level">Function-level</a></h1>
 <p>Function-level coprocessors—commonly known as precompiles—are specialized circuits within Pico designed to optimize and streamline specific cryptographic operations and computational tasks. These precompiles handle operations such as elliptic curve arithmetic, hash functions, and signature verifications. In a general-purpose environment, these operations can be resource-intensive, but by offloading them to dedicated circuits, Pico significantly reduces computational costs, improves performance, and enhances scalability during proof generation and verification. Packaging these core operations into efficient, well-tested modules not only accelerates development cycles but also establishes a secure foundation for a wide range of zk-applications, including privacy-preserving transactions, rollups, and layer-2 scaling solutions.</p>
 <h2 id="work-flow"><a class="header" href="#work-flow">Work Flow</a></h2>
@@ -847,9 +812,6 @@ fn main() {
 </table>
 
 <div style="break-before: page; page-break-before: always;"></div>
-<h1 id="application-level-1"><a href="#application-level-1" class="header">Application-level</a></h1>
-<hr>
-<h2 id="description-integrating-beyond-function-level-precompiles"><a class="header" href="#description-integrating-beyond-function-level-precompiles">description: Integrating Beyond Function-Level Precompiles</a></h2>
 <h1 id="application-level"><a class="header" href="#application-level">Application-level</a></h1>
 <p>Application-level coprocessors extend far beyond individual function-level precompiles. Instead of optimizing a single cryptographic operation, these coprocessors integrate an array of specialized circuits that work together to tackle broader, domain-specific computational challenges. By incorporating application-level coprocessors, Pico not only enhances its performance but also serves as a versatile “glue” that seamlessly routes data between high-efficiency modules. This design enables Pico to be finely tuned for specific applications without sacrificing its overall flexibility and general-purpose utility—resulting in enhanced performance, improved scalability, and accelerated development cycles.</p>
 <p>Pico can integrate a variety of exceptional coprocessors across different domains. For example:</p>
