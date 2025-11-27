@@ -1,0 +1,11 @@
+# VM Cycle Tracking
+
+The Pico emulator supports the standard VM cycle tracking protocol, but we explicitly state its operation here.
+
+To request the VM to track cycles for you, the emulator must be started with the appropriate option set to true. You can use `EmulatorOpts::with_cycle_tracker`, which produces an `EmulatorOpts` with the appropriate field set, or by setting the `cycle_tracker` field within `EmulatorOpts`. The naming of the field is subject to change, but the function should be somewhat stable for now.
+
+The emulator will then maintain a mapping between Request ⇒ Clock Cycle and Request ⇒ Vec<# Clock Cycle>. Every time a `cycle-tracker-start: Request` is encountered, the current clock is stored into the Request ⇒ Clock Cycle map, overwriting any pre-existing value. Every time a `cycle-tracker-end: Request` is encountered, the start clock is retrieved from the Request ⇒ Clock Cycle map, inserting the current clock if it does not exist. The difference between the current clock and the retrieved clock is added to the Request ⇒ Vec<# Clock Cycle> mapping.
+
+Put shortly, `cycle-tracker-start` stores the current clock, and `cycle-tracker-end` will report the number of elapsed cycles since the last observed `cycle-tracker-start`, using itself as a fallback. It is important to know that these requests must be terminated by a newline. If a guest program writes something along the lines of `println!("cycle-tracker-start: {}", req)`, this may result in three write syscalls. One to write the prefix, one to write the formatted `req`, and one to write the final newline. In order to accurately capture the entire string after `cycle-tracker-start:` , a newline must be received before Pico will service the request. The request is the entire string after `cycle-tracker-start:` or `cycle-tracker-end:` and before the next newline character. Note that there is exactly one space after the colon (`:`).
+
+This information can then be processed on the host side by iterating through the `cycle_tracker` field of the returned `EmulationReport`. These reports are batched per chunk in the sense that you only receive the results of `cycle-tracker-end` for the current batch, but they will still correctly track the `cycle-tracker-start` from a previous batch.
