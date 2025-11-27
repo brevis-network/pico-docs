@@ -36,10 +36,10 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-b912f701.js";
+            window.path_to_searchindex_js = "../searchindex-9f064edd.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../toc-c7bf977d.js"></script>
+        <script src="../toc-3c4523d4.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -176,7 +176,7 @@
                 <div id="mdbook-content" class="content">
                     <main>
                         <h1 id="features"><a class="header" href="#features">Features</a></h1>
-<h2 id="logging"><a class="header" href="#logging">Logging </a></h2>
+<h2 id="logging"><a class="header" href="#logging">Logging</a></h2>
 <p>Pico leverages Rust’s standard logging utilities to provide detailed runtime information, particularly about performance and program statistics. You can control the verbosity of the logs via the <code>RUST_LOG</code> environment variable:</p>
 <ul>
 <li><strong>Info Level:</strong> Set <code>RUST_LOG=info</code> to output overall performance data and high-level progress information.</li>
@@ -188,8 +188,10 @@
 <ul>
 <li><strong>Enhanced Debugging Features:</strong> Enable the <code>debug</code> and <code>debug-lookups</code> features when running the prover. These features provide extra context by outputting detailed information on individual constraints and lookup operations within each processing batch.</li>
 <li><strong>Minimal Memory Impact:</strong> Since debug information is generated from data already in memory for the current batch of proofs, enabling debugging does not incur a significant additional memory cost. The debug data can be discarded once the batch is processed and debugged.</li>
-<li><strong>Accessing Debug Data:</strong> Combine the debugging features with <code>RUST_LOG=debug</code> to capture detailed logs. </li>
+<li><strong>Accessing Debug Data:</strong> Combine the debugging features with <code>RUST_LOG=debug</code> to capture detailed logs.</li>
 </ul>
+<h2 id="guest-vm-cycle-tracking"><a class="header" href="#guest-vm-cycle-tracking">Guest VM Cycle Tracking</a></h2>
+<p>Please see <a href="advanced/vm-cycle-tracking.html">VM Cycle Tracking</a> for a detailed explanation of this feature.</p>
 <h2 id="proving-options"><a class="header" href="#proving-options">Proving Options</a></h2>
 <p>Pico offers several configurable parameters to optimize the proving process for your system’s resources and performance requirements:</p>
 <ul>
