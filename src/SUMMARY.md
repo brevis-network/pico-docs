@@ -18,6 +18,7 @@
   * [Instances](writing-apps/advanced/instances.md)
   * [ProverChain](writing-apps/advanced/proverchain.md)
   * [Proving Backends](writing-apps/advanced/proving-backends.md)
+  * [Cost Estimation](writing-apps/advanced/cost-estimation.md)
 
 # Integrating Coprocessors
 
