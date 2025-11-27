@@ -4,7 +4,7 @@ description: Logging, debugging and proving options
 
 # Features
 
-## Logging&#x20;
+## Logging
 
 Pico leverages Rust’s standard logging utilities to provide detailed runtime information, particularly about performance and program statistics. You can control the verbosity of the logs via the `RUST_LOG` environment variable:
 
@@ -19,7 +19,11 @@ In the rare event that proving fails on a correctly executing binary, Pico provi
 
 * **Enhanced Debugging Features:** Enable the `debug` and `debug-lookups` features when running the prover. These features provide extra context by outputting detailed information on individual constraints and lookup operations within each processing batch.
 * **Minimal Memory Impact:** Since debug information is generated from data already in memory for the current batch of proofs, enabling debugging does not incur a significant additional memory cost. The debug data can be discarded once the batch is processed and debugged.
-* **Accessing Debug Data:** Combine the debugging features with `RUST_LOG=debug` to capture detailed logs.&#x20;
+* **Accessing Debug Data:** Combine the debugging features with `RUST_LOG=debug` to capture detailed logs.
+
+## Guest VM Cycle Tracking
+
+Please see [VM Cycle Tracking](advanced/vm-cycle-tracking.md) for a detailed explanation of this feature.
 
 ## Proving Options
 
