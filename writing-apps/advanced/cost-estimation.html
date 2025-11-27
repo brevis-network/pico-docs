@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Proving Backends - Pico</title>
+        <title>Cost Estimation - Pico</title>
 
 
         <!-- Custom HTML head -->
@@ -175,90 +175,19 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <h1 id="proving-backends"><a class="header" href="#proving-backends">Proving Backends</a></h1>
-<p>One of Pico’s most innovative feature is its ability to seamlessly switch between multiple proving backends. This functionality enables you to select the optimal backend for your specific application requirements, resulting in significant efficiency gains without altering your existing proving logic.</p>
-<h2 id="why-multiple-proving-backends-matter"><a class="header" href="#why-multiple-proving-backends-matter">Why Multiple Proving Backends Matter</a></h2>
-<p>Specialized circuits for different application features often demand advanced proving systems optimized for specific prime fields. Consider, for example, the recursive proving of a hash function like <strong>Poseidon2</strong>—a critical component in Pico’s recursive proving strategy. Although the same STARK proving system is used, working on the <strong>KoalaBear</strong> field can be much more efficient than on the <strong>BabyBear</strong> field due to the inherent properties of these fields. As a result, when a program requires extensive Poseidon2 proving, simply switching to KoalaBear can yield considerable performance improvements.</p>
-<h2 id="supported-proving-backends"><a class="header" href="#supported-proving-backends">Supported Proving Backends</a></h2>
-<p>Currently, Pico supports generating proofs in all phases—RISCV, RECURSION, and EVM—with both STARK on KoalaBear and STARK on BabyBear. For CircleSTARK on Mersenne31, Pico currently supports the RISCV-Phase, with RECURSION and EVM phases coming soon.</p>
-<ul>
-<li>STARK on KoalaBear (prime field $$p=2^{31}-2^{24}+1$$): Supports generating proofs for
-<ul>
-<li><input disabled="" type="checkbox" checked="">  RISCV-Phase</li>
-<li><input disabled="" type="checkbox" checked="">  RECURSION-Phase</li>
-<li><input disabled="" type="checkbox" checked="">  EVM-Phase</li>
-</ul>
-</li>
-<li>STARK on BabyBear (prime field $$p=2^{31}-2^{27}+1$$): Supports generating proofs for
-<ul>
-<li><input disabled="" type="checkbox" checked="">  RISCV-Phase</li>
-<li><input disabled="" type="checkbox" checked="">  RECURSION-Phase</li>
-<li><input disabled="" type="checkbox" checked="">  EVM-Phase</li>
-</ul>
-</li>
-<li>CircleSTARK on Mersenne31 where $$p=2^{31}−1$$). Supports generating proofs for
-<ul>
-<li><input disabled="" type="checkbox" checked="">  RISCV-Phase</li>
-<li><input disabled="" type="checkbox">  RECURSION-Phase</li>
-<li><input disabled="" type="checkbox">  EVM-Phase</li>
-</ul>
-</li>
-</ul>
-<h2 id="seamless-backend-switching"><a class="header" href="#seamless-backend-switching">Seamless Backend Switching</a></h2>
-<p>Switching between proving backends in Pico is designed to be straightforward. The underlying proving logic is abstracted away, allowing you to change the backend configuration through a simple parameter update—without needing to rewrite any part of your application.</p>
-<p>The Pico SDK provides a suite of <code>ProverClient</code> implementations, each corresponding to a different proving backend:</p>
-<ul>
-<li><strong>KoalaBearProverClient:</strong> Uses STARK on KoalaBear for fast proving without VK (verification key) verification.</li>
-<li><strong>KoalaBearProverVKClient:</strong> Uses STARK on KoalaBear for full proving with VK verification.</li>
-<li><strong>BabyBearProverClient:</strong> Similar to KoalaBearProverClient, but for STARK on BabyBear.</li>
-<li><strong>BabyBearProverVKClient:</strong> Similar to KoalaBearProverVKClient, but for STARK on BabyBear.</li>
-<li><strong>M31RiscvProverClient:</strong> Performs RISCV proving using CircleSTARK on Mersenne31.</li>
-</ul>
-<p>We could initialize the <code>ProverClient</code> for different backend configurations:</p>
-<pre class="playground"><code class="language-rust">// An example for initializing the different prover clients
-fn main() {
-    // Initialize logger.
-    init_logger();
-
-    // Load the ELF file.
-    let elf = load_elf("./elf/riscv32im-pico-zkvm-elf");
-
-    // Initialize a client for fast proving (without VK verification) 
-    // using STARK on KoalaBear.
-    let client = KoalaBearProverClient::new(elf);
-
-    // Initialize a client for full proving with VK verification 
-    // using STARK on KoalaBear.
-    let client = KoalaBearProverVKClient::new(elf);
-
-    // Initialize a client for fast proving (without VK verification) 
-    // using STARK on BabyBear.
-    let client = BabyBearProverClient::new(elf);
-
-    // Initialize a client for full proving with VK verification 
-    // using STARK on BabyBear.
-    let client = BabyBearProverVKClient::new(elf);
-
-    // Initialize a client for RISCV proving using CircleSTARK on Mersenne31.
-    let client = M31RiscvProverClient::new(elf);
-}</code></pre>
-<h2 id="benefits-of-switchable-proving-backends"><a class="header" href="#benefits-of-switchable-proving-backends">Benefits of Switchable Proving Backends</a></h2>
-<ul>
-<li><strong>Performance Gains:</strong> Optimize your proof generation by selecting the backend that best suits the computational demands of your workload.</li>
-<li><strong>Flexibility:</strong> Experiment with different backends and configurations to achieve the ideal balance between proof size, proving efficiency, and on-chain compatibility.</li>
-<li><strong>Seamless Upgrades:</strong> As new prime fields and proving systems are integrated into Pico, you can upgrade your proving backend with minimal disruption.</li>
-<li><strong>Future-Proofing:</strong> Stay at the forefront of zero-knowledge technology advancements by taking advantage of the latest proving systems as they become available.</li>
-</ul>
+                        <h1 id="cost-estimation"><a class="header" href="#cost-estimation">Cost Estimation</a></h1>
+<p>The Pico emulator also provides a method for obtaining a rough estimate for the answer to the question: how many CPU cycles would it take to prove this trace? This is done by setting the <code>EmulatorOpts::cost_estimator</code> flag to <code>true</code> or by using <code>EmulatorOpts::with_cost_estimator</code>. This produces a value in the <code>host_cycle_estimator</code> field of the <code>EmulationReport</code> per batch, and the <code>Vec</code> entries of type <code>CycleEstimator</code> can be used to estimate the cycles on a given model. Each entry corresponds to the chunk index within the specific batch. The current model used by Pico is present in <code>model.json</code>, found at the root of the repository, and can be loaded with <code>EstimatorModel::from_json(path)</code>. By using the estimator data with different models of host prover, different numbers may be obtained.</p>
+<p>Currently, the Pico model universally divides the estimator result by 1000 as a means to avoid overflow. This is subject to change.</p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="../../writing-apps/advanced/proverchain.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="../../writing-apps/advanced/proving-backends.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                             </a>
 
-                            <a rel="next prefetch" href="../../writing-apps/advanced/cost-estimation.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="../../integrating-coprocessors/function-level.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                             </a>
 
@@ -268,11 +197,11 @@ fn main() {
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="../../writing-apps/advanced/proverchain.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="../../writing-apps/advanced/proving-backends.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                     </a>
 
-                    <a rel="next prefetch" href="../../writing-apps/advanced/cost-estimation.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="../../integrating-coprocessors/function-level.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                     </a>
             </nav>

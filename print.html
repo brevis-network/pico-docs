@@ -37,10 +37,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-fc3941f9.js";
+            window.path_to_searchindex_js = "searchindex-b912f701.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-2ac93ff0.js"></script>
+        <script src="toc-c7bf977d.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -774,6 +774,10 @@ fn main() {
 <li><strong>Seamless Upgrades:</strong> As new prime fields and proving systems are integrated into Pico, you can upgrade your proving backend with minimal disruption.</li>
 <li><strong>Future-Proofing:</strong> Stay at the forefront of zero-knowledge technology advancements by taking advantage of the latest proving systems as they become available.</li>
 </ul>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="cost-estimation"><a class="header" href="#cost-estimation">Cost Estimation</a></h1>
+<p>The Pico emulator also provides a method for obtaining a rough estimate for the answer to the question: how many CPU cycles would it take to prove this trace? This is done by setting the <code>EmulatorOpts::cost_estimator</code> flag to <code>true</code> or by using <code>EmulatorOpts::with_cost_estimator</code>. This produces a value in the <code>host_cycle_estimator</code> field of the <code>EmulationReport</code> per batch, and the <code>Vec</code> entries of type <code>CycleEstimator</code> can be used to estimate the cycles on a given model. Each entry corresponds to the chunk index within the specific batch. The current model used by Pico is present in <code>model.json</code>, found at the root of the repository, and can be loaded with <code>EstimatorModel::from_json(path)</code>. By using the estimator data with different models of host prover, different numbers may be obtained.</p>
+<p>Currently, the Pico model universally divides the estimator result by 1000 as a means to avoid overflow. This is subject to change.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="function-level"><a class="header" href="#function-level">Function-level</a></h1>
 <p>Function-level coprocessors—commonly known as precompiles—are specialized circuits within Pico designed to optimize and streamline specific cryptographic operations and computational tasks. These precompiles handle operations such as elliptic curve arithmetic, hash functions, and signature verifications. In a general-purpose environment, these operations can be resource-intensive, but by offloading them to dedicated circuits, Pico significantly reduces computational costs, improves performance, and enhances scalability during proof generation and verification. Packaging these core operations into efficient, well-tested modules not only accelerates development cycles but also establishes a secure foundation for a wide range of zk-applications, including privacy-preserving transactions, rollups, and layer-2 scaling solutions.</p>
