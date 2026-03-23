@@ -4,7 +4,7 @@ description: A modular, performant zkVM
 
 # Introducing Pico
 
-<figure><img src=".gitbook/assets/Frame - 1.png" alt=""><figcaption></figcaption></figure>
+<figure><img src=".gitbook/assets/pico.png" alt=""><figcaption></figcaption></figure>
 
 Welcome to Pico—the open-source zero-knowledge virtual machine (zkVM) that transforms how developers build secure, scalable, and high-performance decentralized applications. Drawing on the innovative ["glue-and-coprocessor"](https://vitalik.eth.limo/general/2024/09/02/gluecp.html) architecture, Pico fuses the efficiency of specialized circuits with the adaptability of a general-purpose zkVM. This unique design empowers you to craft tailored proof systems that meet the diverse needs of modern cryptographic applications.
 
@@ -24,4 +24,3 @@ Pico is built upon four fundamental strengths that set it apart:
 * **Performance:** Engineered for efficiency, Pico achieves industry-leading proof generation speeds on standard hardware. Its optimized workflows and specialized circuits deliver exceptional throughput and low latency, even in high-demand scenarios.
 
 Pico provides a robust, future-ready foundation that meets today’s challenges and evolves with the advancing field of zero-knowledge technology. Whether you’re a developer eager to explore the potential of ZK proofs or a researcher pushing the boundaries of cryptographic innovation, Pico is the ideal platform to build upon.
-
