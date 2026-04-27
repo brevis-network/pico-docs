@@ -35,7 +35,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-9f064edd.js";
+            window.path_to_searchindex_js = "../searchindex-65d362cb.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-3c4523d4.js"></script>
@@ -178,11 +178,11 @@
 <h2 id="requirements"><a class="header" href="#requirements">Requirements:</a></h2>
 <ul>
 <li><a href="https://www.rust-lang.org/tools/install">Rust (Nightly)</a></li>
-<li><a href="https://git-scm.com/book/en/v2/Getting-Started-Installing-Git">Git </a></li>
+<li><a href="https://git-scm.com/book/en/v2/Getting-Started-Installing-Git">Git</a></li>
 <li><a href="https://docs.docker.com/engine/install/">Docker (Optional, for EVM proof)</a></li>
 </ul>
-<h2 id="install"><a class="header" href="#install">Install </a></h2>
-<h3 id="option-1--cargo-install"><a class="header" href="#option-1--cargo-install">Option 1:  Cargo install</a></h3>
+<h2 id="install"><a class="header" href="#install">Install</a></h2>
+<h3 id="option-1-cargo-install"><a class="header" href="#option-1-cargo-install">Option 1: Cargo install</a></h3>
 <ol>
 <li>Install pico-cli from the GitHub repository</li>
 </ol>
@@ -211,7 +211,14 @@ cargo install --locked --force --path .
 </code></pre>
 <pre><code class="language-bash">rustup component add rust-src --toolchain nightly-2025-08-04
 </code></pre>
-<p><a href="https://book.openvm.dev/introduction.html"><br></a></p>
+<h3 id="install-risc-v64-target-toolchain"><a class="header" href="#install-risc-v64-target-toolchain">Install RISC-V64 target toolchain</a></h3>
+<p>Pico requires a RISC-V64 target toolchain to compile programs. After installing cargo pico, run:</p>
+<pre><code class="language-sh">cargo pico install
+</code></pre>
+<p>Then verify the installation:</p>
+<pre><code class="language-sh">rustup toolchain list | grep pico
+</code></pre>
+<p>You should see pico in the list.</p>
 
                     </main>
 
