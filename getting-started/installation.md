@@ -7,12 +7,12 @@ description: Install Pico toolchains
 ## Requirements:
 
 * [Rust (Nightly)](https://www.rust-lang.org/tools/install)
-* [Git ](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
+* [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
 * [Docker (Optional, for EVM proof)](https://docs.docker.com/engine/install/)
 
-## Install&#x20;
+## Install
 
-### Option 1:  Cargo install
+### Option 1: Cargo install
 
 1. Install pico-cli from the GitHub repository
 
@@ -53,5 +53,18 @@ rustup install nightly-2025-08-04
 rustup component add rust-src --toolchain nightly-2025-08-04
 ```
 
-[\
-](https://book.openvm.dev/introduction.html)
+### Install RISC-V64 target toolchain
+
+Pico requires a RISC-V64 target toolchain to compile programs. After installing cargo pico, run:
+
+```sh
+cargo pico install
+```
+
+Then verify the installation:
+
+```sh
+rustup toolchain list | grep pico
+```
+
+You should see pico in the list.
