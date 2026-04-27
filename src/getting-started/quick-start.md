@@ -3,11 +3,11 @@
 
 This page shows you how to create and prove a Fibonacci program.
 
-## Start with the Fibonacci template&#x20;
+## Start with the Fibonacci template
 
-1. Create project&#x20;
+1. Create project
 
-```
+```sh
 cargo pico new --template basic Fibonacci
 ```
 
@@ -23,7 +23,7 @@ cargo pico build
 
 This will use the Pico compiler to generate a RISC-V ELF that can be executed by the Pico ZKVM.
 
-3. Prove program with Pico
+3. Prove program with Pico (Default Path)
 
 ```sh
 # Prove in prover folder
@@ -40,6 +40,43 @@ RUST_LOG=info cargo pico prove --input "0x0A000000" --fast --elf /path/to/elf # 
 ```
 
 The input to the fibonacci program is a single u32 specifying which number to compute, so we can directly pass the input with the `--input` option, supplying little endian bytes. `--fast` simply tells the prover to skip any recursion steps and terminate after finishing the RISC-V proof.
+
+4. Prove program with AOT (Experimental)
+
+AOT is an alternative execution path: the emulator thread can be driven by AOT-compiled chunks generated from the specific guest ELF you are proving, instead of the interpreter. This trades a one-time codegen step for reduced per-proof execution cost.
+
+* &#x20;One-Time setup
+
+Install the AOT codegen binary:
+
+```sh
+cargo +nightly-2025-08-04 install \
+  --git https://github.com/brevis-network/pico \
+  --tag v2.0.0 \
+  pico-aot-codegen
+```
+
+* Generate AOT chunks
+
+The generated chunks are tied to the PC ranges of a specific ELF. You must re-generate whenever `app/src/` changes.
+
+From the project root, after `cargo pico build`:
+
+```sh
+PICO_AOT_RUNTIME_SPEC='git = "https://github.com/brevis-network/pico", tag = "v2.0.0"' \
+  generate_crates app/elf/riscv64im-pico-zkvm-elf ./aot-generated
+```
+
+`PICO_AOT_RUNTIME_SPEC` tells the codegen tool to wire `pico-aot-runtime` as a git dep in the generated chunk crates, so `aot-generated/` works at the template root without requiring a local Pico checkout.
+
+* Prove with `--aot`&#x20;
+
+Enable the template's `aot` feature and pass the `--aot` runtime flag:
+
+```sh
+cd prover
+RUST_LOG=info cargo run --release --features aot -- --aot
+```
 
 ## Project Layout
 
@@ -68,13 +105,13 @@ The template project includes 3 workspace members: `app`, `lib` and `prover`
 
 `app`: contains the program source code, which will be compiled to `RiscV`
 
-`app/elf`**:** contains ELF with RISC-V instructions.&#x20;
+`app/elf`**:** contains ELF with RISC-V instructions.
 
-`lib`:  contains components or utilities shared in multiple modules.
+`lib`: contains components or utilities shared in multiple modules.
 
 `prover`: contains the scripts to prepare program input data and execute the proving process.
 
-## Start with the EVM template&#x20;
+## Start with the EVM template
 
 **Minimum memory requirement**: 32GB
 
