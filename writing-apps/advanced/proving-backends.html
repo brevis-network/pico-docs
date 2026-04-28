@@ -35,7 +35,7 @@
             const path_to_root = "../../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../searchindex-65d362cb.js";
+            window.path_to_searchindex_js = "../../searchindex-e3763d09.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../../toc-3c4523d4.js"></script>
@@ -183,23 +183,23 @@
 <ul>
 <li>STARK on KoalaBear (prime field $$p=2^{31}-2^{24}+1$$): Supports generating proofs for
 <ul>
-<li><input disabled="" type="checkbox" checked="">  RISCV-Phase</li>
-<li><input disabled="" type="checkbox" checked="">  RECURSION-Phase</li>
-<li><input disabled="" type="checkbox" checked="">  EVM-Phase</li>
+<li><input disabled="" type="checkbox" checked=""> RISCV-Phase</li>
+<li><input disabled="" type="checkbox" checked=""> RECURSION-Phase</li>
+<li><input disabled="" type="checkbox" checked=""> EVM-Phase</li>
 </ul>
 </li>
 <li>STARK on BabyBear (prime field $$p=2^{31}-2^{27}+1$$): Supports generating proofs for
 <ul>
-<li><input disabled="" type="checkbox" checked="">  RISCV-Phase</li>
-<li><input disabled="" type="checkbox" checked="">  RECURSION-Phase</li>
-<li><input disabled="" type="checkbox" checked="">  EVM-Phase</li>
+<li><input disabled="" type="checkbox" checked=""> RISCV-Phase</li>
+<li><input disabled="" type="checkbox" checked=""> RECURSION-Phase</li>
+<li><input disabled="" type="checkbox" checked=""> EVM-Phase</li>
 </ul>
 </li>
 <li>CircleSTARK on Mersenne31 where $$p=2^{31}−1$$). Supports generating proofs for
 <ul>
-<li><input disabled="" type="checkbox" checked="">  RISCV-Phase</li>
-<li><input disabled="" type="checkbox">  RECURSION-Phase</li>
-<li><input disabled="" type="checkbox">  EVM-Phase</li>
+<li><input disabled="" type="checkbox" checked=""> RISCV-Phase</li>
+<li><input disabled="" type="checkbox"> RECURSION-Phase</li>
+<li><input disabled="" type="checkbox"> EVM-Phase</li>
 </ul>
 </li>
 </ul>
@@ -220,7 +220,7 @@ fn main() {
     init_logger();
 
     // Load the ELF file.
-    let elf = load_elf("./elf/riscv32im-pico-zkvm-elf");
+    let elf = load_elf("./elf/riscv64im-pico-zkvm-elf");
 
     // Initialize a client for fast proving (without VK verification) 
     // using STARK on KoalaBear.

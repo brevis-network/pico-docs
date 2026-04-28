@@ -35,7 +35,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-65d362cb.js";
+            window.path_to_searchindex_js = "../searchindex-e3763d09.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-3c4523d4.js"></script>
@@ -200,15 +200,15 @@ RUST_LOG=info cargo run --release
 </code></pre>
 <p>The <code>prover</code> subdirectory contains a Rust program that will load an input for the ELF that was just compiled, execute it, and generate a proof. This project has the entire functionality of the Pico SDK at its disposal, and can be customized however you want.</p>
 <p>If you simply wish to use the default provided proving clients and options, you can prove using the Pico CLI via</p>
-<pre><code class="language-sh">RUST_LOG=info cargo pico prove --input "0x0A000000" --fast --elf /path/to/elf # input n = 10
+<pre><code class="language-sh">RUST_LOG=info cargo pico prove --input "0x6400000000000000" --fast --elf /path/to/elf # input n = 100
 </code></pre>
-<p>The input to the fibonacci program is a single u32 specifying which number to compute, so we can directly pass the input with the <code>--input</code> option, supplying little endian bytes. <code>--fast</code> simply tells the prover to skip any recursion steps and terminate after finishing the RISC-V proof.</p>
+<p>The input to the fibonacci program is a single u64 specifying which number to compute, so we can directly pass the input with the <code>--input</code> option, supplying little endian bytes. <code>--fast</code> simply tells the prover to skip any recursion steps and terminate after finishing the RISC-V proof.</p>
 <ol start="4">
 <li>Prove program with AOT (Experimental)</li>
 </ol>
 <p>AOT is an alternative execution path: the emulator thread can be driven by AOT-compiled chunks generated from the specific guest ELF you are proving, instead of the interpreter. This trades a one-time codegen step for reduced per-proof execution cost.</p>
 <ul>
-<li> One-Time setup</li>
+<li>One-Time setup</li>
 </ul>
 <p>Install the AOT codegen binary:</p>
 <pre><code class="language-sh">cargo +nightly-2025-08-04 install \
@@ -226,7 +226,7 @@ RUST_LOG=info cargo run --release
 </code></pre>
 <p><code>PICO_AOT_RUNTIME_SPEC</code> tells the codegen tool to wire <code>pico-aot-runtime</code> as a git dep in the generated chunk crates, so <code>aot-generated/</code> works at the template root without requiring a local Pico checkout.</p>
 <ul>
-<li>Prove with <code>--aot</code> </li>
+<li>Prove with <code>--aot</code></li>
 </ul>
 <p>Enable the template’s <code>aot</code> feature and pass the <code>--aot</code> runtime flag:</p>
 <pre><code class="language-sh">cd prover
@@ -236,7 +236,7 @@ RUST_LOG=info cargo run --release --features aot -- --aot
 <pre><code>Fibonacci
 |—— app
      |—— elf
-          |—— riscv32im-pico-zkvm-elf
+          |—— riscv64im-pico-zkvm-elf
      |—— src
           |—— main.rs
      |—— Cargo.toml
