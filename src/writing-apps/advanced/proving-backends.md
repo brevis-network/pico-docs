@@ -12,17 +12,17 @@ Specialized circuits for different application features often demand advanced pr
 Currently, Pico supports generating proofs in all phases—RISCV, RECURSION, and EVM—with both STARK on KoalaBear and STARK on BabyBear. For CircleSTARK on Mersenne31, Pico currently supports the RISCV-Phase, with RECURSION and EVM phases coming soon.
 
 * STARK on KoalaBear (prime field $$p=2^{31}-2^{24}+1$$): Supports generating proofs for
-  * [x] &#x20;RISCV-Phase
-  * [x] &#x20;RECURSION-Phase
-  * [x] &#x20;EVM-Phase
+  * [x] RISCV-Phase
+  * [x] RECURSION-Phase
+  * [x] EVM-Phase
 * STARK on BabyBear (prime field $$p=2^{31}-2^{27}+1$$): Supports generating proofs for
-  * [x] &#x20;RISCV-Phase
-  * [x] &#x20;RECURSION-Phase
-  * [x] &#x20;EVM-Phase
+  * [x] RISCV-Phase
+  * [x] RECURSION-Phase
+  * [x] EVM-Phase
 * CircleSTARK on Mersenne31 where $$p=2^{31}−1$$). Supports generating proofs for
-  * [x] &#x20;RISCV-Phase
-  * [ ] &#x20;RECURSION-Phase
-  * [ ] &#x20;EVM-Phase
+  * [x] RISCV-Phase
+  * [ ] RECURSION-Phase
+  * [ ] EVM-Phase
 
 ## Seamless Backend Switching
 
@@ -45,7 +45,7 @@ fn main() {
     init_logger();
 
     // Load the ELF file.
-    let elf = load_elf("./elf/riscv32im-pico-zkvm-elf");
+    let elf = load_elf("./elf/riscv64im-pico-zkvm-elf");
 
     // Initialize a client for fast proving (without VK verification) 
     // using STARK on KoalaBear.

@@ -36,16 +36,16 @@ The `prover` subdirectory contains a Rust program that will load an input for th
 If you simply wish to use the default provided proving clients and options, you can prove using the Pico CLI via
 
 ```sh
-RUST_LOG=info cargo pico prove --input "0x0A000000" --fast --elf /path/to/elf # input n = 10
+RUST_LOG=info cargo pico prove --input "0x6400000000000000" --fast --elf /path/to/elf # input n = 100
 ```
 
-The input to the fibonacci program is a single u32 specifying which number to compute, so we can directly pass the input with the `--input` option, supplying little endian bytes. `--fast` simply tells the prover to skip any recursion steps and terminate after finishing the RISC-V proof.
+The input to the fibonacci program is a single u64 specifying which number to compute, so we can directly pass the input with the `--input` option, supplying little endian bytes. `--fast` simply tells the prover to skip any recursion steps and terminate after finishing the RISC-V proof.
 
 4. Prove program with AOT (Experimental)
 
 AOT is an alternative execution path: the emulator thread can be driven by AOT-compiled chunks generated from the specific guest ELF you are proving, instead of the interpreter. This trades a one-time codegen step for reduced per-proof execution cost.
 
-* &#x20;One-Time setup
+* One-Time setup
 
 Install the AOT codegen binary:
 
@@ -69,7 +69,7 @@ PICO_AOT_RUNTIME_SPEC='git = "https://github.com/brevis-network/pico", tag = "v2
 
 `PICO_AOT_RUNTIME_SPEC` tells the codegen tool to wire `pico-aot-runtime` as a git dep in the generated chunk crates, so `aot-generated/` works at the template root without requiring a local Pico checkout.
 
-* Prove with `--aot`&#x20;
+* Prove with `--aot`
 
 Enable the template's `aot` feature and pass the `--aot` runtime flag:
 
@@ -84,7 +84,7 @@ RUST_LOG=info cargo run --release --features aot -- --aot
 Fibonacci
 |—— app
      |—— elf
-          |—— riscv32im-pico-zkvm-elf
+          |—— riscv64im-pico-zkvm-elf
      |—— src
           |—— main.rs
      |—— Cargo.toml

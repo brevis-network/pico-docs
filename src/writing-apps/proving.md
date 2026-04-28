@@ -1,13 +1,13 @@
 
 # Proving
 
-## Overview&#x20;
+## Overview
 
-Pico provides CLI and SDK tools to recursively prove the program to the developers. &#x20;
+Pico provides CLI and SDK tools to recursively prove the program to the developers.
 
-Pico CLI provides a complete toolchain for compiling the RISC-V program and using Pico to complete end-to-end proof. Refer to the [installation page](../getting-started/installation.md) to install the CLI toolchain. CLI default use the KoalaBear field for the backend proving, if you want to switch to other fields, read more details in [Proving Backends Page](advanced/proving-backends.md).&#x20;
+Pico CLI provides a complete toolchain for compiling the RISC-V program and using Pico to complete end-to-end proof. Refer to the [installation page](../getting-started/installation.md) to install the CLI toolchain. CLI default use the KoalaBear field for the backend proving, if you want to switch to other fields, read more details in [Proving Backends Page](advanced/proving-backends.md).
 
-Like the CLI, the Pico-SDK includes lower-level APIs that can prove the program directly. The [prover package](https://github.com/brevis-network/pico-zkapp-template/tree/main/prover) of the template project repository provides an example of how to import and initialize the SDK and quickly generate a RISC-V proof using the Pico SDK. In the [Proving Steps Section](proving.md#proving-steps), you can read more about VM e2e proving and the Gnark EVM proof generation for On-chain verification&#x20;
+Like the CLI, the Pico-SDK includes lower-level APIs that can prove the program directly. The [prover package](https://github.com/brevis-network/pico-zkapp-template/tree/main/prover) of the template project repository provides an example of how to import and initialize the SDK and quickly generate a RISC-V proof using the Pico SDK. In the [Proving Steps Section](proving.md#proving-steps), you can read more about VM e2e proving and the Gnark EVM proof generation for On-chain verification
 
 Let's quickly go through the Pico SDK usage and generate a Fibonacci RISC-V proof.
 
@@ -28,7 +28,7 @@ fn main() {
     init_logger();
 
     // Load the ELF file
-    let elf = load_elf("../elf/riscv32im-pico-zkvm-elf");
+    let elf = load_elf("../elf/riscv64im-pico-zkvm-elf");
 
     // Initialize the prover client
     let client = DefaultProverClient::new(&elf);
@@ -36,7 +36,7 @@ fn main() {
     let mut stdin_builder = client.new_stdin_builder();
 
     // Set up input and generate proof
-    let n = 100u32;
+    let n = 100u64;
     stdin_builder.write(&n);
 
     // Generate proof
@@ -51,7 +51,7 @@ fn main() {
 }
 
 /// Verifies that the computed Fibonacci values match the public values.
-fn verify_public_values(n: u32, public_values: &PublicValuesStruct) {
+fn verify_public_values(n: u64, public_values: &PublicValuesStruct) {
     println!(
         "Public value n: {:?}, a: {:?}, b: {:?}",
         public_values.n, public_values.a, public_values.b
@@ -88,9 +88,9 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize)]
 pub struct FibonacciInputs {
-    pub a: u32,
-    pub b: u32,
-    pub n: u32,
+    pub a: u64,
+    pub b: u64,
+    pub n: u64,
 }
 
 fn main() {
@@ -98,8 +98,8 @@ fn main() {
     let client = SDKProverClient::new(&#x26;elf, false);
     // Initialize new stdin
     let mut stdin_builder = client.new_stdin_builder();
-    // example 1: write a u32 to the VM
-    let n = 100u32;
+    // example 1: write a u64 to the VM
+    let n = 100u64;
     stdin_builder.write(&#x26;n);
     
 <strong>    // example 2: write a struct 
@@ -114,10 +114,10 @@ fn main() {
 
 2. **CLI input option**
 
-The `prove` command <mark style="color:orange;">`--input`</mark> option can take a hex string or a file path. the hex string must be match the length of the read type. For example, the input `n = 100u32`; the <mark style="color:orange;">hex string should be</mark> <mark style="color:orange;"></mark><mark style="color:orange;">`0x0A000000`</mark> <mark style="color:orange;"></mark><mark style="color:orange;">in little-endian format</mark>.
+The `prove` command <mark style="color:orange;">`--input`</mark> option can take a hex string or a file path. the hex string must be match the length of the read type. For example, the input `n = 100u64`; the <mark style="color:orange;">hex string should be</mark> `0x6400000000000000` <mark style="color:orange;">in little-endian format</mark>.
 
 ```sh
-RUST_LOG=info cargo pico prove --input "0x0A000000" --fast
+RUST_LOG=info cargo pico prove --input "0x6400000000000000" --fast
 ```
 
 ### Read
@@ -131,14 +131,14 @@ use pico_sdk::io::{read_as, read_vec};
 
 <strong>#[derive(Serialize, Deserialize)]
 </strong>pub struct FibonacciInputs {
-    pub a: u32,
-    pub b: u32,
-    pub n: u32,
+    pub a: u64,
+    pub b: u64,
+    pub n: u64,
 }
 
 fn main() {
-    // example 1: read the u32 input `n`
-<strong>    let n: u32 = read_as();
+    // example 1: read the u64 input `n`
+<strong>    let n: u64 = read_as();
 </strong><strong>    
 </strong>    // example 2: read FibonacciInputs struct  
     let inputs = read_as::&#x3C;FibonacciInputs>();
@@ -150,7 +150,7 @@ fn main() {
 
 ## End-to-end Proving
 
-This section introduces more advanced CLI options and SDK APIs to complete the end-to-end proving process. The Proving process consists of multiple stages, including [RISCV, RECURSION, and  EVM Phases](advanced/proverchain.md#provechain-proving-phase). Pico SDK includes various ProverClients in different proving backends. Here, we use the KoalaBearProverClient (based on STARK on KoalaBear) in the example code.&#x20;
+This section introduces more advanced CLI options and SDK APIs to complete the end-to-end proving process. The Proving process consists of multiple stages, including [RISCV, RECURSION, and EVM Phases](advanced/proverchain.md#provechain-proving-phase). Pico SDK includes various ProverClients in different proving backends. Here, we use the KoalaBearProverClient (based on STARK on KoalaBear) in the example code.
 
 ### RISCV-Phase
 
@@ -162,10 +162,10 @@ CLI:
 RUST_LOG cargo pico prove --fast 
 ```
 
-For example, when executing the fast proving with inputs in the Fibonacci, the input `n` is a `u32` data received through `pico::sdk::read_as`, and it must be in little-endian format and filled to 4 bytes.
+For example, when executing the fast proving with inputs in the Fibonacci, the input `n` is a `u64` data received through `pico::sdk::read_as`, and it must be in little-endian format and filled to 8 bytes.
 
 ```sh
-RUST_LOG=info cargo pico prove --input "0x0A000000" --fast
+RUST_LOG=info cargo pico prove --input "0x6400000000000000" --fast
 ```
 
 SDK:
@@ -178,7 +178,7 @@ let client = DefaultProverClient::new(&elf);
 let mut stdin_builder = client.new_stdin_builder();
  
 // Set up input
-let n = 100u32;
+let n = 100u64;
 stdin_builder.write(&n);
 
 let riscv_proof = client.prove_fast(stdin_builder).expect("Failed to generate proof");
@@ -207,7 +207,7 @@ Specify the field, When without this option, default to Koalabear field.
 
 `--output`
 
-You can specify the output path to generate the files prepared for the `Gnark` verification and default is in the project root  `target/pico_out/`
+You can specify the output path to generate the files prepared for the `Gnark` verification and default is in the project root `target/pico_out/`
 
 ```sh
 RUST_LOG cargo pico prove --output outputs
@@ -255,7 +255,7 @@ let output_dir = PathBuf::from_str(&#x26;"./outputs").expect("the output dir is 
 
 The outputs:
 
-`proof.data`:  `Groth16` proof generated by the Gnark Verifier Circuit.
+`proof.data`: `Groth16` proof generated by the Gnark Verifier Circuit.
 
 `pv_file`: The public values hex string; it's the input of `Fibonacci` Contract
 
@@ -299,4 +299,3 @@ interface IPicoVerifier {
 The `verifyPicoProof` function in `PicoVerifier.sol` takes a RISC-V verification key, public values, and a Pico proof, using the Groth16 verifier to validate the proof and public inputs via the pairing algorithm. For the full implementation of the PicoVerifier, please refer to the repository [here](https://github.com/brevis-network/pico-zkapp-template/blob/evm/contracts/src/PicoVerifier.sol).
 
 In production, you need to verify riscvVKey and parse the public values verified by PicoVerifier. You can refer to the Fibonacci.sol example in the repository [here](https://github.com/brevis-network/pico-zkapp-template/blob/evm/contracts/src/Fibonacci.sol).
-
