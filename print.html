@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-e3763d09.js";
+            window.path_to_searchindex_js = "searchindex-3f065d6d.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-3c4523d4.js"></script>
@@ -279,7 +279,7 @@ RUST_LOG=info cargo run --release
 <p>Install the AOT codegen binary:</p>
 <pre><code class="language-sh">cargo +nightly-2025-08-04 install \
   --git https://github.com/brevis-network/pico \
-  --tag v2.0.0 \
+  --tag v2.1.1 \
   pico-aot-codegen
 </code></pre>
 <ul>
@@ -287,7 +287,7 @@ RUST_LOG=info cargo run --release
 </ul>
 <p>The generated chunks are tied to the PC ranges of a specific ELF. You must re-generate whenever <code>app/src/</code> changes.</p>
 <p>From the project root, after <code>cargo pico build</code>:</p>
-<pre><code class="language-sh">PICO_AOT_RUNTIME_SPEC='git = "https://github.com/brevis-network/pico", tag = "v2.0.0"' \
+<pre><code class="language-sh">PICO_AOT_RUNTIME_SPEC='git = "https://github.com/brevis-network/pico", tag = "v2.1.1"' \
   generate_crates app/elf/riscv64im-pico-zkvm-elf ./aot-generated
 </code></pre>
 <p><code>PICO_AOT_RUNTIME_SPEC</code> tells the codegen tool to wire <code>pico-aot-runtime</code> as a git dep in the generated chunk crates, so <code>aot-generated/</code> works at the template root without requiring a local Pico checkout.</p>
