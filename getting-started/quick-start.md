@@ -55,7 +55,7 @@ Install the AOT codegen binary:
 ```sh
 cargo +nightly-2025-08-04 install \
   --git https://github.com/brevis-network/pico \
-  --tag v2.0.0 \
+  --tag v2.1.1 \
   pico-aot-codegen
 ```
 
@@ -66,7 +66,7 @@ The generated chunks are tied to the PC ranges of a specific ELF. You must re-ge
 From the project root, after `cargo pico build`:
 
 ```sh
-PICO_AOT_RUNTIME_SPEC='git = "https://github.com/brevis-network/pico", tag = "v2.0.0"' \
+PICO_AOT_RUNTIME_SPEC='git = "https://github.com/brevis-network/pico", tag = "v2.1.1"' \
   generate_crates app/elf/riscv64im-pico-zkvm-elf ./aot-generated
 ```
 
