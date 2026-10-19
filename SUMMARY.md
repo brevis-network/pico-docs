@@ -3,6 +3,7 @@
 ## Welcome
 
 * [Introducing Pico](README.md)
+* [Migrating to 3.0](welcome/migrating-to-3.0.md)
 
 ## Getting Started
 
@@ -17,7 +18,6 @@
 * [Advanced](writing-apps/advanced/README.md)
   * [Instances](writing-apps/advanced/instances.md)
   * [ProverChain](writing-apps/advanced/proverchain.md)
-  * [Proving Backends](writing-apps/advanced/proving-backends.md)
   * [VM Cycle Tracking](writing-apps/advanced/vm-cycle-tracking.md)
   * [Cost Estimation](writing-apps/advanced/cost-estimation.md)
 

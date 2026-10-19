@@ -44,16 +44,16 @@ To build `pico-vm` without default features, simply set default-features = false
 
 ## Single threaded profiling
 
-As mentioned in the previous section, we support single threaded builds in order to generate neater flamegraphs for profiling purposes. For example, to build `test_riscv` for profiling, run
+As mentioned in the previous section, we support single threaded builds in order to generate neater flamegraphs for profiling purposes. For example, to build `test_mle_e2e` for profiling, run
 
 ```
-cargo build -p pico-vm --no-default-features --profile --profiling --example test_riscv
+cargo build -p pico-vm --no-default-features --profile profiling --example test_mle_e2e
 ```
 
 to build the binary and then run
 
 ```
-sudo flamegraph -o flamegraph.svg -- ./target/profiling/examples/test_riscv
+sudo flamegraph -o flamegraph.svg -- ./target/profiling/examples/test_mle_e2e --elf fib --n 10 --step riscv
 ```
 
 with [`cargo flamegraph`](https://github.com/flamegraph-rs/flamegraph) to produce a flamegraph that you can use to explore cost centers.
