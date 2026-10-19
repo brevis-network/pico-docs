@@ -14,7 +14,7 @@
 1. Install pico-cli from the GitHub repository
 
 ```sh
-cargo +nightly-2025-08-04 install --git https://github.com/brevis-network/pico pico-cli
+cargo +nightly-2026-09-27 install --git https://github.com/brevis-network/pico pico-cli
 ```
 
 2. Check the version
@@ -34,20 +34,20 @@ git clone https://github.com/brevis-network/pico
 2. cargo install from the local path
 
 ```sh
-cd sdk/cli
+cd pico/sdk/cli
 cargo install --locked --force --path .
 ```
 
 ### Rust toolchain
 
-Pico uses the rust-specific rust toolchain version(nightly-2025-08-04) to build the program. The specific toolchain version can be found in the `rust_toolchain` file in the repository root.
+Pico uses the rust-specific rust toolchain version(nightly-2026-09-27) to build the program. The specific toolchain version can be found in the `rust-toolchain` file in the repository root.
 
 ```sh
-rustup install nightly-2025-08-04
+rustup install nightly-2026-09-27
 ```
 
 ```bash
-rustup component add rust-src --toolchain nightly-2025-08-04
+rustup component add rust-src --toolchain nightly-2026-09-27
 ```
 
 ### Install RISC-V64 target toolchain

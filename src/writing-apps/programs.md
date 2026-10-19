@@ -3,7 +3,7 @@
 
 ## Pico entrypoint
 
-The program is executed and proved with the zkVM platform. Pico links the programs by the main function annotated with the `entrypoint` macro\_rules. The program needs to be declared with `no_main`.&#x20;
+The program is executed and proved with the zkVM platform. Pico links the programs by the main function annotated with the `entrypoint` macro\_rules. The program needs to be declared with `no_main`.
 
 ```rust
 // declare no_main
@@ -24,13 +24,13 @@ Be very careful with using heap memory. The currently implemented allocator does
 
 ## Inputs and outputs
 
-`pico_sdk::io::read_as` Read a serialized input data type into the program and deserialize it into specific types, such as u32, u64, and bytes. Pico `prove` CLI provides two ways to pass the inputs: hex string and file path. When your specific input is a file path , the file content will be read as bytes in the program. &#x20;
+`pico_sdk::io::read_as` Read a serialized input data type into the program and deserialize it into specific types, such as u32, u64, and bytes. Pico `prove` CLI provides two ways to pass the inputs: hex string (`0x…`) and file path (`file:<path>`). When your specific input is a file path, the file content will be read as bytes in the program.
 
 ```sh
-cargo pico prove --input "" # hex or file path
+cargo pico prove --elf elf/riscv64im-pico-zkvm-elf --input "0x..." # hex, or file:<path>
 ```
 
-`pico_sdk::io::commit` Commit serializable data to the public stream. The public inputs will be compressed using a SHA256 hash and exported to the on-chain.&#x20;
+`pico_sdk::io::commit` Commit serializable data to the public stream. The public inputs will be compressed using a SHA256 hash and exported to the on-chain.
 
 `pico_sdk::io:commit_bytes` Write the public values in a byte buffer.
 
@@ -42,7 +42,7 @@ cargo pico prove --input "" # hex or file path
 cargo pico new --template basic basic-example
 ```
 
-The project only contains a program module.  You can test and debug your RISC-V program quickly using the basic template.
+The project only contains a program module. You can test and debug your RISC-V program quickly using the basic template.
 
 2. Create a program with EVM
 
@@ -53,12 +53,11 @@ cargo pico new --template evm evm-example
 The created project with the evm template will contain an extra `Contracts` folder for app and verification contracts .
 
 * Proving with the evm option referring to [this page](proving.md) can generate the proof for on-chain EVM.
-* Verification test requires to the install [foundryup and forge test](https://book.getfoundry.sh/getting-started/installation).&#x20;
+* Verification test requires to the install [foundryup and forge test](https://book.getfoundry.sh/getting-started/installation).
 
 Use the pre-prepared pico EVM proof and Groth16 verifier in the repo to run contract tests.
 
 ```sh
-cd contract 
+cd contracts
 forge test
 ```
-

@@ -28,7 +28,7 @@ This will use the Pico compiler to generate a RISC-V ELF that can be executed by
 ```sh
 # Prove in prover folder
 cd ../prover
-RUST_LOG=info cargo run --release
+RUST_LOG=info cargo run --release -- prove fib.pico
 ```
 
 The `prover` subdirectory contains a Rust program that will load an input for the ELF that was just compiled, execute it, and generate a proof. This project has the entire functionality of the Pico SDK at its disposal, and can be customized however you want.
@@ -36,7 +36,7 @@ The `prover` subdirectory contains a Rust program that will load an input for th
 If you simply wish to use the default provided proving clients and options, you can prove using the Pico CLI via
 
 ```sh
-RUST_LOG=info cargo pico prove --input "0x6400000000000000" --fast --elf /path/to/elf # input n = 100
+RUST_LOG=info cargo pico prove --input "0x6400000000000000" --phase riscv --elf /path/to/elf # input n = 100
 ```
 
 The input to the fibonacci program is a single u64 specifying which number to compute, so we can directly pass the input with the `--input` option, supplying little endian bytes. `--fast` simply tells the prover to skip any recursion steps and terminate after finishing the RISC-V proof.
@@ -45,17 +45,6 @@ The input to the fibonacci program is a single u64 specifying which number to co
 
 AOT is an alternative execution path: the emulator thread can be driven by AOT-compiled chunks generated from the specific guest ELF you are proving, instead of the interpreter. This trades a one-time codegen step for reduced per-proof execution cost.
 
-* One-Time setup
-
-Install the AOT codegen binary:
-
-```sh
-cargo +nightly-2025-08-04 install \
-  --git https://github.com/brevis-network/pico \
-  --tag v2.1.1 \
-  pico-aot-codegen
-```
-
 * Generate AOT chunks
 
 The generated chunks are tied to the PC ranges of a specific ELF. You must re-generate whenever `app/src/` changes.
@@ -63,19 +52,18 @@ The generated chunks are tied to the PC ranges of a specific ELF. You must re-ge
 From the project root, after `cargo pico build`:
 
 ```sh
-PICO_AOT_RUNTIME_SPEC='git = "https://github.com/brevis-network/pico", tag = "v2.1.1"' \
-  generate_crates app/elf/riscv64im-pico-zkvm-elf ./aot-generated
+cargo pico aot --elf app/elf/riscv64im-pico-zkvm-elf --out aot-generated
 ```
 
-`PICO_AOT_RUNTIME_SPEC` tells the codegen tool to wire `pico-aot-runtime` as a git dep in the generated chunk crates, so `aot-generated/` works at the template root without requiring a local Pico checkout.
+`cargo pico aot` wires `pico-aot-runtime` as a git dep in the generated chunk crates, pinned to the CLI's release tag, so `aot-generated/` works at the template root without requiring a local Pico checkout. Set `PICO_SOURCE` to a Pico checkout to build against it instead.
 
 * Prove with `--aot`
 
-Enable the template's `aot` feature and pass the `--aot` runtime flag:
+Enable the template's `aot` feature:
 
 ```sh
 cd prover
-RUST_LOG=info cargo run --release --features aot -- --aot
+RUST_LOG=info cargo run --release --features aot -- prove fib.pico
 ```
 
 ## Project Layout
@@ -128,17 +116,15 @@ The template project includes 3 workspace members: `app`, `lib` and `prover`
 
     ```bash
     cd ../prover
-    RUST_LOG=info cargo run --release
+    RUST_LOG=info cargo run --release -- prove fib.pico
     ```
 
-    This step will locally set up the Groth16 Verifier contract and generate the Pico Groth16 proof. The files will be outputted to the `root/contracts/test_data` folder.\
-    The prover program will then attempt to launch a Docker container to generate the final EVM proof with `gnark`. This ingests `test_data/proof.json` and should produce `test_data/proof.data`. If this file is not produced, you may need to increase the amount of RAM available to the container.
+    This proves the program in dev mode and writes `fib.pico`, a RISC-V proof that verifies from the ELF but is not one a contract can check. The EVM proof comes from `cargo pico prove --evm` in whitelist mode, with a gnark prover and a Groth16 key set; the template's README, "The on-chain proof", lists the exact commands.
 3.  Test EVM Proof
 
     ```bash
     cd ../contracts
-    mv -f ./test_data/Groth16Verifier.sol ./src/Groth16Verifier.sol
     forge test
     ```
 
-    The foundry test script will parse the proof generated in the previous step and interact with the Groth16 Verifier contract. With all tests passing, the EVM quick start is successful.
+    The Foundry tests verify the proof in `test_data/inputs.json` with the Groth16 verifier in `test/dev`. To test your own EVM proof, copy its `inputs.json` and key files in, as the template's README shows. With all tests passing, the EVM quick start is successful.
