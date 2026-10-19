@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Proving Backends - Pico</title>
+        <title>Migrating to 3.0 - Pico</title>
 
 
         <!-- Custom HTML head -->
@@ -13,32 +13,32 @@
         <meta name="theme-color" content="#ffffff">
 
         <link rel="shortcut icon" href="/favicon.png" type="image/png">
-        <link rel="stylesheet" href="../../css/variables-8adf115d.css">
-        <link rel="stylesheet" href="../../css/general-2459343d.css">
-        <link rel="stylesheet" href="../../css/chrome-cc69e1fb.css">
-        <link rel="stylesheet" href="../../css/print-9e4910d8.css" media="print">
+        <link rel="stylesheet" href="../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../css/general-2459343d.css">
+        <link rel="stylesheet" href="../css/chrome-cc69e1fb.css">
+        <link rel="stylesheet" href="../css/print-9e4910d8.css" media="print">
 
         <!-- Fonts -->
-        <link rel="stylesheet" href="../../fonts/fonts-9644e21d.css">
+        <link rel="stylesheet" href="../fonts/fonts-9644e21d.css">
 
         <!-- Highlight.js Stylesheets -->
-        <link rel="stylesheet" id="mdbook-highlight-css" href="../../highlight-493f70e1.css">
-        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../../tomorrow-night-4c0ae647.css">
-        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../../ayu-highlight-56612340.css">
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../ayu-highlight-56612340.css">
 
         <!-- Custom theme stylesheets -->
-        <link rel="stylesheet" href="../../theme/custom-fc75f45e.css">
+        <link rel="stylesheet" href="../theme/custom-fc75f45e.css">
 
 
         <!-- Provide site root and default themes to javascript -->
         <script>
-            const path_to_root = "../../";
+            const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../../searchindex-3f065d6d.js";
+            window.path_to_searchindex_js = "../searchindex-85d25064.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../../toc-3c4523d4.js"></script>
+        <script src="../toc-8533914a.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -105,7 +105,7 @@
             <!-- populated by js -->
             <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
             <noscript>
-                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
             </noscript>
             <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
                 <div class="sidebar-resize-indicator"></div>
@@ -140,7 +140,7 @@
                     <h1 class="menu-title">Pico</h1>
 
                     <div class="right-buttons">
-                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
                             <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
                         </a>
 
@@ -174,90 +174,88 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <h1 id="proving-backends"><a class="header" href="#proving-backends">Proving Backends</a></h1>
-<p>One of Pico’s most innovative feature is its ability to seamlessly switch between multiple proving backends. This functionality enables you to select the optimal backend for your specific application requirements, resulting in significant efficiency gains without altering your existing proving logic.</p>
-<h2 id="why-multiple-proving-backends-matter"><a class="header" href="#why-multiple-proving-backends-matter">Why Multiple Proving Backends Matter</a></h2>
-<p>Specialized circuits for different application features often demand advanced proving systems optimized for specific prime fields. Consider, for example, the recursive proving of a hash function like <strong>Poseidon2</strong>—a critical component in Pico’s recursive proving strategy. Although the same STARK proving system is used, working on the <strong>KoalaBear</strong> field can be much more efficient than on the <strong>BabyBear</strong> field due to the inherent properties of these fields. As a result, when a program requires extensive Poseidon2 proving, simply switching to KoalaBear can yield considerable performance improvements.</p>
-<h2 id="supported-proving-backends"><a class="header" href="#supported-proving-backends">Supported Proving Backends</a></h2>
-<p>Currently, Pico supports generating proofs in all phases—RISCV, RECURSION, and EVM—with both STARK on KoalaBear and STARK on BabyBear. For CircleSTARK on Mersenne31, Pico currently supports the RISCV-Phase, with RECURSION and EVM phases coming soon.</p>
+                        <h1 id="migrating-to-30"><a class="header" href="#migrating-to-30">Migrating to 3.0</a></h1>
+<p>Pico 3.0 replaces the proof system: it proves over the KoalaBear field with an MLE proof system (LogUp-GKR, ZeroCheck and WHIR), and the host-side API moved to a new crate. 2.x proofs do not verify under 3.0, and 2.x on-chain verifiers do not accept 3.0 proofs.</p>
+<p>This page lists the changes most projects hit. The full guide is <a href="https://github.com/brevis-network/pico/blob/v3.0.0/docs/migration-2.x-to-3.0.md">Migrating from 2.x to 3.0</a>, and the <a href="https://github.com/brevis-network/pico/blob/v3.0.0/docs/release-notes/3.0.md">3.0 release notes</a> summarize the release.</p>
+<h3 id="toolchain"><a class="header" href="#toolchain">Toolchain</a></h3>
 <ul>
-<li>STARK on KoalaBear (prime field $$p=2^{31}-2^{24}+1$$): Supports generating proofs for
+<li>The Rust toolchain moved from <code>nightly-2025-08-04</code> to <code>nightly-2026-09-27</code>. Reinstall the CLI with it (see <a href="../getting-started/installation.html">Installation</a>), then run <code>cargo pico install</code> again for the matching guest toolchain.</li>
+<li>Set the project’s own <code>rust-toolchain</code> file to <code>nightly-2026-09-27</code>: the host crate builds <code>pico-prover</code>, which uses nightly-only features.</li>
+<li>The guest target is still <code>riscv64im-pico-zkvm-elf</code>.</li>
+<li>The guest depends on <code>pico-sdk = { git = "https://github.com/brevis-network/pico" }</code>, as before.</li>
+</ul>
+<h3 id="fields-and-phases"><a class="header" href="#fields-and-phases">Fields and phases</a></h3>
 <ul>
-<li><input disabled="" type="checkbox" checked=""> RISCV-Phase</li>
-<li><input disabled="" type="checkbox" checked=""> RECURSION-Phase</li>
-<li><input disabled="" type="checkbox" checked=""> EVM-Phase</li>
+<li>KoalaBear is the only field. BabyBear and Mersenne31 are removed with no replacement: the <code>bb</code> and <code>m31</code> features of <code>pico-sdk</code> are gone, and <code>kb</code> is kept as a no-op so existing guests still build.</li>
+<li>The <code>COMPRESS</code> phase is removed. The chain is now <code>RISCV → CONVERT → COMBINE → EMBED → WRAP</code>; see <a href="../writing-apps/advanced/proverchain.html">ProverChain</a>.</li>
 </ul>
-</li>
-<li>STARK on BabyBear (prime field $$p=2^{31}-2^{27}+1$$): Supports generating proofs for
+<h3 id="cli"><a class="header" href="#cli">CLI</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>2.x</th><th>3.0</th></tr>
+</thead>
+<tbody>
+<tr><td><code>cargo pico prove --fast</code></td><td><code>cargo pico prove --phase riscv</code>. The RISC-V phase is full-security; <code>--fast</code> now fails with this hint</td></tr>
+<tr><td><code>cargo pico prove --field</code></td><td>removed; KoalaBear is the only field, and the flag fails with an error</td></tr>
+<tr><td><code>--elf</code> optional</td><td><code>--elf</code> required</td></tr>
+<tr><td><code>--input "0x…"</code> or a file path, once</td><td>repeatable and typed: <code>--input u64:100</code>, <code>--input 0x…</code>, <code>--input file:&lt;path&gt;</code></td></tr>
+<tr><td>output in <code>&lt;target&gt;/pico_out</code></td><td>output in <code>pico_out</code> under the current directory (<code>--output</code> to change)</td></tr>
+<tr><td><code>prove</code> stops after EMBED</td><td><code>prove</code> stops after COMBINE by default; <code>--phase</code> chooses</td></tr>
+<tr><td><code>--evm</code> with a fixed Docker image</td><td><code>--evm</code> with gnark from <code>$PICO_GNARK_BIN</code> or <code>$PICO_GNARK_IMAGE</code>, in whitelist mode only, with keys from <code>--keys DIR</code> or <code>$PICO_GROTH16_KEYS</code>. See the <a href="https://github.com/brevis-network/pico/blob/v3.0.0/gnark/README.md">gnark README</a></td></tr>
+</tbody>
+</table>
+</div>
+<p>New subcommands: <code>cargo pico execute</code> (emulate without proving) and <code>cargo pico aot</code> (generate AOT crates). See the <a href="https://github.com/brevis-network/pico/blob/v3.0.0/docs/migration-2.x-to-3.0.md#cli-cargo-pico">CLI section of the migration guide</a>.</p>
+<h3 id="host-sdk-pico-sdk-client--pico-prover"><a class="header" href="#host-sdk-pico-sdk-client--pico-prover">Host SDK: <code>pico-sdk</code> client → <code>pico-prover</code></a></h3>
+<p>The prover clients left <code>pico-sdk</code>. The host program depends on the new crate <code>pico-prover</code>:</p>
+<pre><code class="language-toml">pico-prover = { git = "https://github.com/brevis-network/pico" }
+</code></pre>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>2.x (<code>pico_sdk::client</code>)</th><th>3.0 (<code>pico_prover</code>)</th></tr>
+</thead>
+<tbody>
+<tr><td><code>DefaultProverClient::new(&amp;elf)</code> (and the other <code>*ProverClient</code>s)</td><td><code>Prover::new(&amp;elf)?</code>, or <code>Prover::builder(&amp;elf)…build()?</code> for options</td></tr>
+<tr><td><code>client.new_stdin_builder()</code> + <code>write</code></td><td><code>Stdin::new()</code> + <code>write</code> / <code>write_bytes</code>, or <code>Stdin::from(&amp;value)</code></td></tr>
+<tr><td><code>prove_fast(stdin)</code></td><td><code>prove_to(stdin, Phase::Riscv)</code></td></tr>
+<tr><td><code>prove(stdin)</code> → <code>(riscv_proof, embed_proof)</code></td><td><code>prove(stdin)</code> → one <code>Proof</code> at COMBINE, already verified</td></tr>
+<tr><td><code>verify(..)</code></td><td>no separate call: every returned <code>Proof</code> is verified. A proof read from a file goes through <code>ProofArtifact::read</code> and <code>Prover::verify_artifact</code></td></tr>
+<tr><td><code>emulate(stdin)</code></td><td><code>execute(stdin)</code>; its output is not proof-authenticated</td></tr>
+<tr><td><code>prove_evm(stdin, need_setup, out, field)</code></td><td><code>prove_evm(stdin)</code> → <code>EvmBundle</code>, whitelist mode only. Groth16 itself runs outside the library (<code>cargo pico prove --evm</code>)</td></tr>
+<tr><td><code>write_onchain_data(..)</code></td><td><code>Proof::write_wrap_artifacts</code> or <code>EvmBundle::write_to</code></td></tr>
+<tr><td><code>proof.pv_stream</code></td><td><code>proof.committed().as_bytes()</code></td></tr>
+</tbody>
+</table>
+</div>
+<p>See <a href="../writing-apps/proving.html">Proving</a> for the new API.</p>
+<h3 id="guest-sdk"><a class="header" href="#guest-sdk">Guest SDK</a></h3>
 <ul>
-<li><input disabled="" type="checkbox" checked=""> RISCV-Phase</li>
-<li><input disabled="" type="checkbox" checked=""> RECURSION-Phase</li>
-<li><input disabled="" type="checkbox" checked=""> EVM-Phase</li>
+<li><code>pico_sdk::poseidon2_hash</code> is deprecated: its single-element output is not collision-resistant. Use <code>pico_sdk::poseidon2::hash</code> (fixed-length input).</li>
+<li><code>syscall_poseidon2_permute</code> now takes <code>*const Poseidon2State, *mut Poseidon2State</code>.</li>
 </ul>
-</li>
-<li>CircleSTARK on Mersenne31 where $$p=2^{31}−1$$). Supports generating proofs for
+<h3 id="output-files"><a class="header" href="#output-files">Output files</a></h3>
 <ul>
-<li><input disabled="" type="checkbox" checked=""> RISCV-Phase</li>
-<li><input disabled="" type="checkbox"> RECURSION-Phase</li>
-<li><input disabled="" type="checkbox"> EVM-Phase</li>
+<li><code>constraints.json</code> and <code>groth16_witness.json</code> are now <code>wrap_constraints.json</code> and <code>wrap_groth16_witness.json</code>.</li>
+<li>RISC-V and COMBINE proofs are written as <code>proof-riscv.pico</code> and <code>proof-combine.pico</code>.</li>
+<li><code>inputs.json</code> gains a <code>committedValuesDigest</code> field.</li>
 </ul>
-</li>
-</ul>
-<h2 id="seamless-backend-switching"><a class="header" href="#seamless-backend-switching">Seamless Backend Switching</a></h2>
-<p>Switching between proving backends in Pico is designed to be straightforward. The underlying proving logic is abstracted away, allowing you to change the backend configuration through a simple parameter update—without needing to rewrite any part of your application.</p>
-<p>The Pico SDK provides a suite of <code>ProverClient</code> implementations, each corresponding to a different proving backend:</p>
-<ul>
-<li><strong>KoalaBearProverClient:</strong> Uses STARK on KoalaBear for fast proving without VK (verification key) verification.</li>
-<li><strong>KoalaBearProverVKClient:</strong> Uses STARK on KoalaBear for full proving with VK verification.</li>
-<li><strong>BabyBearProverClient:</strong> Similar to KoalaBearProverClient, but for STARK on BabyBear.</li>
-<li><strong>BabyBearProverVKClient:</strong> Similar to KoalaBearProverVKClient, but for STARK on BabyBear.</li>
-<li><strong>M31RiscvProverClient:</strong> Performs RISCV proving using CircleSTARK on Mersenne31.</li>
-</ul>
-<p>We could initialize the <code>ProverClient</code> for different backend configurations:</p>
-<pre class="playground"><code class="language-rust">// An example for initializing the different prover clients
-fn main() {
-    // Initialize logger.
-    init_logger();
-
-    // Load the ELF file.
-    let elf = load_elf("./elf/riscv64im-pico-zkvm-elf");
-
-    // Initialize a client for fast proving (without VK verification) 
-    // using STARK on KoalaBear.
-    let client = KoalaBearProverClient::new(elf);
-
-    // Initialize a client for full proving with VK verification 
-    // using STARK on KoalaBear.
-    let client = KoalaBearProverVKClient::new(elf);
-
-    // Initialize a client for fast proving (without VK verification) 
-    // using STARK on BabyBear.
-    let client = BabyBearProverClient::new(elf);
-
-    // Initialize a client for full proving with VK verification 
-    // using STARK on BabyBear.
-    let client = BabyBearProverVKClient::new(elf);
-
-    // Initialize a client for RISCV proving using CircleSTARK on Mersenne31.
-    let client = M31RiscvProverClient::new(elf);
-}</code></pre>
-<h2 id="benefits-of-switchable-proving-backends"><a class="header" href="#benefits-of-switchable-proving-backends">Benefits of Switchable Proving Backends</a></h2>
-<ul>
-<li><strong>Performance Gains:</strong> Optimize your proof generation by selecting the backend that best suits the computational demands of your workload.</li>
-<li><strong>Flexibility:</strong> Experiment with different backends and configurations to achieve the ideal balance between proof size, proving efficiency, and on-chain compatibility.</li>
-<li><strong>Seamless Upgrades:</strong> As new prime fields and proving systems are integrated into Pico, you can upgrade your proving backend with minimal disruption.</li>
-<li><strong>Future-Proofing:</strong> Stay at the forefront of zero-knowledge technology advancements by taking advantage of the latest proving systems as they become available.</li>
-</ul>
+<h3 id="on-chain-verifier"><a class="header" href="#on-chain-verifier">On-chain verifier</a></h3>
+<p><code>verifyPicoProof</code> now takes a twelve-word proof:</p>
+<pre><code class="language-solidity">function verifyPicoProof(bytes32 riscvVkey, bytes calldata publicValues, uint256[12] calldata proof) external view;
+</code></pre>
+<p>In 2.x it took <code>uint256[8]</code>. The extra four words are the Pedersen commitment and its proof of knowledge that the 3.0 wrap circuit carries. Redeploy the verifier contracts; see the <a href="https://github.com/brevis-network/pico/blob/v3.0.0/gnark/README.md">gnark README</a>.</p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="../../writing-apps/advanced/proverchain.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="../index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                             </a>
 
-                            <a rel="next prefetch" href="../../writing-apps/advanced/vm-cycle-tracking.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="../getting-started/installation.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                             </a>
 
@@ -267,11 +265,11 @@ fn main() {
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="../../writing-apps/advanced/proverchain.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="../index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                     </a>
 
-                    <a rel="next prefetch" href="../../writing-apps/advanced/vm-cycle-tracking.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="../getting-started/installation.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                     </a>
             </nav>
@@ -291,13 +289,13 @@ fn main() {
         </script>
 
 
-        <script src="../../elasticlunr-ef4e11c1.min.js"></script>
-        <script src="../../mark-09e88c2c.min.js"></script>
-        <script src="../../searcher-c2a407aa.js"></script>
+        <script src="../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../mark-09e88c2c.min.js"></script>
+        <script src="../searcher-c2a407aa.js"></script>
 
-        <script src="../../clipboard-1626706a.min.js"></script>
-        <script src="../../highlight-abc7f01d.js"></script>
-        <script src="../../book-a0b12cfe.js"></script>
+        <script src="../clipboard-1626706a.min.js"></script>
+        <script src="../highlight-abc7f01d.js"></script>
+        <script src="../book-a0b12cfe.js"></script>
 
         <!-- Custom JS scripts -->
 

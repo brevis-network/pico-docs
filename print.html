@@ -36,10 +36,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-3f065d6d.js";
+            window.path_to_searchindex_js = "searchindex-85d25064.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-3c4523d4.js"></script>
+        <script src="toc-8533914a.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -194,6 +194,79 @@
 </ul>
 <p>Pico provides a robust, future-ready foundation that meets today’s challenges and evolves with the advancing field of zero-knowledge technology. Whether you’re a developer eager to explore the potential of ZK proofs or a researcher pushing the boundaries of cryptographic innovation, Pico is the ideal platform to build upon.</p>
 <div style="break-before: page; page-break-before: always;"></div>
+<h1 id="migrating-to-30"><a class="header" href="#migrating-to-30">Migrating to 3.0</a></h1>
+<p>Pico 3.0 replaces the proof system: it proves over the KoalaBear field with an MLE proof system (LogUp-GKR, ZeroCheck and WHIR), and the host-side API moved to a new crate. 2.x proofs do not verify under 3.0, and 2.x on-chain verifiers do not accept 3.0 proofs.</p>
+<p>This page lists the changes most projects hit. The full guide is <a href="https://github.com/brevis-network/pico/blob/v3.0.0/docs/migration-2.x-to-3.0.md">Migrating from 2.x to 3.0</a>, and the <a href="https://github.com/brevis-network/pico/blob/v3.0.0/docs/release-notes/3.0.md">3.0 release notes</a> summarize the release.</p>
+<h3 id="toolchain"><a class="header" href="#toolchain">Toolchain</a></h3>
+<ul>
+<li>The Rust toolchain moved from <code>nightly-2025-08-04</code> to <code>nightly-2026-09-27</code>. Reinstall the CLI with it (see <a href="#installation">Installation</a>), then run <code>cargo pico install</code> again for the matching guest toolchain.</li>
+<li>Set the project’s own <code>rust-toolchain</code> file to <code>nightly-2026-09-27</code>: the host crate builds <code>pico-prover</code>, which uses nightly-only features.</li>
+<li>The guest target is still <code>riscv64im-pico-zkvm-elf</code>.</li>
+<li>The guest depends on <code>pico-sdk = { git = "https://github.com/brevis-network/pico" }</code>, as before.</li>
+</ul>
+<h3 id="fields-and-phases"><a class="header" href="#fields-and-phases">Fields and phases</a></h3>
+<ul>
+<li>KoalaBear is the only field. BabyBear and Mersenne31 are removed with no replacement: the <code>bb</code> and <code>m31</code> features of <code>pico-sdk</code> are gone, and <code>kb</code> is kept as a no-op so existing guests still build.</li>
+<li>The <code>COMPRESS</code> phase is removed. The chain is now <code>RISCV → CONVERT → COMBINE → EMBED → WRAP</code>; see <a href="#proverchain">ProverChain</a>.</li>
+</ul>
+<h3 id="cli"><a class="header" href="#cli">CLI</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>2.x</th><th>3.0</th></tr>
+</thead>
+<tbody>
+<tr><td><code>cargo pico prove --fast</code></td><td><code>cargo pico prove --phase riscv</code>. The RISC-V phase is full-security; <code>--fast</code> now fails with this hint</td></tr>
+<tr><td><code>cargo pico prove --field</code></td><td>removed; KoalaBear is the only field, and the flag fails with an error</td></tr>
+<tr><td><code>--elf</code> optional</td><td><code>--elf</code> required</td></tr>
+<tr><td><code>--input "0x…"</code> or a file path, once</td><td>repeatable and typed: <code>--input u64:100</code>, <code>--input 0x…</code>, <code>--input file:&lt;path&gt;</code></td></tr>
+<tr><td>output in <code>&lt;target&gt;/pico_out</code></td><td>output in <code>pico_out</code> under the current directory (<code>--output</code> to change)</td></tr>
+<tr><td><code>prove</code> stops after EMBED</td><td><code>prove</code> stops after COMBINE by default; <code>--phase</code> chooses</td></tr>
+<tr><td><code>--evm</code> with a fixed Docker image</td><td><code>--evm</code> with gnark from <code>$PICO_GNARK_BIN</code> or <code>$PICO_GNARK_IMAGE</code>, in whitelist mode only, with keys from <code>--keys DIR</code> or <code>$PICO_GROTH16_KEYS</code>. See the <a href="https://github.com/brevis-network/pico/blob/v3.0.0/gnark/README.md">gnark README</a></td></tr>
+</tbody>
+</table>
+</div>
+<p>New subcommands: <code>cargo pico execute</code> (emulate without proving) and <code>cargo pico aot</code> (generate AOT crates). See the <a href="https://github.com/brevis-network/pico/blob/v3.0.0/docs/migration-2.x-to-3.0.md#cli-cargo-pico">CLI section of the migration guide</a>.</p>
+<h3 id="host-sdk-pico-sdk-client--pico-prover"><a class="header" href="#host-sdk-pico-sdk-client--pico-prover">Host SDK: <code>pico-sdk</code> client → <code>pico-prover</code></a></h3>
+<p>The prover clients left <code>pico-sdk</code>. The host program depends on the new crate <code>pico-prover</code>:</p>
+<pre><code class="language-toml">pico-prover = { git = "https://github.com/brevis-network/pico" }
+</code></pre>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>2.x (<code>pico_sdk::client</code>)</th><th>3.0 (<code>pico_prover</code>)</th></tr>
+</thead>
+<tbody>
+<tr><td><code>DefaultProverClient::new(&amp;elf)</code> (and the other <code>*ProverClient</code>s)</td><td><code>Prover::new(&amp;elf)?</code>, or <code>Prover::builder(&amp;elf)…build()?</code> for options</td></tr>
+<tr><td><code>client.new_stdin_builder()</code> + <code>write</code></td><td><code>Stdin::new()</code> + <code>write</code> / <code>write_bytes</code>, or <code>Stdin::from(&amp;value)</code></td></tr>
+<tr><td><code>prove_fast(stdin)</code></td><td><code>prove_to(stdin, Phase::Riscv)</code></td></tr>
+<tr><td><code>prove(stdin)</code> → <code>(riscv_proof, embed_proof)</code></td><td><code>prove(stdin)</code> → one <code>Proof</code> at COMBINE, already verified</td></tr>
+<tr><td><code>verify(..)</code></td><td>no separate call: every returned <code>Proof</code> is verified. A proof read from a file goes through <code>ProofArtifact::read</code> and <code>Prover::verify_artifact</code></td></tr>
+<tr><td><code>emulate(stdin)</code></td><td><code>execute(stdin)</code>; its output is not proof-authenticated</td></tr>
+<tr><td><code>prove_evm(stdin, need_setup, out, field)</code></td><td><code>prove_evm(stdin)</code> → <code>EvmBundle</code>, whitelist mode only. Groth16 itself runs outside the library (<code>cargo pico prove --evm</code>)</td></tr>
+<tr><td><code>write_onchain_data(..)</code></td><td><code>Proof::write_wrap_artifacts</code> or <code>EvmBundle::write_to</code></td></tr>
+<tr><td><code>proof.pv_stream</code></td><td><code>proof.committed().as_bytes()</code></td></tr>
+</tbody>
+</table>
+</div>
+<p>See <a href="#proving">Proving</a> for the new API.</p>
+<h3 id="guest-sdk"><a class="header" href="#guest-sdk">Guest SDK</a></h3>
+<ul>
+<li><code>pico_sdk::poseidon2_hash</code> is deprecated: its single-element output is not collision-resistant. Use <code>pico_sdk::poseidon2::hash</code> (fixed-length input).</li>
+<li><code>syscall_poseidon2_permute</code> now takes <code>*const Poseidon2State, *mut Poseidon2State</code>.</li>
+</ul>
+<h3 id="output-files"><a class="header" href="#output-files">Output files</a></h3>
+<ul>
+<li><code>constraints.json</code> and <code>groth16_witness.json</code> are now <code>wrap_constraints.json</code> and <code>wrap_groth16_witness.json</code>.</li>
+<li>RISC-V and COMBINE proofs are written as <code>proof-riscv.pico</code> and <code>proof-combine.pico</code>.</li>
+<li><code>inputs.json</code> gains a <code>committedValuesDigest</code> field.</li>
+</ul>
+<h3 id="on-chain-verifier"><a class="header" href="#on-chain-verifier">On-chain verifier</a></h3>
+<p><code>verifyPicoProof</code> now takes a twelve-word proof:</p>
+<pre><code class="language-solidity">function verifyPicoProof(bytes32 riscvVkey, bytes calldata publicValues, uint256[12] calldata proof) external view;
+</code></pre>
+<p>In 2.x it took <code>uint256[8]</code>. The extra four words are the Pedersen commitment and its proof of knowledge that the 3.0 wrap circuit carries. Redeploy the verifier contracts; see the <a href="https://github.com/brevis-network/pico/blob/v3.0.0/gnark/README.md">gnark README</a>.</p>
+<div style="break-before: page; page-break-before: always;"></div>
 <h1 id="installation"><a class="header" href="#installation">Installation</a></h1>
 <h2 id="requirements"><a class="header" href="#requirements">Requirements:</a></h2>
 <ul>
@@ -206,7 +279,7 @@
 <ol>
 <li>Install pico-cli from the GitHub repository</li>
 </ol>
-<pre><code class="language-sh">cargo +nightly-2025-08-04 install --git https://github.com/brevis-network/pico pico-cli
+<pre><code class="language-sh">cargo +nightly-2026-09-27 install --git https://github.com/brevis-network/pico pico-cli
 </code></pre>
 <ol start="2">
 <li>Check the version</li>
@@ -222,14 +295,14 @@
 <ol start="2">
 <li>cargo install from the local path</li>
 </ol>
-<pre><code class="language-sh">cd sdk/cli
+<pre><code class="language-sh">cd pico/sdk/cli
 cargo install --locked --force --path .
 </code></pre>
 <h3 id="rust-toolchain"><a class="header" href="#rust-toolchain">Rust toolchain</a></h3>
-<p>Pico uses the rust-specific rust toolchain version(nightly-2025-08-04) to build the program. The specific toolchain version can be found in the <code>rust_toolchain</code> file in the repository root.</p>
-<pre><code class="language-sh">rustup install nightly-2025-08-04
+<p>Pico uses the rust-specific rust toolchain version(nightly-2026-09-27) to build the program. The specific toolchain version can be found in the <code>rust-toolchain</code> file in the repository root.</p>
+<pre><code class="language-sh">rustup install nightly-2026-09-27
 </code></pre>
-<pre><code class="language-bash">rustup component add rust-src --toolchain nightly-2025-08-04
+<pre><code class="language-bash">rustup component add rust-src --toolchain nightly-2026-09-27
 </code></pre>
 <h3 id="install-risc-v64-target-toolchain"><a class="header" href="#install-risc-v64-target-toolchain">Install RISC-V64 target toolchain</a></h3>
 <p>Pico requires a RISC-V64 target toolchain to compile programs. After installing cargo pico, run:</p>
@@ -262,11 +335,11 @@ cargo pico build
 </ol>
 <pre><code class="language-sh"># Prove in prover folder
 cd ../prover
-RUST_LOG=info cargo run --release
+RUST_LOG=info cargo run --release -- prove fib.pico
 </code></pre>
 <p>The <code>prover</code> subdirectory contains a Rust program that will load an input for the ELF that was just compiled, execute it, and generate a proof. This project has the entire functionality of the Pico SDK at its disposal, and can be customized however you want.</p>
 <p>If you simply wish to use the default provided proving clients and options, you can prove using the Pico CLI via</p>
-<pre><code class="language-sh">RUST_LOG=info cargo pico prove --input "0x6400000000000000" --fast --elf /path/to/elf # input n = 100
+<pre><code class="language-sh">RUST_LOG=info cargo pico prove --input "0x6400000000000000" --phase riscv --elf /path/to/elf # input n = 100
 </code></pre>
 <p>The input to the fibonacci program is a single u64 specifying which number to compute, so we can directly pass the input with the <code>--input</code> option, supplying little endian bytes. <code>--fast</code> simply tells the prover to skip any recursion steps and terminate after finishing the RISC-V proof.</p>
 <ol start="4">
@@ -274,29 +347,19 @@ RUST_LOG=info cargo run --release
 </ol>
 <p>AOT is an alternative execution path: the emulator thread can be driven by AOT-compiled chunks generated from the specific guest ELF you are proving, instead of the interpreter. This trades a one-time codegen step for reduced per-proof execution cost.</p>
 <ul>
-<li>One-Time setup</li>
-</ul>
-<p>Install the AOT codegen binary:</p>
-<pre><code class="language-sh">cargo +nightly-2025-08-04 install \
-  --git https://github.com/brevis-network/pico \
-  --tag v2.1.1 \
-  pico-aot-codegen
-</code></pre>
-<ul>
 <li>Generate AOT chunks</li>
 </ul>
 <p>The generated chunks are tied to the PC ranges of a specific ELF. You must re-generate whenever <code>app/src/</code> changes.</p>
 <p>From the project root, after <code>cargo pico build</code>:</p>
-<pre><code class="language-sh">PICO_AOT_RUNTIME_SPEC='git = "https://github.com/brevis-network/pico", tag = "v2.1.1"' \
-  generate_crates app/elf/riscv64im-pico-zkvm-elf ./aot-generated
+<pre><code class="language-sh">cargo pico aot --elf app/elf/riscv64im-pico-zkvm-elf --out aot-generated
 </code></pre>
-<p><code>PICO_AOT_RUNTIME_SPEC</code> tells the codegen tool to wire <code>pico-aot-runtime</code> as a git dep in the generated chunk crates, so <code>aot-generated/</code> works at the template root without requiring a local Pico checkout.</p>
+<p><code>cargo pico aot</code> wires <code>pico-aot-runtime</code> as a git dep in the generated chunk crates, pinned to the CLI’s release tag, so <code>aot-generated/</code> works at the template root without requiring a local Pico checkout. Set <code>PICO_SOURCE</code> to a Pico checkout to build against it instead.</p>
 <ul>
 <li>Prove with <code>--aot</code></li>
 </ul>
-<p>Enable the template’s <code>aot</code> feature and pass the <code>--aot</code> runtime flag:</p>
+<p>Enable the template’s <code>aot</code> feature:</p>
 <pre><code class="language-sh">cd prover
-RUST_LOG=info cargo run --release --features aot -- --aot
+RUST_LOG=info cargo run --release --features aot -- prove fib.pico
 </code></pre>
 <h2 id="project-layout"><a class="header" href="#project-layout">Project Layout</a></h2>
 <pre><code>Fibonacci
@@ -337,23 +400,22 @@ cargo pico build
 <li>
 <p>Prove program to EVM</p>
 <pre><code class="language-bash">cd ../prover
-RUST_LOG=info cargo run --release
+RUST_LOG=info cargo run --release -- prove fib.pico
 </code></pre>
-<p>This step will locally set up the Groth16 Verifier contract and generate the Pico Groth16 proof. The files will be outputted to the <code>root/contracts/test_data</code> folder.<br>The prover program will then attempt to launch a Docker container to generate the final EVM proof with <code>gnark</code>. This ingests <code>test_data/proof.json</code> and should produce <code>test_data/proof.data</code>. If this file is not produced, you may need to increase the amount of RAM available to the container.</p>
+<p>This proves the program in dev mode and writes <code>fib.pico</code>, a RISC-V proof that verifies from the ELF but is not one a contract can check. The EVM proof comes from <code>cargo pico prove --evm</code> in whitelist mode, with a gnark prover and a Groth16 key set; the template’s README, “The on-chain proof”, lists the exact commands.</p>
 </li>
 <li>
 <p>Test EVM Proof</p>
 <pre><code class="language-bash">cd ../contracts
-mv -f ./test_data/Groth16Verifier.sol ./src/Groth16Verifier.sol
 forge test
 </code></pre>
-<p>The foundry test script will parse the proof generated in the previous step and interact with the Groth16 Verifier contract. With all tests passing, the EVM quick start is successful.</p>
+<p>The Foundry tests verify the proof in <code>test_data/inputs.json</code> with the Groth16 verifier in <code>test/dev</code>. To test your own EVM proof, copy its <code>inputs.json</code> and key files in, as the template’s README shows. With all tests passing, the EVM quick start is successful.</p>
 </li>
 </ol>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="programs"><a class="header" href="#programs">Programs</a></h1>
 <h2 id="pico-entrypoint"><a class="header" href="#pico-entrypoint">Pico entrypoint</a></h2>
-<p>The program is executed and proved with the zkVM platform. Pico links the programs by the main function annotated with the <code>entrypoint</code> macro_rules. The program needs to be declared with <code>no_main</code>. </p>
+<p>The program is executed and proved with the zkVM platform. Pico links the programs by the main function annotated with the <code>entrypoint</code> macro_rules. The program needs to be declared with <code>no_main</code>.</p>
 <pre class="playground"><code class="language-rust">// declare no_main
 #![no_main]
 
@@ -367,10 +429,10 @@ pub fn main() {
 <p>Raw system calls are available by using <code>pico_sdk::riscv_ecalls::*</code> but it is recommended to use the integrated patch libraries to avoid disrupting the standard development workflow. The program can then be compiled to RiscV without creating conditional compilation-related hoops aside from the entry point (unless your system assumes a word size of 64 bits, which is untrue in the zkVM). A few light wrappers for elliptic curve types can also be found in the <code>pico-patch-libs</code> crate.</p>
 <p>Be very careful with using heap memory. The currently implemented allocator does not free any memory, so cloning a medium-sized <code>Vec</code> a few too many times will cause your program to go OOM. You must write your own allocator if a more managed memory solution is required.</p>
 <h2 id="inputs-and-outputs"><a class="header" href="#inputs-and-outputs">Inputs and outputs</a></h2>
-<p><code>pico_sdk::io::read_as</code> Read a serialized input data type into the program and deserialize it into specific types, such as u32, u64, and bytes. Pico <code>prove</code> CLI provides two ways to pass the inputs: hex string and file path. When your specific input is a file path , the file content will be read as bytes in the program.  </p>
-<pre><code class="language-sh">cargo pico prove --input "" # hex or file path
+<p><code>pico_sdk::io::read_as</code> Read a serialized input data type into the program and deserialize it into specific types, such as u32, u64, and bytes. Pico <code>prove</code> CLI provides two ways to pass the inputs: hex string (<code>0x…</code>) and file path (<code>file:&lt;path&gt;</code>). When your specific input is a file path, the file content will be read as bytes in the program.</p>
+<pre><code class="language-sh">cargo pico prove --elf elf/riscv64im-pico-zkvm-elf --input "0x..." # hex, or file:&lt;path&gt;
 </code></pre>
-<p><code>pico_sdk::io::commit</code> Commit serializable data to the public stream. The public inputs will be compressed using a SHA256 hash and exported to the on-chain. </p>
+<p><code>pico_sdk::io::commit</code> Commit serializable data to the public stream. The public inputs will be compressed using a SHA256 hash and exported to the on-chain.</p>
 <p><code>pico_sdk::io:commit_bytes</code> Write the public values in a byte buffer.</p>
 <h2 id="setup-programs"><a class="header" href="#setup-programs">Setup programs</a></h2>
 <ol>
@@ -378,7 +440,7 @@ pub fn main() {
 </ol>
 <pre><code class="language-sh">cargo pico new --template basic basic-example
 </code></pre>
-<p>The project only contains a program module.  You can test and debug your RISC-V program quickly using the basic template.</p>
+<p>The project only contains a program module. You can test and debug your RISC-V program quickly using the basic template.</p>
 <ol start="2">
 <li>Create a program with EVM</li>
 </ol>
@@ -387,24 +449,25 @@ pub fn main() {
 <p>The created project with the evm template will contain an extra <code>Contracts</code> folder for app and verification contracts .</p>
 <ul>
 <li>Proving with the evm option referring to <a href="#proving">this page</a> can generate the proof for on-chain EVM.</li>
-<li>Verification test requires to the install <a href="https://book.getfoundry.sh/getting-started/installation">foundryup and forge test</a>. </li>
+<li>Verification test requires to the install <a href="https://book.getfoundry.sh/getting-started/installation">foundryup and forge test</a>.</li>
 </ul>
 <p>Use the pre-prepared pico EVM proof and Groth16 verifier in the repo to run contract tests.</p>
-<pre><code class="language-sh">cd contract 
+<pre><code class="language-sh">cd contracts
 forge test
 </code></pre>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="proving"><a class="header" href="#proving">Proving</a></h1>
 <h2 id="overview"><a class="header" href="#overview">Overview</a></h2>
 <p>Pico provides CLI and SDK tools to recursively prove the program to the developers.</p>
-<p>Pico CLI provides a complete toolchain for compiling the RISC-V program and using Pico to complete end-to-end proof. Refer to the <a href="#installation">installation page</a> to install the CLI toolchain. CLI default use the KoalaBear field for the backend proving, if you want to switch to other fields, read more details in <a href="#proving-backends">Proving Backends Page</a>.</p>
-<p>Like the CLI, the Pico-SDK includes lower-level APIs that can prove the program directly. The <a href="https://github.com/brevis-network/pico-zkapp-template/tree/main/prover">prover package</a> of the template project repository provides an example of how to import and initialize the SDK and quickly generate a RISC-V proof using the Pico SDK. In the <a href="#proving-steps">Proving Steps Section</a>, you can read more about VM e2e proving and the Gnark EVM proof generation for On-chain verification</p>
+<p>Pico CLI provides a complete toolchain for compiling the RISC-V program and using Pico to complete end-to-end proof. Refer to the <a href="#installation">installation page</a> to install the CLI toolchain. Pico 3.0 proves over the KoalaBear field.</p>
+<p>Like the CLI, the <code>pico-prover</code> crate includes lower-level APIs that can prove the program directly. The <a href="https://github.com/brevis-network/pico-zkapp-template/tree/main/prover">prover package</a> of the template project repository provides an example of how to import and initialize the SDK and quickly generate a RISC-V proof using the Pico SDK. In the <a href="#proving-steps">Proving Steps Section</a>, you can read more about VM e2e proving and the Gnark EVM proof generation for On-chain verification</p>
 <p>Let’s quickly go through the Pico SDK usage and generate a Fibonacci RISC-V proof.</p>
 <ol>
-<li>Import <code>pico-sdk</code></li>
+<li>Import <code>pico-sdk</code> and <code>pico-prover</code></li>
 </ol>
 <pre><code class="language-toml"># Cargo.toml
 pico-sdk = { git = "https://github.com/brevis-network/pico" }
+pico-prover = { git = "https://github.com/brevis-network/pico" }
 </code></pre>
 <ol start="2">
 <li>Execute the proving process and generate RISC-V proof.</li>
@@ -415,30 +478,29 @@ fn main() {
     init_logger();
 
     // Load the ELF file
-    let elf = load_elf("../elf/riscv64im-pico-zkvm-elf");
+    let elf = load_elf("../app/elf/riscv64im-pico-zkvm-elf");
 
-    // Initialize the prover client
-    let client = DefaultProverClient::new(&amp;elf);
+    // Initialize the prover
+    let mut prover = Prover::new(&amp;elf).expect("Failed to initialize the prover");
     // Initialize new stdin
-    let mut stdin_builder = client.new_stdin_builder();
+    let mut stdin = Stdin::new();
 
     // Set up input and generate proof
     let n = 100u64;
-    stdin_builder.write(&amp;n);
+    stdin.write(&amp;n);
 
     // Generate proof
-    let proof = client.prove_fast(stdin_builder).expect("Failed to generate proof");
+    let proof = prover.prove_to(stdin, Phase::Riscv).expect("Failed to generate proof");
 
-    // Decodes public values from the proof's public value stream.
-    let public_buffer = proof.pv_stream.unwrap();
-    let public_values = PublicValuesStruct::abi_decode(&amp;public_buffer, true).unwrap();
+    // Decodes public values from the proof's committed values.
+    let public_values: FibonacciData = proof.committed().read().expect("Failed to decode public values");
 
     // Verify the public values
     verify_public_values(n, &amp;public_values);
 }
 
 /// Verifies that the computed Fibonacci values match the public values.
-fn verify_public_values(n: u64, public_values: &amp;PublicValuesStruct) {
+fn verify_public_values(n: u64, public_values: &amp;FibonacciData) {
     println!(
         "Public value n: {:?}, a: {:?}, b: {:?}",
         public_values.n, public_values.a, public_values.b
@@ -461,11 +523,11 @@ fn verify_public_values(n: u64, public_values: &amp;PublicValuesStruct) {
 </span>/// Write a serializable struct to the buffer.
 pub fn write&lt;T: Serialize&gt;(&amp;mut self, data: &amp;T);
 /// Write a slice of bytes to the buffer.
-pub fn write_slice(&amp;mut self, slice: &amp;[u8]);
+pub fn write_bytes(&amp;mut self, bytes: &amp;[u8]);
 <span class="boring">}</span></code></pre>
 <p>Examples:</p>
-<pre class="language-rust"><code class="lang-rust">use std::vec;
-use pico_sdk::client::SDKProverClient;
+<pre class="playground"><code class="language-rust">use std::vec;
+use pico_prover::Stdin;
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize)]
@@ -476,29 +538,25 @@ pub struct FibonacciInputs {
 }
 
 fn main() {
-    // Initialize the prover client
-    let client = SDKProverClient::new(&amp;elf, false);
     // Initialize new stdin
-    let mut stdin_builder = client.new_stdin_builder();
+    let mut stdin = Stdin::new();
     // example 1: write a u64 to the VM
     let n = 100u64;
-    stdin_builder.write(&amp;n);
-    
-<strong>    // example 2: write a struct 
-</strong>    let inputs = FibonacciInputs { a: 0, b: 1, n };
-    stdin_builder.write(&amp;inputs);
-    
+    stdin.write(&amp;n);
+
+    // example 2: write a struct
+    let inputs = FibonacciInputs { a: 0, b: 1, n };
+    stdin.write(&amp;inputs);
+
     // example 3: write a byte array
     let bytes = vec![1, 2, 3, 4];
-    stdin_builder.write_slice(&amp;bytes);
-}
-</code></pre>
-
+    stdin.write_bytes(&amp;bytes);
+}</code></pre>
 <ol start="2">
 <li><strong>CLI input option</strong></li>
 </ol>
 <p>The <code>prove</code> command <mark style="color:orange;"><code>--input</code></mark> option can take a hex string or a file path. the hex string must be match the length of the read type. For example, the input <code>n = 100u64</code>; the <mark style="color:orange;">hex string should be</mark> <code>0x6400000000000000</code> <mark style="color:orange;">in little-endian format</mark>.</p>
-<pre><code class="language-sh">RUST_LOG=info cargo pico prove --input "0x6400000000000000" --fast
+<pre><code class="language-sh">RUST_LOG=info cargo pico prove --elf elf/riscv64im-pico-zkvm-elf --input "0x6400000000000000" --phase riscv
 </code></pre>
 <h3 id="read"><a class="header" href="#read">Read</a></h3>
 <p>Corresponding to the writer functions, there are read_as and read_slice tools for io reading the serializable object or bytes into the program.</p>
@@ -526,92 +584,96 @@ fn main() {
 </code></pre>
 
 <h2 id="end-to-end-proving"><a class="header" href="#end-to-end-proving">End-to-end Proving</a></h2>
-<p>This section introduces more advanced CLI options and SDK APIs to complete the end-to-end proving process. The Proving process consists of multiple stages, including <a href="#provechain-proving-phase">RISCV, RECURSION, and EVM Phases</a>. Pico SDK includes various ProverClients in different proving backends. Here, we use the KoalaBearProverClient (based on STARK on KoalaBear) in the example code.</p>
+<p>This section introduces more advanced CLI options and SDK APIs to complete the end-to-end proving process. The Proving process consists of multiple stages, including <a href="#proverchain">RISCV, RECURSION, and EVM Phases</a>.</p>
 <h3 id="riscv-phase"><a class="header" href="#riscv-phase">RISCV-Phase</a></h3>
-<p>Prove RISC-V programs and generate an uncompressed proof with the <mark style="color:orange;">–fast</mark> option. The command is mainly used to test and debug the program.</p>
+<p>Prove RISC-V programs and generate an uncompressed proof with the <code>--phase riscv</code> option. The command is mainly used to test and debug the program.</p>
 <p>CLI:</p>
-<pre><code class="language-sh">RUST_LOG cargo pico prove --fast 
+<pre><code class="language-sh">RUST_LOG=info cargo pico prove --elf elf/riscv64im-pico-zkvm-elf --phase riscv
 </code></pre>
 <p>For example, when executing the fast proving with inputs in the Fibonacci, the input <code>n</code> is a <code>u64</code> data received through <code>pico::sdk::read_as</code>, and it must be in little-endian format and filled to 8 bytes.</p>
-<pre><code class="language-sh">RUST_LOG=info cargo pico prove --input "0x6400000000000000" --fast
+<pre><code class="language-sh">RUST_LOG=info cargo pico prove --elf elf/riscv64im-pico-zkvm-elf --input "0x6400000000000000" --phase riscv
 </code></pre>
 <p>SDK:</p>
 <pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
-</span>// Initialize the SDK.
-let client = DefaultProverClient::new(&amp;elf);
+</span>// Initialize the prover.
+let mut prover = Prover::new(&amp;elf).expect("Failed to initialize the prover");
 
-// Initialize new stdin and write the inputs by builder.
-let mut stdin_builder = client.new_stdin_builder();
- 
+// Initialize new stdin and write the inputs.
+let mut stdin = Stdin::new();
+
 // Set up input
 let n = 100u64;
-stdin_builder.write(&amp;n);
+stdin.write(&amp;n);
 
-let riscv_proof = client.prove_fast(stdin_builder).expect("Failed to generate proof");
+let riscv_proof = prover.prove_to(stdin, Phase::Riscv).expect("Failed to generate proof");
 <span class="boring">}</span></code></pre>
-<p>Fast proving is implemented by using only one FRI query which drastically reduces the theoretical security bits. <strong>DO NOT USE THIS OPTION IN PRODUCTION. ATTACKERS MAY BE ABLE TO COMMIT TO INVALID TRACES</strong>.</p>
 <h3 id="recursion-phase"><a class="header" href="#recursion-phase">RECURSION-Phase</a></h3>
 <p>CLI:</p>
-<pre><code class="language-sh">RUST_LOG cargo pico prove --field kb # kb: koalabear (default), bb:babebear 
+<pre><code class="language-sh">RUST_LOG=info cargo pico prove --elf elf/riscv64im-pico-zkvm-elf --phase wrap
 </code></pre>
-<p>Proving without the <code>--fast</code> argument will execute the prover up to and including the EMBED-Phase. The resulting proof can then be verified by the <code>Gnark</code> proof verification circuit, which can then be verified on-chain via contract.</p>
+<p>Proving with <code>--phase wrap</code> will execute the prover up to and including the EMBED-Phase and write the inputs of the <code>Gnark</code> proof verification circuit, which can then be verified on-chain via contract. Without <code>--phase</code>, <code>prove</code> stops after the COMBINE phase.</p>
 <p>options:</p>
-<p><code>--field</code></p>
-<p>Specify the field, When without this option, default to Koalabear field.</p>
-<ul>
-<li>kb: Koalabear</li>
-<li>bb: Babybear</li>
-</ul>
 <p><code>--output</code></p>
-<p>You can specify the output path to generate the files prepared for the <code>Gnark</code> verification and default is in the project root <code>target/pico_out/</code></p>
-<pre><code class="language-sh">RUST_LOG cargo pico prove --output outputs
+<p>You can specify the output path to generate the files prepared for the <code>Gnark</code> verification and default is <code>pico_out</code> in the current directory</p>
+<pre><code class="language-sh">RUST_LOG=info cargo pico prove --elf elf/riscv64im-pico-zkvm-elf --phase wrap --output outputs
 </code></pre>
 <p>SDK:</p>
 <pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
-</span>// Initialize the SDK.
-let client = DefaultProverClient::new(&amp;elf);
+</span>// Initialize the prover.
+let mut prover = Prover::new(&amp;elf).expect("Failed to initialize the prover");
 // ... write to stdin as previously described
-let (riscv_proof, embed_proof) = client.prove(stdin_builder)?;
+let proof = prover.prove_to(stdin, Phase::Wrap).expect("Failed to generate proof");
 let output_dir = PathBuf::from_str(&amp;"./outputs").expect("the output dir is invalid");
 
-client.write_onchain_data(output, &amp;riscv_proof, &amp;embed_proof)?;
+proof
+    .write_wrap_artifacts(
+        output_dir.join("wrap_constraints.json"),
+        output_dir.join("wrap_groth16_witness.json"),
+    )
+    .expect("Failed to write the outputs");
 <span class="boring">}</span></code></pre>
 <p>Outputs</p>
 <ul>
-<li><code>constraints.json</code>: The schema of the stark proof constraints is used to transform to Gnark circuit constraints.</li>
-<li><code>groth16_witness.json</code>: input witnessness of Gnark circuit.</li>
+<li><code>wrap_constraints.json</code>: The schema of the stark proof constraints is used to transform to Gnark circuit constraints.</li>
+<li><code>wrap_groth16_witness.json</code>: input witnessness of Gnark circuit.</li>
 </ul>
 <h3 id="evm-phase"><a class="header" href="#evm-phase">EVM-Phase</a></h3>
-<p>The Pico CLI provides an EVM option to generate the program Groth16 proof and verifier Contracts. You must ensure the <a href="https://docs.docker.com/engine/install/ubuntu/">Docker</a> has been installed when using the evm option.</p>
+<p>The Pico CLI provides an EVM option to generate the program Groth16 proof and verifier Contracts. The evm option runs in whitelist mode only (<code>VK_VERIFICATION=true</code>, <code>MLE_VK_MAP</code>, <code>MLE_VK_ROOT</code>), with gnark from <code>$PICO_GNARK_IMAGE</code> (a <a href="https://docs.docker.com/engine/install/ubuntu/">Docker</a> image built from <code>gnark/Dockerfile</code>) or <code>$PICO_GNARK_BIN</code>.</p>
 <p>CLI:</p>
 <pre><code class="language-sh"># Setup groth16 PK/VK if its never generated or a new version update.
-cargo pico prove --evm --setup 
-# generate groth16 proof 
-cargo pico prove --evm 
+cargo pico prove --elf elf/riscv64im-pico-zkvm-elf --input "0x6400000000000000" --evm --setup --keys keys
+# generate groth16 proof
+cargo pico prove --elf elf/riscv64im-pico-zkvm-elf --input "0x6400000000000000" --evm --keys keys
 </code></pre>
 <p>SDK:</p>
-<pre class="language-rust"><code class="lang-rust">// Initialize the SDK.
-let client = KoalaBearProveVKClient::new(&amp;elf);
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Initialize the prover in whitelist mode, which EVM proofs require.
+let mut prover = Prover::builder(&amp;elf)
+    .verify_keys(true)
+    .vk_map("mle_vk_map_kb.bin")
+    .trusted_vk_root(vk_root)
+    .build()
+    .expect("Failed to initialize the prover");
 let output_dir = PathBuf::from_str(&amp;"./outputs").expect("the output dir is invalid");
-// The second argument need_setup should be true when you haven't setup groth16 pk/vk yet.
-<strong>// The last argument selects the proving backend: use "kb" for KoalaBear or "bb" for BabyBear.
-</strong>prover_client.prove_evm(stdin_builder, true, output_path, "kb").expect("Failed to generate evm proof");
-</code></pre>
-
+// Writes the inputs of the Gnark circuit; the Groth16 proof itself is made by `cargo pico prove --evm`.
+let bundle = prover.prove_evm(stdin).expect("Failed to generate evm proof");
+bundle.write_to(output_dir).expect("Failed to write the outputs");
+<span class="boring">}</span></code></pre>
 <p>The outputs:</p>
 <p><code>proof.data</code>: <code>Groth16</code> proof generated by the Gnark Verifier Circuit.</p>
-<p><code>pv_file</code>: The public values hex string; it’s the input of <code>Fibonacci</code> Contract</p>
-<p>When executing EVM proving, the <code>Gnark</code> <code>Groth16</code> ProvingKey/VerificationKey is also generated at this step. The <code>--setup</code> only needs to be executed once to make sure the PK/VK is generated.</p>
+<p><code>inputs.json</code>: what the verifier contract is called with, including the public values.</p>
+<p>With <code>--setup</code>, the <code>Gnark</code> <code>Groth16</code> ProvingKey/VerificationKey is also generated at this step, into the <code>--keys</code> directory. The <code>--setup</code> only needs to be executed once; its keys are for testing only, since whoever runs the setup knows its randomness.</p>
 <h3 id="evm-verification"><a class="header" href="#evm-verification">EVM Verification</a></h3>
 <p>The generated <code>inputs.json</code> format is as follows:</p>
 <pre><code>{
   "riscvVKey": "bytes32",
-  "proof": "bytes32[]",
-  "publicValues": "bytes"
+  "publicValues": "bytes",
+  "committedValuesDigest": "bytes32",
+  "proof": "uint256[12]"
 }
-
 </code></pre>
 <p>After parsing the input data, you can call the <code>PicoVerifier.sol</code> as shown below:</p>
 <pre><code class="language-solidity">// SPDX-License-Identifier: MIT
@@ -628,7 +690,7 @@ interface IPicoVerifier {
     function verifyPicoProof(
         bytes32 riscvVkey,
         bytes calldata publicValues,
-        uint256[8] calldata proof
+        uint256[12] calldata proof
     ) external view;
 }
 </code></pre>
@@ -668,11 +730,11 @@ interface IPicoVerifier {
 <p><code>pico-vm</code> comes enabled with several features by default. These being <code>strict</code>, <code>rayon</code>, and <code>nightly-features</code>. <code>strict</code> is a compile time option for <code>#![deny(warnings)]</code> on the entire pico-vm module. <code>rayon</code> enables the usage of rayon’s <code>ParallelIterator</code> and related traits to use multithreading to speed up the proving process. This feature should be left on unless you wish to compile a single threaded prover for profiling reasons, as <code>rayon</code> tends to pollute the stack trace when running <code>flamegraph</code>. nightly-features enables certain CPU-specific performance enhancements, enabling further optimizations with <code>-march=native</code> and turning on <code>AVX2</code> by default on x86-based architectures. <code>AVX512</code> can be enabled via additional <code>RUSTFLAGS</code> as well. This should be left on, like <code>rayon</code>, unless you have a specific reason not to.</p>
 <p>To build <code>pico-vm</code> without default features, simply set default-features = false in your Cargo.toml or run <code>cargo build -p pico-vm --no-default-features</code> for your local build environment, maybe adding <code>--example</code> if you want to build a specific example in addition to the Rust library.</p>
 <h2 id="single-threaded-profiling"><a class="header" href="#single-threaded-profiling">Single threaded profiling</a></h2>
-<p>As mentioned in the previous section, we support single threaded builds in order to generate neater flamegraphs for profiling purposes. For example, to build <code>test_riscv</code> for profiling, run</p>
-<pre><code>cargo build -p pico-vm --no-default-features --profile --profiling --example test_riscv
+<p>As mentioned in the previous section, we support single threaded builds in order to generate neater flamegraphs for profiling purposes. For example, to build <code>test_mle_e2e</code> for profiling, run</p>
+<pre><code>cargo build -p pico-vm --no-default-features --profile profiling --example test_mle_e2e
 </code></pre>
 <p>to build the binary and then run</p>
-<pre><code>sudo flamegraph -o flamegraph.svg -- ./target/profiling/examples/test_riscv
+<pre><code>sudo flamegraph -o flamegraph.svg -- ./target/profiling/examples/test_mle_e2e --elf fib --n 10 --step riscv
 </code></pre>
 <p>with <a href="https://github.com/flamegraph-rs/flamegraph"><code>cargo flamegraph</code></a> to produce a flamegraph that you can use to explore cost centers.</p>
 <div style="break-before: page; page-break-before: always;"></div>
@@ -681,7 +743,6 @@ interface IPicoVerifier {
 <ul>
 <li><strong>VM Instances:</strong> The fundamental building blocks for creating custom virtual machines.</li>
 <li><strong>ProverChains:</strong> Tools that enable you to compose tailored proving workflows.</li>
-<li><strong>Proving Backends:</strong> A range of supported proving backends and insights on how switching between them can optimize performance.</li>
 </ul>
 <p>Together, these powerful features empower you to build a customized VM that perfectly fits your application’s unique requirements.</p>
 <div style="break-before: page; page-break-before: always;"></div>
@@ -735,81 +796,6 @@ interface IPicoVerifier {
 <li><strong>Chain Modification:</strong> Easily add, adjust, or remove machine instances. For example, if on-chain verification is not required, you can simply omit the ONCHAIN step.</li>
 <li><strong>Performance Optimization:</strong> Experiment with different configurations to achieve the optimal balance between proof size and proving efficiency. In some scenarios, accepting a slightly larger proof can lead to faster overall performance.</li>
 <li><strong>Intermediate Access:</strong> The ProverChain module exposes the intermediate steps—formatted as a sequence (e.g., <code>stdin -&gt; proof -&gt; proof -&gt; ... -&gt; final proof</code>)—allowing you to fine-tune internal parameters at each stage of the workflow.</li>
-</ul>
-<div style="break-before: page; page-break-before: always;"></div>
-<h1 id="proving-backends"><a class="header" href="#proving-backends">Proving Backends</a></h1>
-<p>One of Pico’s most innovative feature is its ability to seamlessly switch between multiple proving backends. This functionality enables you to select the optimal backend for your specific application requirements, resulting in significant efficiency gains without altering your existing proving logic.</p>
-<h2 id="why-multiple-proving-backends-matter"><a class="header" href="#why-multiple-proving-backends-matter">Why Multiple Proving Backends Matter</a></h2>
-<p>Specialized circuits for different application features often demand advanced proving systems optimized for specific prime fields. Consider, for example, the recursive proving of a hash function like <strong>Poseidon2</strong>—a critical component in Pico’s recursive proving strategy. Although the same STARK proving system is used, working on the <strong>KoalaBear</strong> field can be much more efficient than on the <strong>BabyBear</strong> field due to the inherent properties of these fields. As a result, when a program requires extensive Poseidon2 proving, simply switching to KoalaBear can yield considerable performance improvements.</p>
-<h2 id="supported-proving-backends"><a class="header" href="#supported-proving-backends">Supported Proving Backends</a></h2>
-<p>Currently, Pico supports generating proofs in all phases—RISCV, RECURSION, and EVM—with both STARK on KoalaBear and STARK on BabyBear. For CircleSTARK on Mersenne31, Pico currently supports the RISCV-Phase, with RECURSION and EVM phases coming soon.</p>
-<ul>
-<li>STARK on KoalaBear (prime field $$p=2^{31}-2^{24}+1$$): Supports generating proofs for
-<ul>
-<li><input disabled="" type="checkbox" checked=""> RISCV-Phase</li>
-<li><input disabled="" type="checkbox" checked=""> RECURSION-Phase</li>
-<li><input disabled="" type="checkbox" checked=""> EVM-Phase</li>
-</ul>
-</li>
-<li>STARK on BabyBear (prime field $$p=2^{31}-2^{27}+1$$): Supports generating proofs for
-<ul>
-<li><input disabled="" type="checkbox" checked=""> RISCV-Phase</li>
-<li><input disabled="" type="checkbox" checked=""> RECURSION-Phase</li>
-<li><input disabled="" type="checkbox" checked=""> EVM-Phase</li>
-</ul>
-</li>
-<li>CircleSTARK on Mersenne31 where $$p=2^{31}−1$$). Supports generating proofs for
-<ul>
-<li><input disabled="" type="checkbox" checked=""> RISCV-Phase</li>
-<li><input disabled="" type="checkbox"> RECURSION-Phase</li>
-<li><input disabled="" type="checkbox"> EVM-Phase</li>
-</ul>
-</li>
-</ul>
-<h2 id="seamless-backend-switching"><a class="header" href="#seamless-backend-switching">Seamless Backend Switching</a></h2>
-<p>Switching between proving backends in Pico is designed to be straightforward. The underlying proving logic is abstracted away, allowing you to change the backend configuration through a simple parameter update—without needing to rewrite any part of your application.</p>
-<p>The Pico SDK provides a suite of <code>ProverClient</code> implementations, each corresponding to a different proving backend:</p>
-<ul>
-<li><strong>KoalaBearProverClient:</strong> Uses STARK on KoalaBear for fast proving without VK (verification key) verification.</li>
-<li><strong>KoalaBearProverVKClient:</strong> Uses STARK on KoalaBear for full proving with VK verification.</li>
-<li><strong>BabyBearProverClient:</strong> Similar to KoalaBearProverClient, but for STARK on BabyBear.</li>
-<li><strong>BabyBearProverVKClient:</strong> Similar to KoalaBearProverVKClient, but for STARK on BabyBear.</li>
-<li><strong>M31RiscvProverClient:</strong> Performs RISCV proving using CircleSTARK on Mersenne31.</li>
-</ul>
-<p>We could initialize the <code>ProverClient</code> for different backend configurations:</p>
-<pre class="playground"><code class="language-rust">// An example for initializing the different prover clients
-fn main() {
-    // Initialize logger.
-    init_logger();
-
-    // Load the ELF file.
-    let elf = load_elf("./elf/riscv64im-pico-zkvm-elf");
-
-    // Initialize a client for fast proving (without VK verification) 
-    // using STARK on KoalaBear.
-    let client = KoalaBearProverClient::new(elf);
-
-    // Initialize a client for full proving with VK verification 
-    // using STARK on KoalaBear.
-    let client = KoalaBearProverVKClient::new(elf);
-
-    // Initialize a client for fast proving (without VK verification) 
-    // using STARK on BabyBear.
-    let client = BabyBearProverClient::new(elf);
-
-    // Initialize a client for full proving with VK verification 
-    // using STARK on BabyBear.
-    let client = BabyBearProverVKClient::new(elf);
-
-    // Initialize a client for RISCV proving using CircleSTARK on Mersenne31.
-    let client = M31RiscvProverClient::new(elf);
-}</code></pre>
-<h2 id="benefits-of-switchable-proving-backends"><a class="header" href="#benefits-of-switchable-proving-backends">Benefits of Switchable Proving Backends</a></h2>
-<ul>
-<li><strong>Performance Gains:</strong> Optimize your proof generation by selecting the backend that best suits the computational demands of your workload.</li>
-<li><strong>Flexibility:</strong> Experiment with different backends and configurations to achieve the ideal balance between proof size, proving efficiency, and on-chain compatibility.</li>
-<li><strong>Seamless Upgrades:</strong> As new prime fields and proving systems are integrated into Pico, you can upgrade your proving backend with minimal disruption.</li>
-<li><strong>Future-Proofing:</strong> Stay at the forefront of zero-knowledge technology advancements by taking advantage of the latest proving systems as they become available.</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="vm-cycle-tracking"><a class="header" href="#vm-cycle-tracking">VM Cycle Tracking</a></h1>

@@ -35,10 +35,10 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-3f065d6d.js";
+            window.path_to_searchindex_js = "../searchindex-85d25064.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../toc-3c4523d4.js"></script>
+        <script src="../toc-8533914a.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -196,11 +196,11 @@ cargo pico build
 </ol>
 <pre><code class="language-sh"># Prove in prover folder
 cd ../prover
-RUST_LOG=info cargo run --release
+RUST_LOG=info cargo run --release -- prove fib.pico
 </code></pre>
 <p>The <code>prover</code> subdirectory contains a Rust program that will load an input for the ELF that was just compiled, execute it, and generate a proof. This project has the entire functionality of the Pico SDK at its disposal, and can be customized however you want.</p>
 <p>If you simply wish to use the default provided proving clients and options, you can prove using the Pico CLI via</p>
-<pre><code class="language-sh">RUST_LOG=info cargo pico prove --input "0x6400000000000000" --fast --elf /path/to/elf # input n = 100
+<pre><code class="language-sh">RUST_LOG=info cargo pico prove --input "0x6400000000000000" --phase riscv --elf /path/to/elf # input n = 100
 </code></pre>
 <p>The input to the fibonacci program is a single u64 specifying which number to compute, so we can directly pass the input with the <code>--input</code> option, supplying little endian bytes. <code>--fast</code> simply tells the prover to skip any recursion steps and terminate after finishing the RISC-V proof.</p>
 <ol start="4">
@@ -208,29 +208,19 @@ RUST_LOG=info cargo run --release
 </ol>
 <p>AOT is an alternative execution path: the emulator thread can be driven by AOT-compiled chunks generated from the specific guest ELF you are proving, instead of the interpreter. This trades a one-time codegen step for reduced per-proof execution cost.</p>
 <ul>
-<li>One-Time setup</li>
-</ul>
-<p>Install the AOT codegen binary:</p>
-<pre><code class="language-sh">cargo +nightly-2025-08-04 install \
-  --git https://github.com/brevis-network/pico \
-  --tag v2.1.1 \
-  pico-aot-codegen
-</code></pre>
-<ul>
 <li>Generate AOT chunks</li>
 </ul>
 <p>The generated chunks are tied to the PC ranges of a specific ELF. You must re-generate whenever <code>app/src/</code> changes.</p>
 <p>From the project root, after <code>cargo pico build</code>:</p>
-<pre><code class="language-sh">PICO_AOT_RUNTIME_SPEC='git = "https://github.com/brevis-network/pico", tag = "v2.1.1"' \
-  generate_crates app/elf/riscv64im-pico-zkvm-elf ./aot-generated
+<pre><code class="language-sh">cargo pico aot --elf app/elf/riscv64im-pico-zkvm-elf --out aot-generated
 </code></pre>
-<p><code>PICO_AOT_RUNTIME_SPEC</code> tells the codegen tool to wire <code>pico-aot-runtime</code> as a git dep in the generated chunk crates, so <code>aot-generated/</code> works at the template root without requiring a local Pico checkout.</p>
+<p><code>cargo pico aot</code> wires <code>pico-aot-runtime</code> as a git dep in the generated chunk crates, pinned to the CLI’s release tag, so <code>aot-generated/</code> works at the template root without requiring a local Pico checkout. Set <code>PICO_SOURCE</code> to a Pico checkout to build against it instead.</p>
 <ul>
 <li>Prove with <code>--aot</code></li>
 </ul>
-<p>Enable the template’s <code>aot</code> feature and pass the <code>--aot</code> runtime flag:</p>
+<p>Enable the template’s <code>aot</code> feature:</p>
 <pre><code class="language-sh">cd prover
-RUST_LOG=info cargo run --release --features aot -- --aot
+RUST_LOG=info cargo run --release --features aot -- prove fib.pico
 </code></pre>
 <h2 id="project-layout"><a class="header" href="#project-layout">Project Layout</a></h2>
 <pre><code>Fibonacci
@@ -271,17 +261,16 @@ cargo pico build
 <li>
 <p>Prove program to EVM</p>
 <pre><code class="language-bash">cd ../prover
-RUST_LOG=info cargo run --release
+RUST_LOG=info cargo run --release -- prove fib.pico
 </code></pre>
-<p>This step will locally set up the Groth16 Verifier contract and generate the Pico Groth16 proof. The files will be outputted to the <code>root/contracts/test_data</code> folder.<br>The prover program will then attempt to launch a Docker container to generate the final EVM proof with <code>gnark</code>. This ingests <code>test_data/proof.json</code> and should produce <code>test_data/proof.data</code>. If this file is not produced, you may need to increase the amount of RAM available to the container.</p>
+<p>This proves the program in dev mode and writes <code>fib.pico</code>, a RISC-V proof that verifies from the ELF but is not one a contract can check. The EVM proof comes from <code>cargo pico prove --evm</code> in whitelist mode, with a gnark prover and a Groth16 key set; the template’s README, “The on-chain proof”, lists the exact commands.</p>
 </li>
 <li>
 <p>Test EVM Proof</p>
 <pre><code class="language-bash">cd ../contracts
-mv -f ./test_data/Groth16Verifier.sol ./src/Groth16Verifier.sol
 forge test
 </code></pre>
-<p>The foundry test script will parse the proof generated in the previous step and interact with the Groth16 Verifier contract. With all tests passing, the EVM quick start is successful.</p>
+<p>The Foundry tests verify the proof in <code>test_data/inputs.json</code> with the Groth16 verifier in <code>test/dev</code>. To test your own EVM proof, copy its <code>inputs.json</code> and key files in, as the template’s README shows. With all tests passing, the EVM quick start is successful.</p>
 </li>
 </ol>
 

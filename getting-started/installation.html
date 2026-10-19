@@ -35,10 +35,10 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-3f065d6d.js";
+            window.path_to_searchindex_js = "../searchindex-85d25064.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../toc-3c4523d4.js"></script>
+        <script src="../toc-8533914a.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -186,7 +186,7 @@
 <ol>
 <li>Install pico-cli from the GitHub repository</li>
 </ol>
-<pre><code class="language-sh">cargo +nightly-2025-08-04 install --git https://github.com/brevis-network/pico pico-cli
+<pre><code class="language-sh">cargo +nightly-2026-09-27 install --git https://github.com/brevis-network/pico pico-cli
 </code></pre>
 <ol start="2">
 <li>Check the version</li>
@@ -202,14 +202,14 @@
 <ol start="2">
 <li>cargo install from the local path</li>
 </ol>
-<pre><code class="language-sh">cd sdk/cli
+<pre><code class="language-sh">cd pico/sdk/cli
 cargo install --locked --force --path .
 </code></pre>
 <h3 id="rust-toolchain"><a class="header" href="#rust-toolchain">Rust toolchain</a></h3>
-<p>Pico uses the rust-specific rust toolchain version(nightly-2025-08-04) to build the program. The specific toolchain version can be found in the <code>rust_toolchain</code> file in the repository root.</p>
-<pre><code class="language-sh">rustup install nightly-2025-08-04
+<p>Pico uses the rust-specific rust toolchain version(nightly-2026-09-27) to build the program. The specific toolchain version can be found in the <code>rust-toolchain</code> file in the repository root.</p>
+<pre><code class="language-sh">rustup install nightly-2026-09-27
 </code></pre>
-<pre><code class="language-bash">rustup component add rust-src --toolchain nightly-2025-08-04
+<pre><code class="language-bash">rustup component add rust-src --toolchain nightly-2026-09-27
 </code></pre>
 <h3 id="install-risc-v64-target-toolchain"><a class="header" href="#install-risc-v64-target-toolchain">Install RISC-V64 target toolchain</a></h3>
 <p>Pico requires a RISC-V64 target toolchain to compile programs. After installing cargo pico, run:</p>
@@ -224,7 +224,7 @@ cargo install --locked --force --path .
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="../index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="../welcome/migrating-to-3.0.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                             </a>
 
@@ -238,7 +238,7 @@ cargo install --locked --force --path .
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="../index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="../welcome/migrating-to-3.0.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                     </a>
 

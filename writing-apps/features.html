@@ -35,10 +35,10 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-3f065d6d.js";
+            window.path_to_searchindex_js = "../searchindex-85d25064.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../toc-3c4523d4.js"></script>
+        <script src="../toc-8533914a.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -207,11 +207,11 @@
 <p><code>pico-vm</code> comes enabled with several features by default. These being <code>strict</code>, <code>rayon</code>, and <code>nightly-features</code>. <code>strict</code> is a compile time option for <code>#![deny(warnings)]</code> on the entire pico-vm module. <code>rayon</code> enables the usage of rayon’s <code>ParallelIterator</code> and related traits to use multithreading to speed up the proving process. This feature should be left on unless you wish to compile a single threaded prover for profiling reasons, as <code>rayon</code> tends to pollute the stack trace when running <code>flamegraph</code>. nightly-features enables certain CPU-specific performance enhancements, enabling further optimizations with <code>-march=native</code> and turning on <code>AVX2</code> by default on x86-based architectures. <code>AVX512</code> can be enabled via additional <code>RUSTFLAGS</code> as well. This should be left on, like <code>rayon</code>, unless you have a specific reason not to.</p>
 <p>To build <code>pico-vm</code> without default features, simply set default-features = false in your Cargo.toml or run <code>cargo build -p pico-vm --no-default-features</code> for your local build environment, maybe adding <code>--example</code> if you want to build a specific example in addition to the Rust library.</p>
 <h2 id="single-threaded-profiling"><a class="header" href="#single-threaded-profiling">Single threaded profiling</a></h2>
-<p>As mentioned in the previous section, we support single threaded builds in order to generate neater flamegraphs for profiling purposes. For example, to build <code>test_riscv</code> for profiling, run</p>
-<pre><code>cargo build -p pico-vm --no-default-features --profile --profiling --example test_riscv
+<p>As mentioned in the previous section, we support single threaded builds in order to generate neater flamegraphs for profiling purposes. For example, to build <code>test_mle_e2e</code> for profiling, run</p>
+<pre><code>cargo build -p pico-vm --no-default-features --profile profiling --example test_mle_e2e
 </code></pre>
 <p>to build the binary and then run</p>
-<pre><code>sudo flamegraph -o flamegraph.svg -- ./target/profiling/examples/test_riscv
+<pre><code>sudo flamegraph -o flamegraph.svg -- ./target/profiling/examples/test_mle_e2e --elf fib --n 10 --step riscv
 </code></pre>
 <p>with <a href="https://github.com/flamegraph-rs/flamegraph"><code>cargo flamegraph</code></a> to produce a flamegraph that you can use to explore cost centers.</p>
 
