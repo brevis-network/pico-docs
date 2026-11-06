@@ -21,7 +21,7 @@ pub fn main() {
 
 ```
 
-Raw system calls are available by using `pico_sdk::riscv_ecalls::*` but it is recommended to use the integrated patch libraries to avoid disrupting the standard development workflow. The program can then be compiled to RiscV without creating conditional compilation-related hoops aside from the entry point (unless your system assumes a word size of 64 bits, which is untrue in the zkVM). A few light wrappers for elliptic curve types can also be found in the `pico-patch-libs` crate.
+Raw system calls are available by using `pico_sdk::riscv_ecalls::*` but it is recommended to use the integrated patch libraries to avoid disrupting the standard development workflow. The program can then be compiled to RiscV without creating conditional compilation-related hoops aside from the entry point. A few light wrappers for elliptic curve types can also be found in the `pico-patch-libs` crate.
 
 Be very careful with using heap memory. The currently implemented allocator does not free any memory, so cloning a medium-sized `Vec` a few too many times will cause your program to go OOM. You must write your own allocator if a more managed memory solution is required.
 
@@ -45,7 +45,7 @@ cargo pico prove --elf elf/riscv64im-pico-zkvm-elf --input "0x..." # hex, or fil
 cargo pico new --template basic basic-example
 ```
 
-The project only contains a program module. You can test and debug your RISC-V program quickly using the basic template.
+The project contains the program (`app`), a shared library (`lib`) and a prover (`prover`). You can test and debug your RISC-V program quickly using the basic template.
 
 2. Create a program with EVM
 

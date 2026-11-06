@@ -1,24 +1,26 @@
 ---
-description: The changes most 2.x projects hit when moving to Pico 3.0
+description: The changes most projects hit when moving to Pico 3.x
 ---
 
-# Migrating to 3.0
+# Migrating to 3.x
 
-Pico 3.0 replaces the proof system: it proves over the KoalaBear field with an MLE proof system (LogUp-GKR, ZeroCheck and WHIR), and the host-side API moved to a new crate. 2.x proofs do not verify under 3.0, and 2.x on-chain verifiers do not accept 3.0 proofs.
+Pico 3.0 replaced the proof system: it proves over the KoalaBear field with an MLE proof system (LogUp-GKR, ZeroCheck and WHIR), and the host-side API moved to a new crate. Pico 3.1 raises its proofs to 128 bits of provable soundness.
 
-This page lists the changes most projects hit. The full guide is [Migrating from 2.x to 3.0](https://github.com/brevis-network/pico/blob/v3.0.0/docs/migration-2.x-to-3.0.md), and the [3.0 release notes](https://github.com/brevis-network/pico/blob/v3.0.0/docs/release-notes/3.0.md) summarize the release.
+No proof, key, whitelist or verifier contract carries over from 2.x or 3.0. Rebuild every guest (every program id changes), run a new Groth16 setup and redeploy the verifier contracts.
+
+This page lists the changes most projects hit. The full guide is [Migrating from 2.x to 3.0](https://github.com/brevis-network/pico/blob/v3.0.0/docs/migration-2.x-to-3.0.md), and the [3.0](https://github.com/brevis-network/pico/blob/v3.0.0/docs/release-notes/3.0.md) and [3.1](https://github.com/brevis-network/pico/blob/main/docs/release-notes/3.1.md) release notes summarize each release.
 
 ### Toolchain
 
 * The Rust toolchain moved from `nightly-2025-08-04` to `nightly-2026-09-27`. Reinstall the CLI with it (see [Installation](../getting-started/installation.md)), then run `cargo pico install` again for the matching guest toolchain.
 * Set the project's own `rust-toolchain` file to `nightly-2026-09-27`: the host crate builds `pico-prover`, which uses nightly-only features.
 * The guest target is still `riscv64im-pico-zkvm-elf`.
-* The guest depends on `pico-sdk = { git = "https://github.com/brevis-network/pico" }`, as before.
+* The guest depends on `pico-sdk = { git = "https://github.com/brevis-network/pico", tag = "v3.1.1" }`.
 
 ### Fields and phases
 
 * KoalaBear is the only field. BabyBear and Mersenne31 are removed with no replacement: the `bb` and `m31` features of `pico-sdk` are gone, and `kb` is kept as a no-op so existing guests still build.
-* The `COMPRESS` phase is removed. The chain is now `RISCV → CONVERT → COMBINE → EMBED → WRAP`; see [ProverChain](../writing-apps/advanced/proverchain.md).
+* The chain is `RISCV → CONVERT → COMBINE → COMPRESS → EMBED → WRAP`; see [ProverChain](../writing-apps/advanced/proverchain.md).
 
 ### CLI
 
@@ -39,7 +41,7 @@ New subcommands: `cargo pico execute` (emulate without proving) and `cargo pico 
 The prover clients left `pico-sdk`. The host program depends on the new crate `pico-prover`:
 
 ```toml
-pico-prover = { git = "https://github.com/brevis-network/pico" }
+pico-prover = { git = "https://github.com/brevis-network/pico", tag = "v3.1.1" }
 ```
 
 | 2.x (`pico_sdk::client`)                                          | 3.0 (`pico_prover`)                                                                                                                             |

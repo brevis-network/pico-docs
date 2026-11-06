@@ -17,7 +17,7 @@ description: Install Pico toolchains
 1. Install pico-cli from the GitHub repository
 
 ```sh
-cargo +nightly-2026-09-27 install --git https://github.com/brevis-network/pico pico-cli
+cargo +nightly-2026-09-27 install --git https://github.com/brevis-network/pico --tag v3.1.1 --locked pico-cli
 ```
 
 2. Check the version
@@ -31,7 +31,7 @@ cargo pico --version
 1. Git clone Pico-VM repository
 
 ```sh
-git clone https://github.com/brevis-network/pico
+git clone --branch v3.1.1 https://github.com/brevis-network/pico
 ```
 
 2. cargo install from the local path

@@ -3,7 +3,7 @@
 ## Welcome
 
 * [Introducing Pico](README.md)
-* [Migrating to 3.0](welcome/migrating-to-3.0.md)
+* [Migrating to 3.x](welcome/migrating-to-3.x.md)
 
 ## Getting Started
 

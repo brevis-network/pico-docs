@@ -27,18 +27,16 @@ Please see [VM Cycle Tracking](advanced/vm-cycle-tracking.md) for a detailed exp
 
 ## Proving Options
 
-Pico offers several configurable parameters to optimize the proving process for your system’s resources and performance requirements:
+Pico offers several configurable parameters to optimize the proving process for your system’s resources and performance requirements. `cargo pico` reads them from environment variables; with `pico-prover`, set them on `ProverBuilder`:
 
-* **Automatic Configuration:** By default, Pico automatically adjusts standard options, such as chunk and batch sizes, according to the available memory on the running machine.
-* **Manual Overrides:** Developers can fine-tune the proving process by setting the following environment variables:
-  * **`CHUNK_SIZE`:** Determines the number of cycles executed before splitting records. This helps manage the trace size, and setting this value to a power of 2 is recommended.
-  * **`CHUNK_BATCH_SIZE`:** Specifies the number of chunks processed concurrently. Set this value based on the total available system memory and the per-record/trace memory cost, ensuring you do not exceed your system’s capacity.
+* **`CHUNK_SIZE`** (`chunk_size`): the number of instructions executed per chunk. Defaults to 2^23.
+* **`PROVE_CONCURRENCY`** (`concurrency`): the number of RISC-V chunks proved at once. Defaults to 4. Each one holds a full proving working set, so lower it on a machine with less memory.
 
 These options allow you to balance performance and resource utilization, making it possible to optimize Pico for a wide range of environments—from resource-constrained setups to high-performance systems.
 
 ## Features
 
-`pico-vm` comes enabled with several features by default. These being `strict`, `rayon`, and `nightly-features`. `strict` is a compile time option for `#![deny(warnings)]` on the entire pico-vm module. `rayon` enables the usage of rayon's `ParallelIterator` and related traits to use multithreading to speed up the proving process. This feature should be left on unless you wish to compile a single threaded prover for profiling reasons, as `rayon` tends to pollute the stack trace when running `flamegraph`. nightly-features enables certain CPU-specific performance enhancements, enabling further optimizations with `-march=native` and turning on `AVX2` by default on x86-based architectures. `AVX512` can be enabled via additional `RUSTFLAGS` as well. This should be left on, like `rayon`, unless you have a specific reason not to.
+`pico-vm` comes enabled with several features by default. These being `strict`, `rayon`, and `multi-field-transcript`. `strict` is a compile time option for `#![deny(warnings)]` on the entire pico-vm module. `rayon` enables the usage of rayon's `ParallelIterator` and related traits to use multithreading to speed up the proving process. This feature should be left on unless you wish to compile a single threaded prover for profiling reasons, as `rayon` tends to pollute the stack trace when running `flamegraph`. `multi-field-transcript` enables the EMBED and WRAP phases, which the EVM path needs.
 
 To build `pico-vm` without default features, simply set default-features = false in your Cargo.toml or run `cargo build -p pico-vm --no-default-features` for your local build environment, maybe adding `--example` if you want to build a specific example in addition to the Rust library.
 
