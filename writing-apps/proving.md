@@ -188,17 +188,6 @@ let riscv_proof = prover.prove_to(stdin, Phase::Riscv).expect("Failed to generat
 
 ### RECURSION-Phase
 
-#### Dev mode and whitelist mode
-
-Pico proves in one of two modes:
-
-* **Dev mode**, the default: each recursion step uses a circuit fitted to the run. Its COMBINE proof verifies only in the process that made it, and no contract accepts it.
-* **Whitelist mode**: every recursion step uses one of a fixed set of circuits, prepared ahead of time and shipped with Pico. Their verifying keys form the whitelist, identified by its root. A COMBINE proof then verifies in any process with the same whitelist, and the on-chain verifier has the root built in, so EVM proofs need this mode.
-
-The two modes give the same program different program ids; a contract pins the whitelist-mode one. To prove in whitelist mode, set `VK_VERIFICATION=true`, `MLE_VK_MAP` and `MLE_VK_ROOT` for the CLI (see EVM-Phase), or build the SDK prover with `shipped_whitelist()`.
-
-
-
 CLI:
 
 ```sh
@@ -238,6 +227,15 @@ Outputs
 
 * `wrap_constraints.json`: The schema of the stark proof constraints is used to transform to Gnark circuit constraints.
 * `wrap_groth16_witness.json`: input witnessness of Gnark circuit.
+
+#### Dev mode and whitelist mode
+
+Pico proves in one of two modes:
+
+* **Dev mode**, the default: each recursion step uses a circuit fitted to the run. Its COMBINE proof verifies only in the process that made it, and no contract accepts it.
+* **Whitelist mode**: every recursion step uses one of a fixed set of circuits, prepared ahead of time and shipped with Pico. Their verifying keys form the whitelist, identified by its root. A COMBINE proof then verifies in any process with the same whitelist, and the on-chain verifier has the root built in, so EVM proofs need this mode.
+
+The two modes give the same program different program ids; a contract pins the whitelist-mode one. To prove in whitelist mode, set `VK_VERIFICATION=true`, `MLE_VK_MAP` and `MLE_VK_ROOT` for the CLI (see EVM-Phase), or build the SDK prover with `shipped_whitelist()`.
 
 ### EVM-Phase
 
