@@ -39,7 +39,7 @@ If you simply wish to use the default provided proving clients and options, you 
 RUST_LOG=info cargo pico prove --input "0x6400000000000000" --phase riscv --elf /path/to/elf # input n = 100
 ```
 
-The input to the fibonacci program is a single u64 specifying which number to compute, so we can directly pass the input with the `--input` option, supplying little endian bytes. `--fast` simply tells the prover to skip any recursion steps and terminate after finishing the RISC-V proof.
+The input to the fibonacci program is a single u64 specifying which number to compute, so we can directly pass the input with the `--input` option, supplying little endian bytes. `--phase riscv` simply tells the prover to skip any recursion steps and terminate after finishing the RISC-V proof.
 
 4. Prove program with AOT (Experimental)
 
