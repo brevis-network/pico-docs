@@ -2,10 +2,7 @@ name: Deploy mdBook site to GitHub Pages
 
 on:
   push:
-    branches: ["deploy"]  
-  pull_request:
-  repository_dispatch:
-    types: [deploy-pages]
+    branches: ["deploy"]
 
 jobs:
   deploy:
