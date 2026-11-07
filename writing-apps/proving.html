@@ -35,10 +35,10 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-85d25064.js";
+            window.path_to_searchindex_js = "../searchindex-205b3613.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../toc-8533914a.js"></script>
+        <script src="../toc-76066ed2.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -177,15 +177,15 @@
                         <h1 id="proving"><a class="header" href="#proving">Proving</a></h1>
 <h2 id="overview"><a class="header" href="#overview">Overview</a></h2>
 <p>Pico provides CLI and SDK tools to recursively prove the program to the developers.</p>
-<p>Pico CLI provides a complete toolchain for compiling the RISC-V program and using Pico to complete end-to-end proof. Refer to the <a href="../getting-started/installation.html">installation page</a> to install the CLI toolchain. Pico 3.0 proves over the KoalaBear field.</p>
+<p>Pico CLI provides a complete toolchain for compiling the RISC-V program and using Pico to complete end-to-end proof. Refer to the <a href="../getting-started/installation.html">installation page</a> to install the CLI toolchain. Pico 3.1 proves over the KoalaBear field, with 128 bits of provable soundness.</p>
 <p>Like the CLI, the <code>pico-prover</code> crate includes lower-level APIs that can prove the program directly. The <a href="https://github.com/brevis-network/pico-zkapp-template/tree/main/prover">prover package</a> of the template project repository provides an example of how to import and initialize the SDK and quickly generate a RISC-V proof using the Pico SDK. In the <a href="proving.html#proving-steps">Proving Steps Section</a>, you can read more about VM e2e proving and the Gnark EVM proof generation for On-chain verification</p>
 <p>Let’s quickly go through the Pico SDK usage and generate a Fibonacci RISC-V proof.</p>
 <ol>
 <li>Import <code>pico-sdk</code> and <code>pico-prover</code></li>
 </ol>
 <pre><code class="language-toml"># Cargo.toml
-pico-sdk = { git = "https://github.com/brevis-network/pico" }
-pico-prover = { git = "https://github.com/brevis-network/pico" }
+pico-sdk = { git = "https://github.com/brevis-network/pico", tag = "v3.1.1" }
+pico-prover = { git = "https://github.com/brevis-network/pico", tag = "v3.1.1" }
 </code></pre>
 <ol start="2">
 <li>Execute the proving process and generate RISC-V proof.</li>
@@ -277,7 +277,7 @@ fn main() {
 <pre><code class="language-sh">RUST_LOG=info cargo pico prove --elf elf/riscv64im-pico-zkvm-elf --input "0x6400000000000000" --phase riscv
 </code></pre>
 <h3 id="read"><a class="header" href="#read">Read</a></h3>
-<p>Corresponding to the writer functions, there are read_as and read_slice tools for io reading the serializable object or bytes into the program.</p>
+<p>Corresponding to the writer functions, there are <code>read_as</code> and <code>read_vec</code> tools for io reading the serializable object or bytes into the program.</p>
 <p>SDK examples:</p>
 <pre class="language-rust"><code class="lang-rust">
 use pico_sdk::io::{read_as, read_vec};
@@ -308,7 +308,7 @@ fn main() {
 <p>CLI:</p>
 <pre><code class="language-sh">RUST_LOG=info cargo pico prove --elf elf/riscv64im-pico-zkvm-elf --phase riscv
 </code></pre>
-<p>For example, when executing the fast proving with inputs in the Fibonacci, the input <code>n</code> is a <code>u64</code> data received through <code>pico::sdk::read_as</code>, and it must be in little-endian format and filled to 8 bytes.</p>
+<p>For example, the input <code>n</code> in the Fibonacci is a <code>u64</code> read through <code>pico_sdk::io::read_as</code>, so it must be in little-endian format and filled to 8 bytes.</p>
 <pre><code class="language-sh">RUST_LOG=info cargo pico prove --elf elf/riscv64im-pico-zkvm-elf --input "0x6400000000000000" --phase riscv
 </code></pre>
 <p>SDK:</p>
@@ -330,7 +330,7 @@ let riscv_proof = prover.prove_to(stdin, Phase::Riscv).expect("Failed to generat
 <p>CLI:</p>
 <pre><code class="language-sh">RUST_LOG=info cargo pico prove --elf elf/riscv64im-pico-zkvm-elf --phase wrap
 </code></pre>
-<p>Proving with <code>--phase wrap</code> will execute the prover up to and including the EMBED-Phase and write the inputs of the <code>Gnark</code> proof verification circuit, which can then be verified on-chain via contract. Without <code>--phase</code>, <code>prove</code> stops after the COMBINE phase.</p>
+<p>Proving with <code>--phase wrap</code> will execute the prover up to and including the EMBED-Phase and write the inputs of the <code>Gnark</code> proof verification circuit. A contract accepts them only from whitelist mode. Without <code>--phase</code>, <code>prove</code> stops after the COMBINE phase.</p>
 <p>options:</p>
 <p><code>--output</code></p>
 <p>You can specify the output path to generate the files prepared for the <code>Gnark</code> verification and default is <code>pico_out</code> in the current directory</p>
@@ -357,22 +357,37 @@ proof
 <li><code>wrap_constraints.json</code>: The schema of the stark proof constraints is used to transform to Gnark circuit constraints.</li>
 <li><code>wrap_groth16_witness.json</code>: input witnessness of Gnark circuit.</li>
 </ul>
+<h4 id="dev-mode-and-whitelist-mode"><a class="header" href="#dev-mode-and-whitelist-mode">Dev mode and whitelist mode</a></h4>
+<p>Pico proves in one of two modes:</p>
+<ul>
+<li><strong>Dev mode</strong>, the default: each recursion step uses a circuit fitted to the run. Its COMBINE proof verifies only in the process that made it, and no contract accepts it.</li>
+<li><strong>Whitelist mode</strong>: every recursion step uses one of a fixed set of circuits, prepared ahead of time and shipped with Pico. Their verifying keys form the whitelist, identified by its root. A COMBINE proof then verifies in any process with the same whitelist, and the on-chain verifier has the root built in, so EVM proofs need this mode.</li>
+</ul>
+<p>The two modes give the same program different program ids; a contract pins the whitelist-mode one. To prove in whitelist mode, set <code>VK_VERIFICATION=true</code>, <code>MLE_VK_MAP</code> and <code>MLE_VK_ROOT</code> for the CLI (see EVM-Phase), or build the SDK prover with <code>shipped_whitelist()</code>.</p>
 <h3 id="evm-phase"><a class="header" href="#evm-phase">EVM-Phase</a></h3>
-<p>The Pico CLI provides an EVM option to generate the program Groth16 proof and verifier Contracts. The evm option runs in whitelist mode only (<code>VK_VERIFICATION=true</code>, <code>MLE_VK_MAP</code>, <code>MLE_VK_ROOT</code>), with gnark from <code>$PICO_GNARK_IMAGE</code> (a <a href="https://docs.docker.com/engine/install/ubuntu/">Docker</a> image built from <code>gnark/Dockerfile</code>) or <code>$PICO_GNARK_BIN</code>.</p>
+<p>The Pico CLI provides an EVM option to generate the program Groth16 proof and verifier contracts. It proves in whitelist mode only and runs gnark in a <a href="https://docs.docker.com/engine/install/ubuntu/">Docker</a> image. From the root of a project made with the <code>evm</code> template:</p>
 <p>CLI:</p>
-<pre><code class="language-sh"># Setup groth16 PK/VK if its never generated or a new version update.
-cargo pico prove --elf elf/riscv64im-pico-zkvm-elf --input "0x6400000000000000" --evm --setup --keys keys
-# generate groth16 proof
-cargo pico prove --elf elf/riscv64im-pico-zkvm-elf --input "0x6400000000000000" --evm --keys keys
+<pre><code class="language-sh"># Once: build the gnark image. The tag is your CLI's version.
+docker build -t pico-gnark -f gnark/Dockerfile https://github.com/brevis-network/pico.git#v3.1.1
+
+# Whitelist mode, with the whitelist in the template's whitelist/.
+export VK_VERIFICATION=true
+export MLE_VK_MAP=whitelist/mle_vk_map_kb.bin
+export MLE_VK_ROOT="$(sed -n 's/^MLE_VK_ROOT=//p' whitelist/mle_vk_root.txt | tr -d '"')"
+export PICO_GNARK_IMAGE=pico-gnark
+
+# Set up the Groth16 PK/VK the first time, or after a version update.
+cargo pico prove --elf app/elf/riscv64im-pico-zkvm-elf --input u32:10 --evm --setup --keys keys
+# Generate the Groth16 proof with the existing keys.
+cargo pico prove --elf app/elf/riscv64im-pico-zkvm-elf --input u32:10 --evm --keys keys
 </code></pre>
+<p>The <a href="https://github.com/brevis-network/pico-zkapp-template/tree/evm#the-on-chain-proof">EVM template</a> runs the full flow, including the contract tests, and notes the machine it needs.</p>
 <p>SDK:</p>
 <pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>// Initialize the prover in whitelist mode, which EVM proofs require.
 let mut prover = Prover::builder(&amp;elf)
-    .verify_keys(true)
-    .vk_map("mle_vk_map_kb.bin")
-    .trusted_vk_root(vk_root)
+    .shipped_whitelist()
     .build()
     .expect("Failed to initialize the prover");
 let output_dir = PathBuf::from_str(&amp;"./outputs").expect("the output dir is invalid");

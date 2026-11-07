@@ -35,10 +35,10 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-85d25064.js";
+            window.path_to_searchindex_js = "../searchindex-205b3613.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../toc-8533914a.js"></script>
+        <script src="../toc-76066ed2.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -192,19 +192,14 @@
 <h2 id="guest-vm-cycle-tracking"><a class="header" href="#guest-vm-cycle-tracking">Guest VM Cycle Tracking</a></h2>
 <p>Please see <a href="advanced/vm-cycle-tracking.html">VM Cycle Tracking</a> for a detailed explanation of this feature.</p>
 <h2 id="proving-options"><a class="header" href="#proving-options">Proving Options</a></h2>
-<p>Pico offers several configurable parameters to optimize the proving process for your system’s resources and performance requirements:</p>
+<p>Pico offers several configurable parameters to optimize the proving process for your system’s resources and performance requirements. <code>cargo pico</code> reads them from environment variables; with <code>pico-prover</code>, set them on <code>ProverBuilder</code>:</p>
 <ul>
-<li><strong>Automatic Configuration:</strong> By default, Pico automatically adjusts standard options, such as chunk and batch sizes, according to the available memory on the running machine.</li>
-<li><strong>Manual Overrides:</strong> Developers can fine-tune the proving process by setting the following environment variables:
-<ul>
-<li><strong><code>CHUNK_SIZE</code>:</strong> Determines the number of cycles executed before splitting records. This helps manage the trace size, and setting this value to a power of 2 is recommended.</li>
-<li><strong><code>CHUNK_BATCH_SIZE</code>:</strong> Specifies the number of chunks processed concurrently. Set this value based on the total available system memory and the per-record/trace memory cost, ensuring you do not exceed your system’s capacity.</li>
-</ul>
-</li>
+<li><strong><code>CHUNK_SIZE</code></strong> (<code>chunk_size</code>): the number of instructions executed per chunk. Defaults to 2^23.</li>
+<li><strong><code>PROVE_CONCURRENCY</code></strong> (<code>concurrency</code>): the number of RISC-V chunks proved at once. Defaults to 4. Each one holds a full proving working set, so lower it on a machine with less memory.</li>
 </ul>
 <p>These options allow you to balance performance and resource utilization, making it possible to optimize Pico for a wide range of environments—from resource-constrained setups to high-performance systems.</p>
 <h2 id="features-1"><a class="header" href="#features-1">Features</a></h2>
-<p><code>pico-vm</code> comes enabled with several features by default. These being <code>strict</code>, <code>rayon</code>, and <code>nightly-features</code>. <code>strict</code> is a compile time option for <code>#![deny(warnings)]</code> on the entire pico-vm module. <code>rayon</code> enables the usage of rayon’s <code>ParallelIterator</code> and related traits to use multithreading to speed up the proving process. This feature should be left on unless you wish to compile a single threaded prover for profiling reasons, as <code>rayon</code> tends to pollute the stack trace when running <code>flamegraph</code>. nightly-features enables certain CPU-specific performance enhancements, enabling further optimizations with <code>-march=native</code> and turning on <code>AVX2</code> by default on x86-based architectures. <code>AVX512</code> can be enabled via additional <code>RUSTFLAGS</code> as well. This should be left on, like <code>rayon</code>, unless you have a specific reason not to.</p>
+<p><code>pico-vm</code> comes enabled with several features by default. These being <code>strict</code>, <code>rayon</code>, and <code>multi-field-transcript</code>. <code>strict</code> is a compile time option for <code>#![deny(warnings)]</code> on the entire pico-vm module. <code>rayon</code> enables the usage of rayon’s <code>ParallelIterator</code> and related traits to use multithreading to speed up the proving process. This feature should be left on unless you wish to compile a single threaded prover for profiling reasons, as <code>rayon</code> tends to pollute the stack trace when running <code>flamegraph</code>. <code>multi-field-transcript</code> enables the EMBED and WRAP phases, which the EVM path needs.</p>
 <p>To build <code>pico-vm</code> without default features, simply set default-features = false in your Cargo.toml or run <code>cargo build -p pico-vm --no-default-features</code> for your local build environment, maybe adding <code>--example</code> if you want to build a specific example in addition to the Rust library.</p>
 <h2 id="single-threaded-profiling"><a class="header" href="#single-threaded-profiling">Single threaded profiling</a></h2>
 <p>As mentioned in the previous section, we support single threaded builds in order to generate neater flamegraphs for profiling purposes. For example, to build <code>test_mle_e2e</code> for profiling, run</p>

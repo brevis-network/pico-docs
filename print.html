@@ -36,10 +36,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-85d25064.js";
+            window.path_to_searchindex_js = "searchindex-205b3613.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-8533914a.js"></script>
+        <script src="toc-76066ed2.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -178,6 +178,7 @@
                         <h1 id="introducing-pico"><a class="header" href="#introducing-pico">Introducing Pico</a></h1>
 <p><img src=".gitbook/assets/pico.png" alt=""><figcaption></figcaption></p>
 <p>Welcome to Pico—the open-source zero-knowledge virtual machine (zkVM) that transforms how developers build secure, scalable, and high-performance decentralized applications. Drawing on the innovative <a href="https://vitalik.eth.limo/general/2024/09/02/gluecp.html">“glue-and-coprocessor”</a> architecture, Pico fuses the efficiency of specialized circuits with the adaptability of a general-purpose zkVM. This unique design empowers you to craft tailored proof systems that meet the diverse needs of modern cryptographic applications.</p>
+<p>Pico’s STARK proofs have 128 bits of provable soundness; the on-chain Groth16 proof has BN254’s security level.</p>
 <p>Pico’s design is rooted in the need for adaptable, high-performance ZK systems that can keep pace with the rapidly evolving landscape of cryptographic research. Rather than relying on a one-size-fits-all solution, Pico’s modular architecture lets you:</p>
 <ul>
 <li><strong>Leverage Interchangeable Proving Backends:</strong> Select from multiple proving backends to achieve the best performance and efficiency.</li>
@@ -194,20 +195,21 @@
 </ul>
 <p>Pico provides a robust, future-ready foundation that meets today’s challenges and evolves with the advancing field of zero-knowledge technology. Whether you’re a developer eager to explore the potential of ZK proofs or a researcher pushing the boundaries of cryptographic innovation, Pico is the ideal platform to build upon.</p>
 <div style="break-before: page; page-break-before: always;"></div>
-<h1 id="migrating-to-30"><a class="header" href="#migrating-to-30">Migrating to 3.0</a></h1>
-<p>Pico 3.0 replaces the proof system: it proves over the KoalaBear field with an MLE proof system (LogUp-GKR, ZeroCheck and WHIR), and the host-side API moved to a new crate. 2.x proofs do not verify under 3.0, and 2.x on-chain verifiers do not accept 3.0 proofs.</p>
-<p>This page lists the changes most projects hit. The full guide is <a href="https://github.com/brevis-network/pico/blob/v3.0.0/docs/migration-2.x-to-3.0.md">Migrating from 2.x to 3.0</a>, and the <a href="https://github.com/brevis-network/pico/blob/v3.0.0/docs/release-notes/3.0.md">3.0 release notes</a> summarize the release.</p>
+<h1 id="migrating-to-3x"><a class="header" href="#migrating-to-3x">Migrating to 3.x</a></h1>
+<p>Pico 3.0 replaced the proof system: it proves over the KoalaBear field with an MLE proof system (LogUp-GKR, ZeroCheck and WHIR), and the host-side API moved to a new crate. Pico 3.1 raises its proofs to 128 bits of provable soundness.</p>
+<p>No proof, key, whitelist or verifier contract carries over from 2.x or 3.0. Rebuild every guest (every program id changes), run a new Groth16 setup and redeploy the verifier contracts.</p>
+<p>This page lists the changes most projects hit. The full guide is <a href="https://github.com/brevis-network/pico/blob/v3.0.0/docs/migration-2.x-to-3.0.md">Migrating from 2.x to 3.0</a>, and the <a href="https://github.com/brevis-network/pico/blob/v3.0.0/docs/release-notes/3.0.md">3.0</a> and <a href="https://github.com/brevis-network/pico/blob/main/docs/release-notes/3.1.md">3.1</a> release notes summarize each release.</p>
 <h3 id="toolchain"><a class="header" href="#toolchain">Toolchain</a></h3>
 <ul>
 <li>The Rust toolchain moved from <code>nightly-2025-08-04</code> to <code>nightly-2026-09-27</code>. Reinstall the CLI with it (see <a href="#installation">Installation</a>), then run <code>cargo pico install</code> again for the matching guest toolchain.</li>
 <li>Set the project’s own <code>rust-toolchain</code> file to <code>nightly-2026-09-27</code>: the host crate builds <code>pico-prover</code>, which uses nightly-only features.</li>
 <li>The guest target is still <code>riscv64im-pico-zkvm-elf</code>.</li>
-<li>The guest depends on <code>pico-sdk = { git = "https://github.com/brevis-network/pico" }</code>, as before.</li>
+<li>The guest depends on <code>pico-sdk = { git = "https://github.com/brevis-network/pico", tag = "v3.1.1" }</code>.</li>
 </ul>
 <h3 id="fields-and-phases"><a class="header" href="#fields-and-phases">Fields and phases</a></h3>
 <ul>
 <li>KoalaBear is the only field. BabyBear and Mersenne31 are removed with no replacement: the <code>bb</code> and <code>m31</code> features of <code>pico-sdk</code> are gone, and <code>kb</code> is kept as a no-op so existing guests still build.</li>
-<li>The <code>COMPRESS</code> phase is removed. The chain is now <code>RISCV → CONVERT → COMBINE → EMBED → WRAP</code>; see <a href="#proverchain">ProverChain</a>.</li>
+<li>The chain is <code>RISCV → CONVERT → COMBINE → COMPRESS → EMBED → WRAP</code>; see <a href="#proverchain">ProverChain</a>.</li>
 </ul>
 <h3 id="cli"><a class="header" href="#cli">CLI</a></h3>
 <div class="table-wrapper">
@@ -229,7 +231,7 @@
 <p>New subcommands: <code>cargo pico execute</code> (emulate without proving) and <code>cargo pico aot</code> (generate AOT crates). See the <a href="https://github.com/brevis-network/pico/blob/v3.0.0/docs/migration-2.x-to-3.0.md#cli-cargo-pico">CLI section of the migration guide</a>.</p>
 <h3 id="host-sdk-pico-sdk-client--pico-prover"><a class="header" href="#host-sdk-pico-sdk-client--pico-prover">Host SDK: <code>pico-sdk</code> client → <code>pico-prover</code></a></h3>
 <p>The prover clients left <code>pico-sdk</code>. The host program depends on the new crate <code>pico-prover</code>:</p>
-<pre><code class="language-toml">pico-prover = { git = "https://github.com/brevis-network/pico" }
+<pre><code class="language-toml">pico-prover = { git = "https://github.com/brevis-network/pico", tag = "v3.1.1" }
 </code></pre>
 <div class="table-wrapper">
 <table>
@@ -279,7 +281,7 @@
 <ol>
 <li>Install pico-cli from the GitHub repository</li>
 </ol>
-<pre><code class="language-sh">cargo +nightly-2026-09-27 install --git https://github.com/brevis-network/pico pico-cli
+<pre><code class="language-sh">cargo +nightly-2026-09-27 install --git https://github.com/brevis-network/pico --tag v3.1.1 --locked pico-cli
 </code></pre>
 <ol start="2">
 <li>Check the version</li>
@@ -290,7 +292,7 @@
 <ol>
 <li>Git clone Pico-VM repository</li>
 </ol>
-<pre><code class="language-sh">git clone https://github.com/brevis-network/pico
+<pre><code class="language-sh">git clone --branch v3.1.1 https://github.com/brevis-network/pico
 </code></pre>
 <ol start="2">
 <li>cargo install from the local path</li>
@@ -341,7 +343,7 @@ RUST_LOG=info cargo run --release -- prove fib.pico
 <p>If you simply wish to use the default provided proving clients and options, you can prove using the Pico CLI via</p>
 <pre><code class="language-sh">RUST_LOG=info cargo pico prove --input "0x6400000000000000" --phase riscv --elf /path/to/elf # input n = 100
 </code></pre>
-<p>The input to the fibonacci program is a single u64 specifying which number to compute, so we can directly pass the input with the <code>--input</code> option, supplying little endian bytes. <code>--fast</code> simply tells the prover to skip any recursion steps and terminate after finishing the RISC-V proof.</p>
+<p>The input to the fibonacci program is a single u64 specifying which number to compute, so we can directly pass the input with the <code>--input</code> option, supplying little endian bytes. <code>--phase riscv</code> simply tells the prover to skip any recursion steps and terminate after finishing the RISC-V proof.</p>
 <ol start="4">
 <li>Prove program with AOT (Experimental)</li>
 </ol>
@@ -426,7 +428,7 @@ pub fn main() {
     //todo: write your program logic here
 }
 </code></pre>
-<p>Raw system calls are available by using <code>pico_sdk::riscv_ecalls::*</code> but it is recommended to use the integrated patch libraries to avoid disrupting the standard development workflow. The program can then be compiled to RiscV without creating conditional compilation-related hoops aside from the entry point (unless your system assumes a word size of 64 bits, which is untrue in the zkVM). A few light wrappers for elliptic curve types can also be found in the <code>pico-patch-libs</code> crate.</p>
+<p>Raw system calls are available by using <code>pico_sdk::riscv_ecalls::*</code> but it is recommended to use the integrated patch libraries to avoid disrupting the standard development workflow. The program can then be compiled to RiscV without creating conditional compilation-related hoops aside from the entry point. A few light wrappers for elliptic curve types can also be found in the <code>pico-patch-libs</code> crate.</p>
 <p>Be very careful with using heap memory. The currently implemented allocator does not free any memory, so cloning a medium-sized <code>Vec</code> a few too many times will cause your program to go OOM. You must write your own allocator if a more managed memory solution is required.</p>
 <h2 id="inputs-and-outputs"><a class="header" href="#inputs-and-outputs">Inputs and outputs</a></h2>
 <p><code>pico_sdk::io::read_as</code> Read a serialized input data type into the program and deserialize it into specific types, such as u32, u64, and bytes. Pico <code>prove</code> CLI provides two ways to pass the inputs: hex string (<code>0x…</code>) and file path (<code>file:&lt;path&gt;</code>). When your specific input is a file path, the file content will be read as bytes in the program.</p>
@@ -440,7 +442,7 @@ pub fn main() {
 </ol>
 <pre><code class="language-sh">cargo pico new --template basic basic-example
 </code></pre>
-<p>The project only contains a program module. You can test and debug your RISC-V program quickly using the basic template.</p>
+<p>The project contains the program (<code>app</code>), a shared library (<code>lib</code>) and a prover (<code>prover</code>). You can test and debug your RISC-V program quickly using the basic template.</p>
 <ol start="2">
 <li>Create a program with EVM</li>
 </ol>
@@ -459,15 +461,15 @@ forge test
 <h1 id="proving"><a class="header" href="#proving">Proving</a></h1>
 <h2 id="overview"><a class="header" href="#overview">Overview</a></h2>
 <p>Pico provides CLI and SDK tools to recursively prove the program to the developers.</p>
-<p>Pico CLI provides a complete toolchain for compiling the RISC-V program and using Pico to complete end-to-end proof. Refer to the <a href="#installation">installation page</a> to install the CLI toolchain. Pico 3.0 proves over the KoalaBear field.</p>
+<p>Pico CLI provides a complete toolchain for compiling the RISC-V program and using Pico to complete end-to-end proof. Refer to the <a href="#installation">installation page</a> to install the CLI toolchain. Pico 3.1 proves over the KoalaBear field, with 128 bits of provable soundness.</p>
 <p>Like the CLI, the <code>pico-prover</code> crate includes lower-level APIs that can prove the program directly. The <a href="https://github.com/brevis-network/pico-zkapp-template/tree/main/prover">prover package</a> of the template project repository provides an example of how to import and initialize the SDK and quickly generate a RISC-V proof using the Pico SDK. In the <a href="#proving-steps">Proving Steps Section</a>, you can read more about VM e2e proving and the Gnark EVM proof generation for On-chain verification</p>
 <p>Let’s quickly go through the Pico SDK usage and generate a Fibonacci RISC-V proof.</p>
 <ol>
 <li>Import <code>pico-sdk</code> and <code>pico-prover</code></li>
 </ol>
 <pre><code class="language-toml"># Cargo.toml
-pico-sdk = { git = "https://github.com/brevis-network/pico" }
-pico-prover = { git = "https://github.com/brevis-network/pico" }
+pico-sdk = { git = "https://github.com/brevis-network/pico", tag = "v3.1.1" }
+pico-prover = { git = "https://github.com/brevis-network/pico", tag = "v3.1.1" }
 </code></pre>
 <ol start="2">
 <li>Execute the proving process and generate RISC-V proof.</li>
@@ -559,7 +561,7 @@ fn main() {
 <pre><code class="language-sh">RUST_LOG=info cargo pico prove --elf elf/riscv64im-pico-zkvm-elf --input "0x6400000000000000" --phase riscv
 </code></pre>
 <h3 id="read"><a class="header" href="#read">Read</a></h3>
-<p>Corresponding to the writer functions, there are read_as and read_slice tools for io reading the serializable object or bytes into the program.</p>
+<p>Corresponding to the writer functions, there are <code>read_as</code> and <code>read_vec</code> tools for io reading the serializable object or bytes into the program.</p>
 <p>SDK examples:</p>
 <pre class="language-rust"><code class="lang-rust">
 use pico_sdk::io::{read_as, read_vec};
@@ -590,7 +592,7 @@ fn main() {
 <p>CLI:</p>
 <pre><code class="language-sh">RUST_LOG=info cargo pico prove --elf elf/riscv64im-pico-zkvm-elf --phase riscv
 </code></pre>
-<p>For example, when executing the fast proving with inputs in the Fibonacci, the input <code>n</code> is a <code>u64</code> data received through <code>pico::sdk::read_as</code>, and it must be in little-endian format and filled to 8 bytes.</p>
+<p>For example, the input <code>n</code> in the Fibonacci is a <code>u64</code> read through <code>pico_sdk::io::read_as</code>, so it must be in little-endian format and filled to 8 bytes.</p>
 <pre><code class="language-sh">RUST_LOG=info cargo pico prove --elf elf/riscv64im-pico-zkvm-elf --input "0x6400000000000000" --phase riscv
 </code></pre>
 <p>SDK:</p>
@@ -612,7 +614,7 @@ let riscv_proof = prover.prove_to(stdin, Phase::Riscv).expect("Failed to generat
 <p>CLI:</p>
 <pre><code class="language-sh">RUST_LOG=info cargo pico prove --elf elf/riscv64im-pico-zkvm-elf --phase wrap
 </code></pre>
-<p>Proving with <code>--phase wrap</code> will execute the prover up to and including the EMBED-Phase and write the inputs of the <code>Gnark</code> proof verification circuit, which can then be verified on-chain via contract. Without <code>--phase</code>, <code>prove</code> stops after the COMBINE phase.</p>
+<p>Proving with <code>--phase wrap</code> will execute the prover up to and including the EMBED-Phase and write the inputs of the <code>Gnark</code> proof verification circuit. A contract accepts them only from whitelist mode. Without <code>--phase</code>, <code>prove</code> stops after the COMBINE phase.</p>
 <p>options:</p>
 <p><code>--output</code></p>
 <p>You can specify the output path to generate the files prepared for the <code>Gnark</code> verification and default is <code>pico_out</code> in the current directory</p>
@@ -639,22 +641,37 @@ proof
 <li><code>wrap_constraints.json</code>: The schema of the stark proof constraints is used to transform to Gnark circuit constraints.</li>
 <li><code>wrap_groth16_witness.json</code>: input witnessness of Gnark circuit.</li>
 </ul>
+<h4 id="dev-mode-and-whitelist-mode"><a class="header" href="#dev-mode-and-whitelist-mode">Dev mode and whitelist mode</a></h4>
+<p>Pico proves in one of two modes:</p>
+<ul>
+<li><strong>Dev mode</strong>, the default: each recursion step uses a circuit fitted to the run. Its COMBINE proof verifies only in the process that made it, and no contract accepts it.</li>
+<li><strong>Whitelist mode</strong>: every recursion step uses one of a fixed set of circuits, prepared ahead of time and shipped with Pico. Their verifying keys form the whitelist, identified by its root. A COMBINE proof then verifies in any process with the same whitelist, and the on-chain verifier has the root built in, so EVM proofs need this mode.</li>
+</ul>
+<p>The two modes give the same program different program ids; a contract pins the whitelist-mode one. To prove in whitelist mode, set <code>VK_VERIFICATION=true</code>, <code>MLE_VK_MAP</code> and <code>MLE_VK_ROOT</code> for the CLI (see EVM-Phase), or build the SDK prover with <code>shipped_whitelist()</code>.</p>
 <h3 id="evm-phase"><a class="header" href="#evm-phase">EVM-Phase</a></h3>
-<p>The Pico CLI provides an EVM option to generate the program Groth16 proof and verifier Contracts. The evm option runs in whitelist mode only (<code>VK_VERIFICATION=true</code>, <code>MLE_VK_MAP</code>, <code>MLE_VK_ROOT</code>), with gnark from <code>$PICO_GNARK_IMAGE</code> (a <a href="https://docs.docker.com/engine/install/ubuntu/">Docker</a> image built from <code>gnark/Dockerfile</code>) or <code>$PICO_GNARK_BIN</code>.</p>
+<p>The Pico CLI provides an EVM option to generate the program Groth16 proof and verifier contracts. It proves in whitelist mode only and runs gnark in a <a href="https://docs.docker.com/engine/install/ubuntu/">Docker</a> image. From the root of a project made with the <code>evm</code> template:</p>
 <p>CLI:</p>
-<pre><code class="language-sh"># Setup groth16 PK/VK if its never generated or a new version update.
-cargo pico prove --elf elf/riscv64im-pico-zkvm-elf --input "0x6400000000000000" --evm --setup --keys keys
-# generate groth16 proof
-cargo pico prove --elf elf/riscv64im-pico-zkvm-elf --input "0x6400000000000000" --evm --keys keys
+<pre><code class="language-sh"># Once: build the gnark image. The tag is your CLI's version.
+docker build -t pico-gnark -f gnark/Dockerfile https://github.com/brevis-network/pico.git#v3.1.1
+
+# Whitelist mode, with the whitelist in the template's whitelist/.
+export VK_VERIFICATION=true
+export MLE_VK_MAP=whitelist/mle_vk_map_kb.bin
+export MLE_VK_ROOT="$(sed -n 's/^MLE_VK_ROOT=//p' whitelist/mle_vk_root.txt | tr -d '"')"
+export PICO_GNARK_IMAGE=pico-gnark
+
+# Set up the Groth16 PK/VK the first time, or after a version update.
+cargo pico prove --elf app/elf/riscv64im-pico-zkvm-elf --input u32:10 --evm --setup --keys keys
+# Generate the Groth16 proof with the existing keys.
+cargo pico prove --elf app/elf/riscv64im-pico-zkvm-elf --input u32:10 --evm --keys keys
 </code></pre>
+<p>The <a href="https://github.com/brevis-network/pico-zkapp-template/tree/evm#the-on-chain-proof">EVM template</a> runs the full flow, including the contract tests, and notes the machine it needs.</p>
 <p>SDK:</p>
 <pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>// Initialize the prover in whitelist mode, which EVM proofs require.
 let mut prover = Prover::builder(&amp;elf)
-    .verify_keys(true)
-    .vk_map("mle_vk_map_kb.bin")
-    .trusted_vk_root(vk_root)
+    .shipped_whitelist()
     .build()
     .expect("Failed to initialize the prover");
 let output_dir = PathBuf::from_str(&amp;"./outputs").expect("the output dir is invalid");
@@ -715,19 +732,14 @@ interface IPicoVerifier {
 <h2 id="guest-vm-cycle-tracking"><a class="header" href="#guest-vm-cycle-tracking">Guest VM Cycle Tracking</a></h2>
 <p>Please see <a href="#vm-cycle-tracking">VM Cycle Tracking</a> for a detailed explanation of this feature.</p>
 <h2 id="proving-options"><a class="header" href="#proving-options">Proving Options</a></h2>
-<p>Pico offers several configurable parameters to optimize the proving process for your system’s resources and performance requirements:</p>
+<p>Pico offers several configurable parameters to optimize the proving process for your system’s resources and performance requirements. <code>cargo pico</code> reads them from environment variables; with <code>pico-prover</code>, set them on <code>ProverBuilder</code>:</p>
 <ul>
-<li><strong>Automatic Configuration:</strong> By default, Pico automatically adjusts standard options, such as chunk and batch sizes, according to the available memory on the running machine.</li>
-<li><strong>Manual Overrides:</strong> Developers can fine-tune the proving process by setting the following environment variables:
-<ul>
-<li><strong><code>CHUNK_SIZE</code>:</strong> Determines the number of cycles executed before splitting records. This helps manage the trace size, and setting this value to a power of 2 is recommended.</li>
-<li><strong><code>CHUNK_BATCH_SIZE</code>:</strong> Specifies the number of chunks processed concurrently. Set this value based on the total available system memory and the per-record/trace memory cost, ensuring you do not exceed your system’s capacity.</li>
-</ul>
-</li>
+<li><strong><code>CHUNK_SIZE</code></strong> (<code>chunk_size</code>): the number of instructions executed per chunk. Defaults to 2^23.</li>
+<li><strong><code>PROVE_CONCURRENCY</code></strong> (<code>concurrency</code>): the number of RISC-V chunks proved at once. Defaults to 4. Each one holds a full proving working set, so lower it on a machine with less memory.</li>
 </ul>
 <p>These options allow you to balance performance and resource utilization, making it possible to optimize Pico for a wide range of environments—from resource-constrained setups to high-performance systems.</p>
 <h2 id="features-1"><a class="header" href="#features-1">Features</a></h2>
-<p><code>pico-vm</code> comes enabled with several features by default. These being <code>strict</code>, <code>rayon</code>, and <code>nightly-features</code>. <code>strict</code> is a compile time option for <code>#![deny(warnings)]</code> on the entire pico-vm module. <code>rayon</code> enables the usage of rayon’s <code>ParallelIterator</code> and related traits to use multithreading to speed up the proving process. This feature should be left on unless you wish to compile a single threaded prover for profiling reasons, as <code>rayon</code> tends to pollute the stack trace when running <code>flamegraph</code>. nightly-features enables certain CPU-specific performance enhancements, enabling further optimizations with <code>-march=native</code> and turning on <code>AVX2</code> by default on x86-based architectures. <code>AVX512</code> can be enabled via additional <code>RUSTFLAGS</code> as well. This should be left on, like <code>rayon</code>, unless you have a specific reason not to.</p>
+<p><code>pico-vm</code> comes enabled with several features by default. These being <code>strict</code>, <code>rayon</code>, and <code>multi-field-transcript</code>. <code>strict</code> is a compile time option for <code>#![deny(warnings)]</code> on the entire pico-vm module. <code>rayon</code> enables the usage of rayon’s <code>ParallelIterator</code> and related traits to use multithreading to speed up the proving process. This feature should be left on unless you wish to compile a single threaded prover for profiling reasons, as <code>rayon</code> tends to pollute the stack trace when running <code>flamegraph</code>. <code>multi-field-transcript</code> enables the EMBED and WRAP phases, which the EVM path needs.</p>
 <p>To build <code>pico-vm</code> without default features, simply set default-features = false in your Cargo.toml or run <code>cargo build -p pico-vm --no-default-features</code> for your local build environment, maybe adding <code>--example</code> if you want to build a specific example in addition to the Rust library.</p>
 <h2 id="single-threaded-profiling"><a class="header" href="#single-threaded-profiling">Single threaded profiling</a></h2>
 <p>As mentioned in the previous section, we support single threaded builds in order to generate neater flamegraphs for profiling purposes. For example, to build <code>test_mle_e2e</code> for profiling, run</p>
@@ -806,8 +818,7 @@ interface IPicoVerifier {
 <p>This information can then be processed on the host side by iterating through the <code>cycle_tracker</code> field of the returned <code>EmulationReport</code>. These reports are batched per chunk in the sense that you only receive the results of <code>cycle-tracker-end</code> for the current batch, but they will still correctly track the <code>cycle-tracker-start</code> from a previous batch.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="cost-estimation"><a class="header" href="#cost-estimation">Cost Estimation</a></h1>
-<p>The Pico emulator also provides a method for obtaining a rough estimate for the answer to the question: how many CPU cycles would it take to prove this trace? This is done by setting the <code>EmulatorOpts::cost_estimator</code> flag to <code>true</code> or by using <code>EmulatorOpts::with_cost_estimator</code>. This produces a value in the <code>host_cycle_estimator</code> field of the <code>EmulationReport</code> per batch, and the <code>Vec</code> entries of type <code>CycleEstimator</code> can be used to estimate the cycles on a given model. Each entry corresponds to the chunk index within the specific batch. The current model used by Pico is present in <code>model.json</code>, found at the root of the repository, and can be loaded with <code>EstimatorModel::from_json(path)</code>. By using the estimator data with different models of host prover, different numbers may be obtained.</p>
-<p>Currently, the Pico model universally divides the estimator result by 1000 as a means to avoid overflow. This is subject to change.</p>
+<p><code>ProverBuilder::estimate_cost(stdin)</code> (also on <code>Prover</code>) runs the program without proving and returns a <code>CostEstimate</code>: how much proving the run would take, and its cycle count. It covers the RISC-V phase only.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="function-level"><a class="header" href="#function-level">Function-level</a></h1>
 <p>Function-level coprocessors—commonly known as precompiles—are specialized circuits within Pico designed to optimize and streamline specific cryptographic operations and computational tasks. These precompiles handle operations such as elliptic curve arithmetic, hash functions, and signature verifications. In a general-purpose environment, these operations can be resource-intensive, but by offloading them to dedicated circuits, Pico significantly reduces computational costs, improves performance, and enhances scalability during proof generation and verification. Packaging these core operations into efficient, well-tested modules not only accelerates development cycles but also establishes a secure foundation for a wide range of zk-applications, including privacy-preserving transactions, rollups, and layer-2 scaling solutions.</p>

@@ -35,10 +35,10 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-85d25064.js";
+            window.path_to_searchindex_js = "../searchindex-205b3613.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../toc-8533914a.js"></script>
+        <script src="../toc-76066ed2.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -202,7 +202,7 @@ RUST_LOG=info cargo run --release -- prove fib.pico
 <p>If you simply wish to use the default provided proving clients and options, you can prove using the Pico CLI via</p>
 <pre><code class="language-sh">RUST_LOG=info cargo pico prove --input "0x6400000000000000" --phase riscv --elf /path/to/elf # input n = 100
 </code></pre>
-<p>The input to the fibonacci program is a single u64 specifying which number to compute, so we can directly pass the input with the <code>--input</code> option, supplying little endian bytes. <code>--fast</code> simply tells the prover to skip any recursion steps and terminate after finishing the RISC-V proof.</p>
+<p>The input to the fibonacci program is a single u64 specifying which number to compute, so we can directly pass the input with the <code>--input</code> option, supplying little endian bytes. <code>--phase riscv</code> simply tells the prover to skip any recursion steps and terminate after finishing the RISC-V proof.</p>
 <ol start="4">
 <li>Prove program with AOT (Experimental)</li>
 </ol>

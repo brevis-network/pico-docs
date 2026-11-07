@@ -35,10 +35,10 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-85d25064.js";
+            window.path_to_searchindex_js = "../searchindex-205b3613.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="../toc-8533914a.js"></script>
+        <script src="../toc-76066ed2.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -187,7 +187,7 @@ pub fn main() {
     //todo: write your program logic here
 }
 </code></pre>
-<p>Raw system calls are available by using <code>pico_sdk::riscv_ecalls::*</code> but it is recommended to use the integrated patch libraries to avoid disrupting the standard development workflow. The program can then be compiled to RiscV without creating conditional compilation-related hoops aside from the entry point (unless your system assumes a word size of 64 bits, which is untrue in the zkVM). A few light wrappers for elliptic curve types can also be found in the <code>pico-patch-libs</code> crate.</p>
+<p>Raw system calls are available by using <code>pico_sdk::riscv_ecalls::*</code> but it is recommended to use the integrated patch libraries to avoid disrupting the standard development workflow. The program can then be compiled to RiscV without creating conditional compilation-related hoops aside from the entry point. A few light wrappers for elliptic curve types can also be found in the <code>pico-patch-libs</code> crate.</p>
 <p>Be very careful with using heap memory. The currently implemented allocator does not free any memory, so cloning a medium-sized <code>Vec</code> a few too many times will cause your program to go OOM. You must write your own allocator if a more managed memory solution is required.</p>
 <h2 id="inputs-and-outputs"><a class="header" href="#inputs-and-outputs">Inputs and outputs</a></h2>
 <p><code>pico_sdk::io::read_as</code> Read a serialized input data type into the program and deserialize it into specific types, such as u32, u64, and bytes. Pico <code>prove</code> CLI provides two ways to pass the inputs: hex string (<code>0x…</code>) and file path (<code>file:&lt;path&gt;</code>). When your specific input is a file path, the file content will be read as bytes in the program.</p>
@@ -201,7 +201,7 @@ pub fn main() {
 </ol>
 <pre><code class="language-sh">cargo pico new --template basic basic-example
 </code></pre>
-<p>The project only contains a program module. You can test and debug your RISC-V program quickly using the basic template.</p>
+<p>The project contains the program (<code>app</code>), a shared library (<code>lib</code>) and a prover (<code>prover</code>). You can test and debug your RISC-V program quickly using the basic template.</p>
 <ol start="2">
 <li>Create a program with EVM</li>
 </ol>
