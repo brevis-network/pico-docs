@@ -106,15 +106,8 @@ jobs:
         if ! git diff --staged --quiet; then
           git commit -m "Sync src from main: $(git log main -1 --format='%h %s')"
           
-          # Push changes  
+          # Push changes; this push triggers gh-pages.yml because it uses PAT_TOKEN
           git push origin deploy
-          
-          # Trigger repository dispatch event to start GitHub Pages deployment
-          curl -X POST \
-            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            -H "Accept: application/vnd.github.v3+json" \
-            https://api.github.com/repos/${{ github.repository }}/dispatches \
-            -d '{"event_type":"deploy-pages"}'
         else
           echo "No changes to commit"
         fi
