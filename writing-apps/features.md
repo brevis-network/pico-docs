@@ -26,7 +26,7 @@ Please see [VM Cycle Tracking](advanced/vm-cycle-tracking.md) for a detailed exp
 Pico offers several configurable parameters to optimize the proving process for your system’s resources and performance requirements. `cargo pico` reads them from environment variables; with `pico-prover`, set them on `ProverBuilder`:
 
 * **`CHUNK_SIZE`** (`chunk_size`): the number of instructions executed per chunk. Defaults to 2^23.
-* **`PROVE_CONCURRENCY`** (`concurrency`): **`PROVE_CONCURRENCY`** (`concurrency`): the number of RISC-V chunks proved at once. Defaults to 4 on the CPU, lower on a host with less memory (3 under 20 GiB, 2 under 16 GiB, 1 under 12 GiB), and to 1 in a `cuda` build. Each one holds a full proving working set, so lower it on a machine with less memory.
+* **`PROVE_CONCURRENCY`** (`concurrency`): the number of RISC-V chunks proved at once. Defaults to 4 on the CPU, lower on a host with less memory (3 under 20 GiB, 2 under 16 GiB, 1 under 12 GiB), and to 1 in a `cuda` build. Each one holds a full proving working set, so lower it on a machine with less memory.
 
 These options allow you to balance performance and resource utilization, making it possible to optimize Pico for a wide range of environments—from resource-constrained setups to high-performance systems.
 

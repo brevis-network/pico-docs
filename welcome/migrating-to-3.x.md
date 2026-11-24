@@ -10,7 +10,7 @@ No proof, key, whitelist or verifier contract carries over from 2.x, 3.0 or 3.1.
 
 This page lists the changes most projects hit. The full guide is [Migrating from 2.x to 3.0](https://github.com/brevis-network/pico/blob/v3.0.0/docs/migration-2.x-to-3.0.md), and the [3.0](https://github.com/brevis-network/pico/blob/v3.0.0/docs/release-notes/3.0.md), [3.1](https://github.com/brevis-network/pico/blob/v3.2.0/docs/release-notes/3.1.md) and [3.2](https://github.com/brevis-network/pico/blob/v3.2.0/docs/release-notes/3.2.md) release notes summarize each release.
 
-#### From 3.1 to 3.2
+### From 3.1 to 3.2
 
 3.2 is a breaking release. Moving a 3.1 project (any tag from `v3.1.0` to `v3.1.6`) to it takes these steps:
 
