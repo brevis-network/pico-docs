@@ -35,7 +35,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-205b3613.js";
+            window.path_to_searchindex_js = "../searchindex-6e0f36b9.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-76066ed2.js"></script>
@@ -183,19 +183,14 @@
 </ul>
 <p>For scenarios where you want to save logs to a file without color codes (which may be embedded by default), you can pipe the output through a tool like <code>ansi2txt</code>. This conversion ensures that the log file remains clean and free of terminal-specific formatting, as the tracing framework does not automatically adjust colors based on environment variables.</p>
 <h2 id="debugging"><a class="header" href="#debugging">Debugging</a></h2>
-<p>In the rare event that proving fails on a correctly executing binary, Pico provides additional debug capabilities to assist in pinpointing issues:</p>
-<ul>
-<li><strong>Enhanced Debugging Features:</strong> Enable the <code>debug</code> and <code>debug-lookups</code> features when running the prover. These features provide extra context by outputting detailed information on individual constraints and lookup operations within each processing batch.</li>
-<li><strong>Minimal Memory Impact:</strong> Since debug information is generated from data already in memory for the current batch of proofs, enabling debugging does not incur a significant additional memory cost. The debug data can be discarded once the batch is processed and debugged.</li>
-<li><strong>Accessing Debug Data:</strong> Combine the debugging features with <code>RUST_LOG=debug</code> to capture detailed logs.</li>
-</ul>
+<p>In the rare event that proving fails on a program that executes correctly, run it with <code>RUST_LOG=debug</code> to see the chunks and records as they are generated and proved, and check the program alone with <code>cargo pico execute</code>.</p>
 <h2 id="guest-vm-cycle-tracking"><a class="header" href="#guest-vm-cycle-tracking">Guest VM Cycle Tracking</a></h2>
 <p>Please see <a href="advanced/vm-cycle-tracking.html">VM Cycle Tracking</a> for a detailed explanation of this feature.</p>
 <h2 id="proving-options"><a class="header" href="#proving-options">Proving Options</a></h2>
 <p>Pico offers several configurable parameters to optimize the proving process for your system’s resources and performance requirements. <code>cargo pico</code> reads them from environment variables; with <code>pico-prover</code>, set them on <code>ProverBuilder</code>:</p>
 <ul>
 <li><strong><code>CHUNK_SIZE</code></strong> (<code>chunk_size</code>): the number of instructions executed per chunk. Defaults to 2^23.</li>
-<li><strong><code>PROVE_CONCURRENCY</code></strong> (<code>concurrency</code>): the number of RISC-V chunks proved at once. Defaults to 4. Each one holds a full proving working set, so lower it on a machine with less memory.</li>
+<li><strong><code>PROVE_CONCURRENCY</code></strong> (<code>concurrency</code>): the number of RISC-V chunks proved at once. Defaults to 4 on the CPU, lower on a host with less memory (3 under 20 GiB, 2 under 16 GiB, 1 under 12 GiB), and to 1 in a <code>cuda</code> build. Each one holds a full proving working set, so lower it on a machine with less memory.</li>
 </ul>
 <p>These options allow you to balance performance and resource utilization, making it possible to optimize Pico for a wide range of environments—from resource-constrained setups to high-performance systems.</p>
 <h2 id="features-1"><a class="header" href="#features-1">Features</a></h2>
@@ -203,10 +198,10 @@
 <p>To build <code>pico-vm</code> without default features, simply set default-features = false in your Cargo.toml or run <code>cargo build -p pico-vm --no-default-features</code> for your local build environment, maybe adding <code>--example</code> if you want to build a specific example in addition to the Rust library.</p>
 <h2 id="single-threaded-profiling"><a class="header" href="#single-threaded-profiling">Single threaded profiling</a></h2>
 <p>As mentioned in the previous section, we support single threaded builds in order to generate neater flamegraphs for profiling purposes. For example, to build <code>test_mle_e2e</code> for profiling, run</p>
-<pre><code>cargo build -p pico-vm --no-default-features --profile profiling --example test_mle_e2e
+<pre><code>cargo build -p pico-vm --no-default-features --profile flamegraph --example test_mle_e2e
 </code></pre>
 <p>to build the binary and then run</p>
-<pre><code>sudo flamegraph -o flamegraph.svg -- ./target/profiling/examples/test_mle_e2e --elf fib --n 10 --step riscv
+<pre><code>sudo flamegraph -o flamegraph.svg -- ./target/flamegraph/examples/test_mle_e2e --elf fib --n 10 --step riscv
 </code></pre>
 <p>with <a href="https://github.com/flamegraph-rs/flamegraph"><code>cargo flamegraph</code></a> to produce a flamegraph that you can use to explore cost centers.</p>
 

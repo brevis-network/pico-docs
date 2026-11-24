@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-205b3613.js";
+            window.path_to_searchindex_js = "searchindex-6e0f36b9.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-76066ed2.js"></script>
@@ -179,6 +179,7 @@
 <p><img src=".gitbook/assets/pico.png" alt=""><figcaption></figcaption></p>
 <p>Welcome to Pico—the open-source zero-knowledge virtual machine (zkVM) that transforms how developers build secure, scalable, and high-performance decentralized applications. Drawing on the innovative <a href="https://vitalik.eth.limo/general/2024/09/02/gluecp.html">“glue-and-coprocessor”</a> architecture, Pico fuses the efficiency of specialized circuits with the adaptability of a general-purpose zkVM. This unique design empowers you to craft tailored proof systems that meet the diverse needs of modern cryptographic applications.</p>
 <p>Pico’s STARK proofs have 128 bits of provable soundness; the on-chain Groth16 proof has BN254’s security level.</p>
+<p>Pico’s RV64IM circuits are formally verified in Lean 4 against the official Sail RISC-V specification; see <a href="https://github.com/brevis-network/pico-fv">pico-fv</a>.</p>
 <p>Pico’s design is rooted in the need for adaptable, high-performance ZK systems that can keep pace with the rapidly evolving landscape of cryptographic research. Rather than relying on a one-size-fits-all solution, Pico’s modular architecture lets you:</p>
 <ul>
 <li><strong>Leverage Interchangeable Proving Backends:</strong> Select from multiple proving backends to achieve the best performance and efficiency.</li>
@@ -196,15 +197,26 @@
 <p>Pico provides a robust, future-ready foundation that meets today’s challenges and evolves with the advancing field of zero-knowledge technology. Whether you’re a developer eager to explore the potential of ZK proofs or a researcher pushing the boundaries of cryptographic innovation, Pico is the ideal platform to build upon.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="migrating-to-3x"><a class="header" href="#migrating-to-3x">Migrating to 3.x</a></h1>
-<p>Pico 3.0 replaced the proof system: it proves over the KoalaBear field with an MLE proof system (LogUp-GKR, ZeroCheck and WHIR), and the host-side API moved to a new crate. Pico 3.1 raises its proofs to 128 bits of provable soundness.</p>
-<p>No proof, key, whitelist or verifier contract carries over from 2.x or 3.0. Rebuild every guest (every program id changes), run a new Groth16 setup and redeploy the verifier contracts.</p>
-<p>This page lists the changes most projects hit. The full guide is <a href="https://github.com/brevis-network/pico/blob/v3.0.0/docs/migration-2.x-to-3.0.md">Migrating from 2.x to 3.0</a>, and the <a href="https://github.com/brevis-network/pico/blob/v3.0.0/docs/release-notes/3.0.md">3.0</a> and <a href="https://github.com/brevis-network/pico/blob/main/docs/release-notes/3.1.md">3.1</a> release notes summarize each release.</p>
+<p>Pico 3.0 replaced the proof system: it proves over the KoalaBear field with an MLE proof system (LogUp-GKR, ZeroCheck and WHIR), and the host-side API moved to a new crate. Pico 3.1 raises its proofs to 128 bits of provable soundness. Pico 3.2 proves misaligned loads and stores, and changes the keys again.</p>
+<p>No proof, key, whitelist or verifier contract carries over from 2.x, 3.0 or 3.1. Rebuild every guest (every program id changes), run a new Groth16 setup and redeploy the verifier contracts.</p>
+<p>This page lists the changes most projects hit. The full guide is <a href="https://github.com/brevis-network/pico/blob/v3.0.0/docs/migration-2.x-to-3.0.md">Migrating from 2.x to 3.0</a>, and the <a href="https://github.com/brevis-network/pico/blob/v3.0.0/docs/release-notes/3.0.md">3.0</a>, <a href="https://github.com/brevis-network/pico/blob/v3.2.0/docs/release-notes/3.1.md">3.1</a> and <a href="https://github.com/brevis-network/pico/blob/v3.2.0/docs/release-notes/3.2.md">3.2</a> release notes summarize each release.</p>
+<h3 id="from-31-to-32"><a class="header" href="#from-31-to-32">From 3.1 to 3.2</a></h3>
+<p>3.2 is a breaking release. Moving a 3.1 project (any tag from <code>v3.1.0</code> to <code>v3.1.6</code>) to it takes these steps:</p>
+<ul>
+<li><strong>New keys and whitelist.</strong> Every verifying key changes and the whitelist has a new root (<code>MLE_VK_ROOT</code> in <code>vm/src/mle/shape_vk_bins/mle_vk_root.txt</code>). A 3.1 proof does not verify under 3.2, nor the other way round. Run a new Groth16 setup and redeploy the verifier contracts.</li>
+<li><strong>Rebuild every guest.</strong> <code>cargo pico build</code> now compiles with <code>-C target-feature=+unaligned-scalar-mem</code>, and Rust guests link the toolchain’s prebuilt <code>std</code>, so the ELF and its program id change. Reinstall the CLI at <code>v3.2.0</code> and run <code>cargo pico install</code> again first.</li>
+<li><strong>Regenerate AOT code.</strong> Run <code>cargo pico aot</code> again; code generated by 3.1 is refused.</li>
+<li><strong><code>execute</code> is pure execution.</strong> <code>Prover::execute</code> and <code>ProverBuilder::execute</code> run the guest to its halt without the proving pipeline and return a <code>PureExecution</code>, which has no chunk count. The 3.1 behaviour is <code>execute_chunked</code>, which returns an <code>Execution</code> as before.</li>
+<li><strong>Stricter execution.</strong> A guest now stops on a null-page access, a stack overflow, a store into its own code, a misaligned jump target or a jump outside the program; a misaligned load or store runs. <code>cargo pico execute</code> exits with status 2 when the run cannot be executed, and 1 only when the guest fails.</li>
+<li><strong>New formats.</strong> Proofs, stored proof artifacts and VK bundles written by 3.1 are refused by 3.2: generate them again.</li>
+</ul>
+<p>The full list is in the <a href="https://github.com/brevis-network/pico/blob/v3.2.0/docs/release-notes/3.2.md">3.2 release notes</a>.</p>
 <h3 id="toolchain"><a class="header" href="#toolchain">Toolchain</a></h3>
 <ul>
 <li>The Rust toolchain moved from <code>nightly-2025-08-04</code> to <code>nightly-2026-09-27</code>. Reinstall the CLI with it (see <a href="#installation">Installation</a>), then run <code>cargo pico install</code> again for the matching guest toolchain.</li>
 <li>Set the project’s own <code>rust-toolchain</code> file to <code>nightly-2026-09-27</code>: the host crate builds <code>pico-prover</code>, which uses nightly-only features.</li>
 <li>The guest target is still <code>riscv64im-pico-zkvm-elf</code>.</li>
-<li>The guest depends on <code>pico-sdk = { git = "https://github.com/brevis-network/pico", tag = "v3.1.1" }</code>.</li>
+<li>The guest depends on <code>pico-sdk = { git = "https://github.com/brevis-network/pico", tag = "v3.2.0" }</code>.</li>
 </ul>
 <h3 id="fields-and-phases"><a class="header" href="#fields-and-phases">Fields and phases</a></h3>
 <ul>
@@ -231,7 +243,7 @@
 <p>New subcommands: <code>cargo pico execute</code> (emulate without proving) and <code>cargo pico aot</code> (generate AOT crates). See the <a href="https://github.com/brevis-network/pico/blob/v3.0.0/docs/migration-2.x-to-3.0.md#cli-cargo-pico">CLI section of the migration guide</a>.</p>
 <h3 id="host-sdk-pico-sdk-client--pico-prover"><a class="header" href="#host-sdk-pico-sdk-client--pico-prover">Host SDK: <code>pico-sdk</code> client → <code>pico-prover</code></a></h3>
 <p>The prover clients left <code>pico-sdk</code>. The host program depends on the new crate <code>pico-prover</code>:</p>
-<pre><code class="language-toml">pico-prover = { git = "https://github.com/brevis-network/pico", tag = "v3.1.1" }
+<pre><code class="language-toml">pico-prover = { git = "https://github.com/brevis-network/pico", tag = "v3.2.0" }
 </code></pre>
 <div class="table-wrapper">
 <table>
@@ -281,7 +293,7 @@
 <ol>
 <li>Install pico-cli from the GitHub repository</li>
 </ol>
-<pre><code class="language-sh">cargo +nightly-2026-09-27 install --git https://github.com/brevis-network/pico --tag v3.1.1 --locked pico-cli
+<pre><code class="language-sh">cargo +nightly-2026-09-27 install --git https://github.com/brevis-network/pico --tag v3.2.0 --locked pico-cli
 </code></pre>
 <ol start="2">
 <li>Check the version</li>
@@ -292,7 +304,7 @@
 <ol>
 <li>Git clone Pico-VM repository</li>
 </ol>
-<pre><code class="language-sh">git clone --branch v3.1.1 https://github.com/brevis-network/pico
+<pre><code class="language-sh">git clone --branch v3.2.0 https://github.com/brevis-network/pico
 </code></pre>
 <ol start="2">
 <li>cargo install from the local path</li>
@@ -468,8 +480,8 @@ forge test
 <li>Import <code>pico-sdk</code> and <code>pico-prover</code></li>
 </ol>
 <pre><code class="language-toml"># Cargo.toml
-pico-sdk = { git = "https://github.com/brevis-network/pico", tag = "v3.1.1" }
-pico-prover = { git = "https://github.com/brevis-network/pico", tag = "v3.1.1" }
+pico-sdk = { git = "https://github.com/brevis-network/pico", tag = "v3.2.0" }
+pico-prover = { git = "https://github.com/brevis-network/pico", tag = "v3.2.0" }
 </code></pre>
 <ol start="2">
 <li>Execute the proving process and generate RISC-V proof.</li>
@@ -652,7 +664,7 @@ proof
 <p>The Pico CLI provides an EVM option to generate the program Groth16 proof and verifier contracts. It proves in whitelist mode only and runs gnark in a <a href="https://docs.docker.com/engine/install/ubuntu/">Docker</a> image. From the root of a project made with the <code>evm</code> template:</p>
 <p>CLI:</p>
 <pre><code class="language-sh"># Once: build the gnark image. The tag is your CLI's version.
-docker build -t pico-gnark -f gnark/Dockerfile https://github.com/brevis-network/pico.git#v3.1.1
+docker build -t pico-gnark -f gnark/Dockerfile https://github.com/brevis-network/pico.git#v3.2.0
 
 # Whitelist mode, with the whitelist in the template's whitelist/.
 export VK_VERIFICATION=true
@@ -723,19 +735,14 @@ interface IPicoVerifier {
 </ul>
 <p>For scenarios where you want to save logs to a file without color codes (which may be embedded by default), you can pipe the output through a tool like <code>ansi2txt</code>. This conversion ensures that the log file remains clean and free of terminal-specific formatting, as the tracing framework does not automatically adjust colors based on environment variables.</p>
 <h2 id="debugging"><a class="header" href="#debugging">Debugging</a></h2>
-<p>In the rare event that proving fails on a correctly executing binary, Pico provides additional debug capabilities to assist in pinpointing issues:</p>
-<ul>
-<li><strong>Enhanced Debugging Features:</strong> Enable the <code>debug</code> and <code>debug-lookups</code> features when running the prover. These features provide extra context by outputting detailed information on individual constraints and lookup operations within each processing batch.</li>
-<li><strong>Minimal Memory Impact:</strong> Since debug information is generated from data already in memory for the current batch of proofs, enabling debugging does not incur a significant additional memory cost. The debug data can be discarded once the batch is processed and debugged.</li>
-<li><strong>Accessing Debug Data:</strong> Combine the debugging features with <code>RUST_LOG=debug</code> to capture detailed logs.</li>
-</ul>
+<p>In the rare event that proving fails on a program that executes correctly, run it with <code>RUST_LOG=debug</code> to see the chunks and records as they are generated and proved, and check the program alone with <code>cargo pico execute</code>.</p>
 <h2 id="guest-vm-cycle-tracking"><a class="header" href="#guest-vm-cycle-tracking">Guest VM Cycle Tracking</a></h2>
 <p>Please see <a href="#vm-cycle-tracking">VM Cycle Tracking</a> for a detailed explanation of this feature.</p>
 <h2 id="proving-options"><a class="header" href="#proving-options">Proving Options</a></h2>
 <p>Pico offers several configurable parameters to optimize the proving process for your system’s resources and performance requirements. <code>cargo pico</code> reads them from environment variables; with <code>pico-prover</code>, set them on <code>ProverBuilder</code>:</p>
 <ul>
 <li><strong><code>CHUNK_SIZE</code></strong> (<code>chunk_size</code>): the number of instructions executed per chunk. Defaults to 2^23.</li>
-<li><strong><code>PROVE_CONCURRENCY</code></strong> (<code>concurrency</code>): the number of RISC-V chunks proved at once. Defaults to 4. Each one holds a full proving working set, so lower it on a machine with less memory.</li>
+<li><strong><code>PROVE_CONCURRENCY</code></strong> (<code>concurrency</code>): the number of RISC-V chunks proved at once. Defaults to 4 on the CPU, lower on a host with less memory (3 under 20 GiB, 2 under 16 GiB, 1 under 12 GiB), and to 1 in a <code>cuda</code> build. Each one holds a full proving working set, so lower it on a machine with less memory.</li>
 </ul>
 <p>These options allow you to balance performance and resource utilization, making it possible to optimize Pico for a wide range of environments—from resource-constrained setups to high-performance systems.</p>
 <h2 id="features-1"><a class="header" href="#features-1">Features</a></h2>
@@ -743,10 +750,10 @@ interface IPicoVerifier {
 <p>To build <code>pico-vm</code> without default features, simply set default-features = false in your Cargo.toml or run <code>cargo build -p pico-vm --no-default-features</code> for your local build environment, maybe adding <code>--example</code> if you want to build a specific example in addition to the Rust library.</p>
 <h2 id="single-threaded-profiling"><a class="header" href="#single-threaded-profiling">Single threaded profiling</a></h2>
 <p>As mentioned in the previous section, we support single threaded builds in order to generate neater flamegraphs for profiling purposes. For example, to build <code>test_mle_e2e</code> for profiling, run</p>
-<pre><code>cargo build -p pico-vm --no-default-features --profile profiling --example test_mle_e2e
+<pre><code>cargo build -p pico-vm --no-default-features --profile flamegraph --example test_mle_e2e
 </code></pre>
 <p>to build the binary and then run</p>
-<pre><code>sudo flamegraph -o flamegraph.svg -- ./target/profiling/examples/test_mle_e2e --elf fib --n 10 --step riscv
+<pre><code>sudo flamegraph -o flamegraph.svg -- ./target/flamegraph/examples/test_mle_e2e --elf fib --n 10 --step riscv
 </code></pre>
 <p>with <a href="https://github.com/flamegraph-rs/flamegraph"><code>cargo flamegraph</code></a> to produce a flamegraph that you can use to explore cost centers.</p>
 <div style="break-before: page; page-break-before: always;"></div>

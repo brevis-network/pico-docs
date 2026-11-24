@@ -35,7 +35,7 @@
             const path_to_root = "../";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "../searchindex-205b3613.js";
+            window.path_to_searchindex_js = "../searchindex-6e0f36b9.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="../toc-76066ed2.js"></script>
@@ -184,8 +184,8 @@
 <li>Import <code>pico-sdk</code> and <code>pico-prover</code></li>
 </ol>
 <pre><code class="language-toml"># Cargo.toml
-pico-sdk = { git = "https://github.com/brevis-network/pico", tag = "v3.1.1" }
-pico-prover = { git = "https://github.com/brevis-network/pico", tag = "v3.1.1" }
+pico-sdk = { git = "https://github.com/brevis-network/pico", tag = "v3.2.0" }
+pico-prover = { git = "https://github.com/brevis-network/pico", tag = "v3.2.0" }
 </code></pre>
 <ol start="2">
 <li>Execute the proving process and generate RISC-V proof.</li>
@@ -368,7 +368,7 @@ proof
 <p>The Pico CLI provides an EVM option to generate the program Groth16 proof and verifier contracts. It proves in whitelist mode only and runs gnark in a <a href="https://docs.docker.com/engine/install/ubuntu/">Docker</a> image. From the root of a project made with the <code>evm</code> template:</p>
 <p>CLI:</p>
 <pre><code class="language-sh"># Once: build the gnark image. The tag is your CLI's version.
-docker build -t pico-gnark -f gnark/Dockerfile https://github.com/brevis-network/pico.git#v3.1.1
+docker build -t pico-gnark -f gnark/Dockerfile https://github.com/brevis-network/pico.git#v3.2.0
 
 # Whitelist mode, with the whitelist in the template's whitelist/.
 export VK_VERIFICATION=true
