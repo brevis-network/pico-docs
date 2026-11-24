@@ -10,6 +10,8 @@ Welcome to Pico—the open-source zero-knowledge virtual machine (zkVM) that tra
 
 Pico's STARK proofs have 128 bits of provable soundness; the on-chain Groth16 proof has BN254's security level.
 
+Pico's RV64IM circuits are formally verified in Lean 4 against the official Sail RISC-V specification; see [pico-fv](https://github.com/brevis-network/pico-fv).
+
 Pico’s design is rooted in the need for adaptable, high-performance ZK systems that can keep pace with the rapidly evolving landscape of cryptographic research. Rather than relying on a one-size-fits-all solution, Pico’s modular architecture lets you:
 
 * **Leverage Interchangeable Proving Backends:** Select from multiple proving backends to achieve the best performance and efficiency.

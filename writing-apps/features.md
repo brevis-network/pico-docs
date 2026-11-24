@@ -15,11 +15,7 @@ For scenarios where you want to save logs to a file without color codes (which m
 
 ## Debugging
 
-In the rare event that proving fails on a correctly executing binary, Pico provides additional debug capabilities to assist in pinpointing issues:
-
-* **Enhanced Debugging Features:** Enable the `debug` and `debug-lookups` features when running the prover. These features provide extra context by outputting detailed information on individual constraints and lookup operations within each processing batch.
-* **Minimal Memory Impact:** Since debug information is generated from data already in memory for the current batch of proofs, enabling debugging does not incur a significant additional memory cost. The debug data can be discarded once the batch is processed and debugged.
-* **Accessing Debug Data:** Combine the debugging features with `RUST_LOG=debug` to capture detailed logs.
+In the rare event that proving fails on a program that executes correctly, run it with `RUST_LOG=debug` to see the chunks and records as they are generated and proved, and check the program alone with `cargo pico execute`.
 
 ## Guest VM Cycle Tracking
 
@@ -30,7 +26,7 @@ Please see [VM Cycle Tracking](advanced/vm-cycle-tracking.md) for a detailed exp
 Pico offers several configurable parameters to optimize the proving process for your system’s resources and performance requirements. `cargo pico` reads them from environment variables; with `pico-prover`, set them on `ProverBuilder`:
 
 * **`CHUNK_SIZE`** (`chunk_size`): the number of instructions executed per chunk. Defaults to 2^23.
-* **`PROVE_CONCURRENCY`** (`concurrency`): the number of RISC-V chunks proved at once. Defaults to 4. Each one holds a full proving working set, so lower it on a machine with less memory.
+* **`PROVE_CONCURRENCY`** (`concurrency`): **`PROVE_CONCURRENCY`** (`concurrency`): the number of RISC-V chunks proved at once. Defaults to 4 on the CPU, lower on a host with less memory (3 under 20 GiB, 2 under 16 GiB, 1 under 12 GiB), and to 1 in a `cuda` build. Each one holds a full proving working set, so lower it on a machine with less memory.
 
 These options allow you to balance performance and resource utilization, making it possible to optimize Pico for a wide range of environments—from resource-constrained setups to high-performance systems.
 
@@ -45,13 +41,13 @@ To build `pico-vm` without default features, simply set default-features = false
 As mentioned in the previous section, we support single threaded builds in order to generate neater flamegraphs for profiling purposes. For example, to build `test_mle_e2e` for profiling, run
 
 ```
-cargo build -p pico-vm --no-default-features --profile profiling --example test_mle_e2e
+cargo build -p pico-vm --no-default-features --profile flamegraph --example test_mle_e2e
 ```
 
 to build the binary and then run
 
 ```
-sudo flamegraph -o flamegraph.svg -- ./target/profiling/examples/test_mle_e2e --elf fib --n 10 --step riscv
+sudo flamegraph -o flamegraph.svg -- ./target/flamegraph/examples/test_mle_e2e --elf fib --n 10 --step riscv
 ```
 
 with [`cargo flamegraph`](https://github.com/flamegraph-rs/flamegraph) to produce a flamegraph that you can use to explore cost centers.
