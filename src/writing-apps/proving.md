@@ -15,8 +15,8 @@ Let's quickly go through the Pico SDK usage and generate a Fibonacci RISC-V proo
 
 ```toml
 # Cargo.toml
-pico-sdk = { git = "https://github.com/brevis-network/pico", tag = "v3.1.1" }
-pico-prover = { git = "https://github.com/brevis-network/pico", tag = "v3.1.1" }
+pico-sdk = { git = "https://github.com/brevis-network/pico", tag = "v3.2.0" }
+pico-prover = { git = "https://github.com/brevis-network/pico", tag = "v3.2.0" }
 ```
 
 2. Execute the proving process and generate RISC-V proof.
@@ -242,7 +242,7 @@ CLI:
 
 ```sh
 # Once: build the gnark image. The tag is your CLI's version.
-docker build -t pico-gnark -f gnark/Dockerfile https://github.com/brevis-network/pico.git#v3.1.1
+docker build -t pico-gnark -f gnark/Dockerfile https://github.com/brevis-network/pico.git#v3.2.0
 
 # Whitelist mode, with the whitelist in the template's whitelist/.
 export VK_VERIFICATION=true
